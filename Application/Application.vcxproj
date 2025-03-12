@@ -71,12 +71,12 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <IncludePath>$\Application\GLFW\Include;$(IncludePath)</IncludePath>
-    <LibraryPath>$\Application\GLFW\Libs;$(LibraryPath)</LibraryPath>
+    <IncludePath>$(SolutionDir)\Application\GLFW\Include;$(IncludePath)</IncludePath>
+    <LibraryPath>$(SolutionDir)\Application\GLFW\Libs;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-    <IncludePath>C:\Users\felix\Desktop\c# stuff\GLFW\Include;$(IncludePath)</IncludePath>
-    <LibraryPath>C:\Users\felix\Desktop\c# stuff\GLFW\Libs;$(LibraryPath)</LibraryPath>
+    <IncludePath>$(SolutionDir)\Application\GLFW\Include;$(IncludePath), $(SolutionDir)\Application\EngineResources;$(IncludePath) </IncludePath>
+    <LibraryPath>$(SolutionDir)\Application\GLFW\Libs;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -114,15 +114,18 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
+      <AdditionalIncludeDirectories>$\Application\GLFW\Include;$(IncludePath)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalDependencies>glfw3.lib;opengl32.lib;$(CoreLibraryDependencies);%(AdditionalDependencies)</AdditionalDependencies>
       <AdditionalOptions>/ENTRY:"mainCRTStartup" %(AdditionalOptions)</AdditionalOptions>
-      <AdditionalLibraryDirectories>
-      </AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(SolutionDir)\Application\GLFW\Libs</AdditionalLibraryDirectories>
     </Link>
+    <ProjectReference>
+      <LinkLibraryDependencies>false</LinkLibraryDependencies>
+    </ProjectReference>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <ClCompile>
@@ -132,6 +135,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
+      <LanguageStandard>stdcpp14</LanguageStandard>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -144,6 +148,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="glad.c" />
+    <ClCompile Include="engine.h" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="transform.h" />
   </ItemGroup>
@@ -152,6 +157,8 @@
     <None Include="VERTEX_SHADER.glsl" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="EngineResources\Colour.h" />
+    <ClInclude Include="EngineResources\Console.h" />
     <ClInclude Include="resource.h" />
     <ClInclude Include="shader.h" />
   </ItemGroup>

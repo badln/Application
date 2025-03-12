@@ -8,8 +8,10 @@
 //general stuff
 #include <iostream>
 #include "shader.h"
+#include "engine.h";
 #include "transform.h"
 #include <windows.h>
+#include "EngineResources/Console.h"
 
 //OpenGL Mathematics
 #include "GLFW/Include/glm/glm.hpp"
@@ -19,11 +21,16 @@
 using namespace std;
 using namespace glm;
 
-float vertTruncAmount = 7.5;
-bool truncVerts = true;
+WindowConsole Console;
+
+vec2 windowSize(650, 650);
+
+float vertTruncAmount = 12;
+bool truncVerts = false;
 
 bool downArrowPressed, upArrowPressed, leftArrowPressed, rightArrowPressed, spacePressed, aPressed, inWireframe = false;
 bool ambientRotation = true;
+bool LookAtMouse = true;
 int ambientRotationMultiplier = 50;
 
 float desiredFramerate = 60;
@@ -48,8 +55,8 @@ float vertexData[] = {
 	 0.5f, -0.5f, 0.5f, 0.0f, 0.0f, 0.0f,  0.0f,    0.0f,
 	 0.5f,  0.5f, 0.5f, 0.0f, 0.0f, 0.0f,  0.0f,    maxVal,
 
-	-0.5f, -0.5f, 0.5f, 0.0f, 0.0f, 0.0f,  maxVal,  maxVal,
-	 0.5f, -0.5f, 0.5f, 0.0f, 0.0f, 0.0f,  0.0f,  maxVal,
+	-0.5f, -0.5f, 0.5f, 0.0f, 0.0f, 0.0f,  0.0f,    maxVal,
+	 0.5f, -0.5f, 0.5f, 0.0f, 0.0f, 0.0f,  maxVal,    maxVal,
 	 0.5f,  0.5f, 0.5f, 1.0f, 0.0f, 0.0f,  maxVal,  maxVal,
 	 0.5f, -0.5f, 0.5f, 1.0f, 1.0f, 0.0f,  maxVal,  0.0f,
 	-0.5f, -0.5f, 0.5f, 0.0f, 1.0f, 0.0f,  0.0f,    0.0f,
@@ -180,6 +187,18 @@ void processInput(GLFWwindow* window)
 		rightArrowPressed = false;
 	}
 }
+void InfoDump()
+{
+	SYSTEM_INFO sysInfo;
+
+	GetSystemInfo(&sysInfo);
+
+	EngineInfo engineInfo;
+	engineInfo.LogEngineInfo();
+	string displayAdaptor(reinterpret_cast<const char*>(glGetString(GL_RENDERER)));
+	string glVersion(reinterpret_cast<const char*>(glGetString(GL_SHADING_LANGUAGE_VERSION)));
+	Console.PushLine("Display Adaptor: " + displayAdaptor + ", OpenGL Version " + glVersion + ", " + to_string(sysInfo.dwNumberOfProcessors) + " CPU threads avaliable.");
+}
 struct
 {
 	double x;
@@ -188,38 +207,59 @@ struct
 void RotateHandler(Transform transform, Shader shader)
 {
 	mat4 transformMatrix = mat4(1.0f);
-
+	float MouseX, MouseY;
+	if (LookAtMouse)
+	{
+		MouseX = -MousePos.y / 3;
+		MouseY = -MousePos.x / 3;
+	}
+	else
+	{
+		MouseX = 0;
+		MouseY = 0;
+	}
 	if (upArrowPressed)
 	{
 		xAngle += frameTime * 200;
-		transformMatrix = transform.RotateMatrix(transformMatrix, (-MousePos.y / 3) + xAngle, vec3(1, 0, 0));
+		transformMatrix = transform.RotateMatrix(transformMatrix, MouseX + xAngle, vec3(1, 0, 0));
 	}
 	else if (downArrowPressed)
 	{
 		xAngle -= frameTime * 200;
-		transformMatrix = transform.RotateMatrix(transformMatrix, (-MousePos.y / 3) + xAngle, vec3(1, 0, 0));
+		transformMatrix = transform.RotateMatrix(transformMatrix, MouseX + xAngle, vec3(1, 0, 0));
 	}
 	else
 	{
-		transformMatrix = transform.RotateMatrix(transformMatrix, ( -MousePos.y / 3) + xAngle, vec3(1, 0, 0));
+		transformMatrix = transform.RotateMatrix(transformMatrix, MouseX + xAngle, vec3(1, 0, 0));
 	}
 	if (leftArrowPressed)
 	{
 		yAngle += frameTime * 200;
-		transformMatrix = transform.RotateMatrix(transformMatrix, (-MousePos.x / 3) + yAngle, vec3(0, 1, 0));
+		transformMatrix = transform.RotateMatrix(transformMatrix, MouseY + yAngle, vec3(0, 1, 0));
 	}
 	else if (rightArrowPressed)
 	{
 		yAngle -= frameTime * 200;
-		transformMatrix = transform.RotateMatrix(transformMatrix, (-MousePos.x / 3) + yAngle, vec3(0, 1, 0));
+		transformMatrix = transform.RotateMatrix(transformMatrix, MouseY + yAngle, vec3(0, 1, 0));
 	}
 	else
 	{
-		transformMatrix = transform.RotateMatrix(transformMatrix, ( -MousePos.x / 3) + yAngle, vec3(0, 1, 0));
+		transformMatrix = transform.RotateMatrix(transformMatrix, MouseY + yAngle, vec3(0, 1, 0));
 	}
 	shader.setMatrix("transform", transformMatrix);
 }
-
+void GenErrorTex(unsigned char* ErrorTex, int texture)
+{
+	if (ErrorTex)
+	{
+		glBindTexture(GL_TEXTURE_2D, texture);
+		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, 256, 256, 0, GL_RGBA, GL_UNSIGNED_BYTE, ErrorTex);
+		glGenerateMipmap(GL_TEXTURE_2D);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST_MIPMAP_LINEAR);
+	}
+}
 int main()
 {
 	//--------------------------//
@@ -233,13 +273,13 @@ int main()
 	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 	if (!glfwInit())
 	{
-		std::cout << "Failed to initialize GLFW.";
+		Console.PushError("Failed to initialise GLFW.");
 	}
 
-	GLFWwindow* window = glfwCreateWindow(800, 600, windowName.c_str(), NULL, NULL);
+	GLFWwindow* window = glfwCreateWindow(windowSize.x, windowSize.y, windowName.c_str(), NULL, NULL);
 	if (window == NULL)
 	{
-		std::cout << "Window creation failed for unknown reason." << "\n";
+		Console.PushError("Window creation failed for unknown reason.");
 		glfwTerminate();
 		return -1;
 	}
@@ -247,7 +287,7 @@ int main()
 	glfwMakeContextCurrent(window);
 	if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress))
 	{
-		std::cout << "Failed to initialize GLAD" << "\n";
+		Console.PushError("Failed to initialize GLAD");
 		return -1;
 	}
 
@@ -261,7 +301,8 @@ int main()
 	images[0].pixels = stbi_load("IMG_4766.png", &images[0].width, &images[0].height, 0, 4);
 	glfwSetWindowIcon(window, 1, images);
 	stbi_image_free(images[0].pixels);
-	
+	InfoDump();
+
 	//---------------------//
 	// Creates shader program
 	//---------------------//
@@ -272,11 +313,12 @@ int main()
 	// Configuration of Vertex Array Object and Vertex Buffer Object
 	//------------------------------------------------------------//
 
-	unsigned int VAO, VBO, EBO, texture, texture2; 
+	unsigned int VAO, VBO, EBO, texture, texture2, ErrorTexture; 
 	glGenVertexArrays(1, &VAO);
 	glGenBuffers(1, &VBO);
 	glGenBuffers(1, &EBO);
 
+	glGenTextures(1, &ErrorTexture);
 	glGenTextures(1, &texture);
 	glGenTextures(1, &texture2);
 
@@ -303,13 +345,12 @@ int main()
 
 	int width, height, nrChannels;
 	int width2, height2, nrChannels2;
+	int ErrorW, ErrorH, ErrorNrChannels;
 	stbi_set_flip_vertically_on_load(true);
 
+	unsigned char* ErrorTex = stbi_load("EngineResources/ERROR.bmp", &ErrorW, &ErrorH, &ErrorNrChannels, 4);
 	unsigned char* imageData = stbi_load("IMG_4766.png", &width, &height, &nrChannels, 4);
-	unsigned char* imageData2 = stbi_load("image.png", &width2, &height2, &nrChannels2, 4);
-	
-	//unsigned char* imageData = stbi_load("pixels.jpg", &width, &height, &nrChannels, 4);
-	//unsigned char* imageData2 = stbi_load("grass.jpg", &width2, &height2, &nrChannels2, 4);
+	//unsigned char* imageData2 = stbi_load("image.png", &width2, &height2, &nrChannels2, 4);
 
 	nrChannels = 4;
 
@@ -320,6 +361,7 @@ int main()
 	GLint MODE_X = GL_REPEAT;
 	GLint MODE_Y = GL_REPEAT;
 	GLint MODE_Z = GL_REPEAT;
+
 
 	if (imageData)
 	{
@@ -332,8 +374,12 @@ int main()
 	}
 	else
 	{
-		std::cout << "Image data (texture 1) not correctly loaded!\n";
+		GenErrorTex(ErrorTex, texture);
+		Console.PushError("Texture not found or improperly loaded!");
 	}
+
+	
+	/*
 	if (imageData2)
 	{
 		glBindTexture(GL_TEXTURE_2D, texture2);
@@ -346,9 +392,9 @@ int main()
 	else
 	{
 		std::cout << "Image data (texture 2) not correctly loaded!\n";
-	}
+	}*/
 	stbi_image_free(imageData);
-	stbi_image_free(imageData2);
+	//stbi_image_free(imageData2);
 
 
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
@@ -382,7 +428,7 @@ int main()
 			// rendering commands here
 			//----------------------//
 			//glClearColor(1, 0, 0.75f, 1);
-			glClearColor(0, 0, 0, 1);
+			glClearColor(0.1f, 0.1f, 0.1f, 1);
 			glClear(GL_COLOR_BUFFER_BIT);
 			glClear(GL_DEPTH_BUFFER_BIT);
 
@@ -427,6 +473,7 @@ int main()
 			}
 			else
 			{
+				RotateHandler(transform, shader);
 				mat4 transformMatrix = mat4(1.0f);
 				xAngle = xAngle + frameTime * ambientRotationMultiplier;
 				yAngle = yAngle + frameTime * -ambientRotationMultiplier;

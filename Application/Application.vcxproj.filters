@@ -1,0 +1,33 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <ClCompile Include="glad.c" />
+    <ClCompile Include="main.cpp" />
+    <ClCompile Include="transform.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="resource.h" />
+    <ClInclude Include="shader.h" />
+    <ClInclude Include="EngineResources\Colour.h">
+      <Filter>EngineResources</Filter>
+    </ClInclude>
+    <ClInclude Include="EngineResources\Console.h">
+      <Filter>EngineResources</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="Application.rc" />
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="IMG_2209.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="FRAGMENT_SHADER.glsl" />
+    <None Include="VERTEX_SHADER.glsl" />
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="EngineResources">
+      <UniqueIdentifier>{22d2c26a-6ce9-496d-8f08-5d54d994b8db}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+</Project>

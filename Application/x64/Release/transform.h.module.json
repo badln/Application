@@ -1,0 +1,22 @@
+{
+    "version": 1,
+    "revision": 0,
+    "rules": [
+        {
+            "primary-output": "x64\\Release\\transform.h.obj",
+            "outputs": [
+                "C:\\Users\\faye\\Desktop\\Projects\\Application\\Application\\x64\\Release\\vc143.pdb",
+                "x64\\Release\\",
+                "C:\\Users\\faye\\Desktop\\Projects\\Application\\Application\\x64\\Release\\transform.h.ifc"
+            ],
+            "provides": [
+                {
+                    "logical-name": "transform.h",
+                    "source-path": "c:\\users\\faye\\desktop\\projects\\application\\application\\transform.h",
+                    "lookup-method": "absolute"
+                }
+            ],
+            "requires": []
+        }
+    ]
+}
