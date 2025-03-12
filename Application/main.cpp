@@ -2,8 +2,8 @@
 
 //Some specific OpenGL stuff
 #include "stb_image.h"
-#include <glad\glad.h>
-#include <glfw3.h>
+#include "GLFW\Include\glad\glad.h"
+#include "GLFW\Include\glfw3.h"
 
 //general stuff
 #include <iostream>
@@ -12,11 +12,12 @@
 #include <windows.h>
 
 //OpenGL Mathematics
-#include <glm/glm.hpp>
-#include <glm/gtc/matrix_transform.hpp>
-#include <glm/gtc/type_ptr.hpp>
+#include "GLFW/Include/glm/glm.hpp"
+#include "GLFW/Include/glm/gtc/matrix_transform.hpp"
+#include "GLFW/Include/glm/gtc/type_ptr.hpp"
 
 using namespace std;
+using namespace glm;
 
 float vertTruncAmount = 7.5;
 bool truncVerts = true;

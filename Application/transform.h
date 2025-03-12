@@ -1,14 +1,14 @@
 //Some specific OpenGL stuff
-#include <glad\glad.h>
+#include "GLFW\Include\glad\glad.h"
 
 //general stuff
 #include <iostream>
 #include "shader.h"
 
 //OpenGL Mathematics
-#include <glm/glm.hpp>
-#include <glm/gtc/matrix_transform.hpp>
-#include <glm/gtc/type_ptr.hpp>
+#include "GLFW/Include/glm/glm.hpp"
+#include "GLFW/Include/glm/gtc/matrix_transform.hpp"
+#include "GLFW/Include/glm/gtc/type_ptr.hpp"
 
 using namespace std;
 using namespace glm;
