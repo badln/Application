@@ -10,6 +10,7 @@ public:
 
 	void LogEngineInfo()
 	{
+
 		cout << EngineName << " Version " << EngineVer << ", Written by " << EngineAuthor << endl;
 	}
 };

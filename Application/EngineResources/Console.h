@@ -20,6 +20,11 @@ public:
 	{
 		PushLine(str, newLine, 31);
 	}
+	void PushError(exception e, bool newLine = false)
+	{
+		PushError("Error!");
+		throw e;
+	}
 	void PushWarning(string str, bool newLine = true)
 	{
 		PushLine(str, newLine, 35);

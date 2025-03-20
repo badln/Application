@@ -25,42 +25,93 @@ WindowConsole Console;
 
 vec2 windowSize(650, 650);
 
-float vertTruncAmount = 12;
+float vertTruncAmount = 7;
 bool truncVerts = false;
 
-bool downArrowPressed, upArrowPressed, leftArrowPressed, rightArrowPressed, spacePressed, aPressed, inWireframe = false;
-bool ambientRotation = true;
-bool LookAtMouse = true;
+bool downArrowPressed, upArrowPressed, leftArrowPressed, rightArrowPressed, spacePressed, ctrlPressed, escPressed, inWireframe = false;
+bool ambientRotation = false;
+bool LookAtMouse = false;
+bool textureError = false;
 int ambientRotationMultiplier = 50;
 
+float mouseYaw = -90.0f;
+float mousePitch = 0.0f;
+const float MouseSensitivity = 0.1f;
+void mouse_callback(GLFWwindow* window, double xpos, double ypos);
+float xpos_LF = windowSize.x / 2;
+float ypos_LF = windowSize.y / 2;
+bool firstMouse = true;
+bool looking = true;
+
+float nearClipPlane = 0.1f;
+float farClipPlane = 100.0f;
+float fieldOfView = 45;
 float desiredFramerate = 60;
 float desiredFrametime = 1 / desiredFramerate;
 double frameTime, endOfFrameTime, endOfFrameTimeLastFrame;
 float frameRate;
+
+mat4 orthoscopicMat;
+mat4 projectionMat;
+
+struct {
+	vec3 zero = vec3(0.0f);
+	vec3 one = vec3(1.0f);
+
+	vec3 forward = vec3(0.0f, 0.0f, 1.0f);
+	vec3 backward = vec3(0.0f, 0.0f, -1.0f);
+
+	vec3 left = vec3(1.0f, 0.0f, 0.0f);
+	vec3 right = vec3(-1.0f, 0.0f, 0.0f);
+
+	vec3 up = vec3(0.0f, 1.0f, 0.0f);
+	vec3 down = vec3(0.0f, -1.0f, 0.0f);
+}Vector3;
+
+struct {
+
+	vec3 Position = vec3(0.0f, 0.0f, 3.0f);
+
+	vec3 Target = Vector3.zero;
+
+	vec3 Direction = normalize(Position - Target);
+
+	float SpeedMultiplier = 3;
+	vec3 zero = vec3(0.0f);
+	vec3 one = vec3(1.0f);
+
+	vec3 forward = vec3(0.0f, 0.0f, -1.0f);
+	vec3 up =	   vec3(0.0f, 1.0f, 0.0f);
+	vec3 right =   vec3(1.0f, 0.0f, 0.0f);
+	vec3 lookDirection;
+
+} Camera ;
+
 float AddRotation, xAngle, yAngle = 0;
-float maxVal{ 1.0f };
+
+vec3 cubePos = vec3(0.0f, 0.0f, 3.0f);
 float vertexData[] = {
 
 	//----------------------------------------------//
 	// Vertex Position | Vertex Colour  |  TexCoords
 	//----------------------------------------------//
-	 0.5f,  0.5f,-0.5f, 1.0f, 0.0f, 0.0f,  maxVal,  maxVal,
-	 0.5f, -0.5f,-0.5f, 1.0f, 1.0f, 0.0f,  maxVal,  0.0f,
-	-0.5f, -0.5f,-0.5f, 0.0f, 1.0f, 0.0f,  0.0f,    0.0f,
-	-0.5f,  0.5f,-0.5f, 0.0f, 0.0f, 1.0f,  0.0f,    maxVal,
-	-0.5f,  0.5f, 0.5f, 0.0f, 0.0f, 0.0f,  maxVal,  maxVal,
-	-0.5f, -0.5f, 0.5f, 0.0f, 0.0f, 0.0f,  maxVal,  0.0f,
-	-0.5f,  0.5f, 0.5f, 0.0f, 0.0f, 0.0f,  0.0f,    0.0f,
-	 0.5f,  0.5f, 0.5f, 0.0f, 0.0f, 0.0f,  maxVal,  0.0f,
-	 0.5f, -0.5f, 0.5f, 0.0f, 0.0f, 0.0f,  0.0f,    0.0f,
-	 0.5f,  0.5f, 0.5f, 0.0f, 0.0f, 0.0f,  0.0f,    maxVal,
+	 0.5f,  0.5f,-0.5f, 1.0f, 0.0f, 0.0f,  1.0f,  1.0f,
+	 0.5f, -0.5f,-0.5f, 1.0f, 1.0f, 0.0f,  1.0f,  0.0f,
+	-0.5f, -0.5f,-0.5f, 0.0f, 1.0f, 0.0f,  0.0f,  0.0f,
+	-0.5f,  0.5f,-0.5f, 0.0f, 0.0f, 1.0f,  0.0f,  1.0f,
+	-0.5f,  0.5f, 0.5f, 0.0f, 0.0f, 0.0f,  1.0f,  1.0f,
+	-0.5f, -0.5f, 0.5f, 0.0f, 0.0f, 0.0f,  1.0f,  0.0f,
+	-0.5f,  0.5f, 0.5f, 0.0f, 0.0f, 0.0f,  0.0f,  0.0f,
+	 0.5f,  0.5f, 0.5f, 0.0f, 0.0f, 0.0f,  1.0f,  0.0f,
+	 0.5f, -0.5f, 0.5f, 0.0f, 0.0f, 0.0f,  0.0f,  0.0f,
+	 0.5f,  0.5f, 0.5f, 0.0f, 0.0f, 0.0f,  0.0f,  1.0f,
 
-	-0.5f, -0.5f, 0.5f, 0.0f, 0.0f, 0.0f,  0.0f,    maxVal,
-	 0.5f, -0.5f, 0.5f, 0.0f, 0.0f, 0.0f,  maxVal,    maxVal,
-	 0.5f,  0.5f, 0.5f, 1.0f, 0.0f, 0.0f,  maxVal,  maxVal,
-	 0.5f, -0.5f, 0.5f, 1.0f, 1.0f, 0.0f,  maxVal,  0.0f,
-	-0.5f, -0.5f, 0.5f, 0.0f, 1.0f, 0.0f,  0.0f,    0.0f,
-	-0.5f,  0.5f, 0.5f, 0.0f, 0.0f, 1.0f,  0.0f,    maxVal,
+	-0.5f, -0.5f, 0.5f, 0.0f, 0.0f, 0.0f,  0.0f,  1.0f,
+	 0.5f, -0.5f, 0.5f, 0.0f, 0.0f, 0.0f,  1.0f,  1.0f,
+	 0.5f,  0.5f, 0.5f, 1.0f, 0.0f, 0.0f,  1.0f,  1.0f,
+	 0.5f, -0.5f, 0.5f, 1.0f, 1.0f, 0.0f,  1.0f,  0.0f,
+	-0.5f, -0.5f, 0.5f, 0.0f, 1.0f, 0.0f,  0.0f,  0.0f,
+	-0.5f,  0.5f, 0.5f, 0.0f, 0.0f, 1.0f,  0.0f,  1.0f,
 
 };
 unsigned int indicies[] = {
@@ -96,6 +147,47 @@ float clamp(float val, float min, float max)
 	return val;
 }
 
+void UpdateWindowSize(GLFWwindow* window)
+{
+	int width, height;
+	glfwGetWindowSize(window, &width, &height);
+	windowSize.x = width;
+	windowSize.y = height;
+}
+void mouse_callback(GLFWwindow* window, double xposIn, double yposIn)
+{
+	if (!looking)
+	{
+		return;
+	}
+	float xpos = static_cast<float>(xposIn);
+	float ypos = static_cast<float>(yposIn);
+
+	if (firstMouse)
+	{
+		xpos_LF = xpos;
+		ypos_LF = ypos;
+		firstMouse = false;
+	}
+	float xOffset = xpos - xpos_LF;
+	float yOffset = -(ypos - ypos_LF);
+
+	xpos_LF = xpos;
+	ypos_LF = ypos;
+
+	xOffset *= MouseSensitivity;
+	yOffset *= MouseSensitivity;
+
+	mouseYaw += xOffset;
+	mousePitch += yOffset;
+
+	mousePitch = clamp(mousePitch, -89.0f, 89.0f);
+
+	Camera.lookDirection.x = cos(radians(mouseYaw)) * cos(radians(mousePitch));
+	Camera.lookDirection.y = sin(radians(mousePitch));
+	Camera.lookDirection.z = sin(radians(mouseYaw)) * cos(radians(mousePitch));
+	Camera.forward = normalize(Camera.lookDirection);
+}
 
 void framebuffer_size_callback(GLFWwindow* window, int width, int height)
 {
@@ -110,21 +202,36 @@ string windowName = "3D Renderer (Prototype)";
 
 void processInput(GLFWwindow* window)
 {
-	if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
+	if ((glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS) && escPressed == false)
 	{
-		glfwSetWindowShouldClose(window, true);
+		//glfwSetWindowShouldClose(window, true);
+		escPressed = true;
+		if (glfwGetInputMode(window, GLFW_CURSOR) == GLFW_CURSOR_DISABLED)
+		{
+			glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
+			looking = false;
+		}
+		else {
+			firstMouse = true;
+			looking = true;
+			glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+		}
+	}
+	if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_RELEASE)
+	{
+		escPressed = false;
 	}
 
-	if (glfwGetKey(window, GLFW_KEY_A) == GLFW_RELEASE)
+	if (glfwGetKey(window, GLFW_KEY_LEFT_CONTROL) == GLFW_RELEASE)
 	{
-		aPressed = false;
+		ctrlPressed = false;
 	}
-	if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS && aPressed == false)
+	if (glfwGetKey(window, GLFW_KEY_LEFT_CONTROL) == GLFW_PRESS && ctrlPressed == false)
 	{
 		//------------------------------------//
 		// Toggles wireframe rendering on or off
 		//------------------------------------//
-		aPressed = true;
+		ctrlPressed = true;
 		if (inWireframe)
 		{
 			glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
@@ -150,7 +257,7 @@ void processInput(GLFWwindow* window)
 			ambientRotation = !ambientRotation;
 		}
 	}
-	if (glfwGetKey(window, GLFW_KEY_UP) == GLFW_PRESS) 
+	if (glfwGetKey(window, GLFW_KEY_UP) == GLFW_PRESS)
 	{
 		upArrowPressed = true;
 		downArrowPressed = false;
@@ -204,7 +311,7 @@ struct
 	double x;
 	double y;
 } MousePos;
-void RotateHandler(Transform transform, Shader shader)
+mat4 RotateHandler(Transform transform, Shader shader)
 {
 	mat4 transformMatrix = mat4(1.0f);
 	float MouseX, MouseY;
@@ -246,7 +353,7 @@ void RotateHandler(Transform transform, Shader shader)
 	{
 		transformMatrix = transform.RotateMatrix(transformMatrix, MouseY + yAngle, vec3(0, 1, 0));
 	}
-	shader.setMatrix("transform", transformMatrix);
+	return transformMatrix;
 }
 void GenErrorTex(unsigned char* ErrorTex, int texture)
 {
@@ -258,6 +365,7 @@ void GenErrorTex(unsigned char* ErrorTex, int texture)
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST_MIPMAP_LINEAR);
+		textureError = true;
 	}
 }
 int main()
@@ -292,16 +400,18 @@ int main()
 	}
 
 	glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
-	
+
 	//-------------//
 	// Window icon
 	//-------------//
 
 	GLFWimage images[1];
-	images[0].pixels = stbi_load("IMG_4766.png", &images[0].width, &images[0].height, 0, 4);
+	images[0].pixels = stbi_load("image/IMG_4766.png", &images[0].width, &images[0].height, 0, 4);
 	glfwSetWindowIcon(window, 1, images);
 	stbi_image_free(images[0].pixels);
 	InfoDump();
+	glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+	glfwSetCursorPosCallback(window, mouse_callback);
 
 	//---------------------//
 	// Creates shader program
@@ -313,7 +423,7 @@ int main()
 	// Configuration of Vertex Array Object and Vertex Buffer Object
 	//------------------------------------------------------------//
 
-	unsigned int VAO, VBO, EBO, texture, texture2, ErrorTexture; 
+	unsigned int VAO, VBO, EBO, texture, texture2, ErrorTexture;
 	glGenVertexArrays(1, &VAO);
 	glGenBuffers(1, &VBO);
 	glGenBuffers(1, &EBO);
@@ -334,14 +444,13 @@ int main()
 
 	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)0);
 	glEnableVertexAttribArray(0);
-	
+
 	glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(3 * sizeof(float)));
 	glEnableVertexAttribArray(1);
 
 	glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(6 * sizeof(float)));
 	glEnableVertexAttribArray(2);
 
-	
 
 	int width, height, nrChannels;
 	int width2, height2, nrChannels2;
@@ -349,7 +458,7 @@ int main()
 	stbi_set_flip_vertically_on_load(true);
 
 	unsigned char* ErrorTex = stbi_load("EngineResources/ERROR.bmp", &ErrorW, &ErrorH, &ErrorNrChannels, 4);
-	unsigned char* imageData = stbi_load("IMG_4766.png", &width, &height, &nrChannels, 4);
+	unsigned char* imageData = stbi_load("image/IMG_4766.png", &width, &height, &nrChannels, 4);
 	//unsigned char* imageData2 = stbi_load("image.png", &width2, &height2, &nrChannels2, 4);
 
 	nrChannels = 4;
@@ -378,7 +487,7 @@ int main()
 		Console.PushError("Texture not found or improperly loaded!");
 	}
 
-	
+
 	/*
 	if (imageData2)
 	{
@@ -404,6 +513,7 @@ int main()
 	incrementValue *= 0.001f;
 	float mixValue = 0.0f;
 
+
 	glEnable(GL_DEPTH_TEST);
 	while (!glfwWindowShouldClose(window))
 	{
@@ -411,11 +521,15 @@ int main()
 		//----------------------------------------------------------------------------------------------------//
 		//                                       BEGGINING OF FRAME
 		//----------------------------------------------------------------------------------------------------//
-		//cout << transform.VecToString(vec3(MousePos, 0)) << "\n";
-		double x, y;
-		glfwGetCursorPos(window, &x, &y);
-		MousePos.x = x;
-		MousePos.y = y;
+
+		UpdateWindowSize(window);
+
+		orthoscopicMat = glm::ortho(0.0f, windowSize.x, 0.0f, windowSize.y, 0.1f, 100.0f);
+		projectionMat = glm::perspective(glm::radians(fieldOfView), windowSize.x / windowSize.y, nearClipPlane, farClipPlane);
+
+		mat4 view = mat4(1.0f);
+		view = lookAt(Camera.Position, Camera.Position + Camera.forward, Camera.up);
+
 		if (glfwGetTime() > endOfFrameTime + desiredFrametime)
 		{
 			//---------------//
@@ -447,7 +561,10 @@ int main()
 			mixValue = clamp(mixValue, 0, 1);
 
 			shader.use();
-			//Vertex offset
+
+			shader.setMatrix("perspective", projectionMat);
+			shader.setMatrix("view", view);
+
 			shader.setVector("offset", 0, 0, 0, sine_time);
 			shader.setInt("MinionTexture", 0);
 			shader.setBool("wireframe", inWireframe);
@@ -455,6 +572,9 @@ int main()
 
 			shader.setFloat("vertTruncAmount", vertTruncAmount);
 			shader.setBool("truncVerts", truncVerts);
+			shader.setBool("error", textureError);
+
+			shader.setFloat("time", glfwGetTime());
 			glDrawElements(GL_TRIANGLES, sizeof(vertexData), GL_UNSIGNED_INT, 0);
 
 			//-----------------------------------------//
@@ -466,22 +586,35 @@ int main()
 
 			glfwSwapBuffers(window);
 			glfwPollEvents();
+			mat4 transformMatrix = mat4(1.0f);
+			transformMatrix = transform.TranslateMatrix(transformMatrix, -cubePos);
+			shader.setMatrix("model", transformMatrix);
+			if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
+			{
+				Camera.Position += (Camera.SpeedMultiplier * (float)frameTime) * Camera.forward;
+			}
+			if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS)
+			{
+				Camera.Position -= (Camera.SpeedMultiplier * (float)frameTime) * Camera.forward;
+			}
 
-			if (!ambientRotation)
+			if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS)
 			{
-				RotateHandler(transform, shader);
+				Camera.Position -= normalize(cross(Camera.forward, Camera.up)) * (Camera.SpeedMultiplier * (float)frameTime);
 			}
-			else
+			if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS)
 			{
-				RotateHandler(transform, shader);
-				mat4 transformMatrix = mat4(1.0f);
-				xAngle = xAngle + frameTime * ambientRotationMultiplier;
-				yAngle = yAngle + frameTime * -ambientRotationMultiplier;
-				transformMatrix = transform.RotateMatrix(transformMatrix, xAngle, vec3(1, 0, 0));
-				transformMatrix = transform.RotateMatrix(transformMatrix, yAngle, vec3(0, 1, 0));
-				shader.setMatrix("transform", transformMatrix);
+				Camera.Position += normalize(cross(Camera.forward, Camera.up)) * (Camera.SpeedMultiplier * (float)frameTime);
 			}
-			//std::cout << mixValue << "\n";
+			if (glfwGetKey(window, GLFW_KEY_E) == GLFW_PRESS)
+			{
+				Camera.Position += (Camera.SpeedMultiplier * (float)frameTime) * Camera.up;
+			}
+			if (glfwGetKey(window, GLFW_KEY_Q) == GLFW_PRESS)
+			{
+				Camera.Position -= (Camera.SpeedMultiplier * (float)frameTime) * Camera.up;
+			}
+
 			endOfFrameTime = glfwGetTime();
 			frameTime = endOfFrameTime - endOfFrameTimeLastFrame;
 			frameRate = 1 / frameTime;

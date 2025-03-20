@@ -7,7 +7,11 @@ out vec4 vertex_colour;
 out vec2 TexCoord;
 
 uniform vec4 offset;
-uniform mat4 transform;
+
+uniform mat4 model = mat4(1.0f);
+uniform mat4 view = mat4(1.0f);
+uniform mat4 perspective = mat4(1.0f);
+
 uniform float vertTruncAmount = 10;
 uniform bool truncVerts;
 
@@ -19,7 +23,7 @@ float truncate(float num, float place)
 void main()
 {
    gl_Position = mat4(2) * vec4(aPos.x, aPos.y, aPos.z, 1.0f); // + offset;
-   gl_Position = transform * gl_Position;
+   gl_Position = perspective * view * model * gl_Position;
    if (truncVerts)
    {
        gl_Position = vec4(

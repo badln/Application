@@ -4,6 +4,7 @@
     <ClCompile Include="glad.c" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="transform.h" />
+    <ClCompile Include="engine.h" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="resource.h" />
