@@ -25,6 +25,7 @@
   <ItemGroup>
     <None Include="FRAGMENT_SHADER.glsl" />
     <None Include="VERTEX_SHADER.glsl" />
+    <None Include="LIGHTING_FRAGMENT_SHADER.glsl" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="EngineResources">

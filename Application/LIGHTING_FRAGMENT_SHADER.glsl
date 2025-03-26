@@ -7,11 +7,13 @@ in vec4 vertex_position_frag;
 in vec2 TexCoord;
 
 uniform float time;
-uniform sampler2D MinionTexture;
+uniform sampler2D Texture;
 uniform sampler2D OtherTexture;
 uniform float mixAmount;
 uniform bool wireframe;
 uniform bool error;
+
+uniform vec4 globalSceneLight;
 
 uniform vec3 wireframeCol = vec3(1, 1, 1);  //White by default
 
@@ -54,12 +56,12 @@ void main()
     
         if (error)
         {
-            FragColor = mix(texture(MinionTexture, TexCoord), Checkerboard(), 0.5f); 
+            FragColor = mix(texture(Texture, TexCoord), Checkerboard(), 0.5f); 
             //FragColor = Checkerboard();
         }
         else
         {
-            return;
+            FragColor = (texture(Texture, TexCoord) * globalSceneLight.w) * globalSceneLight;
         }
         
     }

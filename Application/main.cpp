@@ -21,9 +21,25 @@
 using namespace std;
 using namespace glm;
 
+EngineInfo engineInfo;
 WindowConsole Console;
 
 vec2 windowSize(650, 650);
+
+//Scene colours
+
+vec4 globalSceneLight (
+	1.0f,	//r
+	1.0f,   //g
+	1.0f,   //b
+	1.0f    //brightness
+);
+
+vec3 cubeData[]{
+	//     Positions        |         Scales        |       Rotations
+	vec3( 1.5f, 0.0f, -4.0f), vec3(1.0f, 5.0f, 1.0f), vec3(0.0f, 45.0f, 0.0f),
+	vec3(-0.5f, 0.0f, -3.0f), vec3(1.0f, 5.0f, 1.0f), vec3(45.0f, 0.0f, 0.0f),
+};
 
 float vertTruncAmount = 7;
 bool truncVerts = false;
@@ -46,7 +62,7 @@ bool looking = true;
 float nearClipPlane = 0.1f;
 float farClipPlane = 100.0f;
 float fieldOfView = 45;
-float desiredFramerate = 60;
+float desiredFramerate = 144;
 float desiredFrametime = 1 / desiredFramerate;
 double frameTime, endOfFrameTime, endOfFrameTimeLastFrame;
 float frameRate;
@@ -89,7 +105,6 @@ struct {
 
 float AddRotation, xAngle, yAngle = 0;
 
-vec3 cubePos = vec3(0.0f, 0.0f, 3.0f);
 float vertexData[] = {
 
 	//----------------------------------------------//
@@ -300,7 +315,6 @@ void InfoDump()
 
 	GetSystemInfo(&sysInfo);
 
-	EngineInfo engineInfo;
 	engineInfo.LogEngineInfo();
 	string displayAdaptor(reinterpret_cast<const char*>(glGetString(GL_RENDERER)));
 	string glVersion(reinterpret_cast<const char*>(glGetString(GL_SHADING_LANGUAGE_VERSION)));
@@ -417,14 +431,15 @@ int main()
 	// Creates shader program
 	//---------------------//
 
-	Shader shader("VERTEX_SHADER.glsl", "FRAGMENT_SHADER.glsl");
+	Shader lightingShader("VERTEX_SHADER.glsl", "LIGHTING_FRAGMENT_SHADER.glsl");
 
 	//------------------------------------------------------------//
 	// Configuration of Vertex Array Object and Vertex Buffer Object
 	//------------------------------------------------------------//
 
-	unsigned int VAO, VBO, EBO, texture, texture2, ErrorTexture;
+	unsigned int lightVAO, VAO, VBO, EBO, texture, texture2, ErrorTexture;
 	glGenVertexArrays(1, &VAO);
+	glGenVertexArrays(1, &lightVAO);
 	glGenBuffers(1, &VBO);
 	glGenBuffers(1, &EBO);
 
@@ -433,11 +448,10 @@ int main()
 	glGenTextures(1, &texture2);
 
 	glBindVertexArray(VAO);
-
+	glBindVertexArray(lightVAO);
 
 	glBindBuffer(GL_ARRAY_BUFFER, VBO);
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
-
 
 	glBufferData(GL_ARRAY_BUFFER, sizeof(vertexData), vertexData, GL_STATIC_DRAW);
 	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indicies), indicies, GL_STATIC_DRAW);
@@ -479,7 +493,7 @@ int main()
 		glGenerateMipmap(GL_TEXTURE_2D);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, MODE_X);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, MODE_Y);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST_MIPMAP_LINEAR);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST_MIPMAP_NEAREST);
 	}
 	else
 	{
@@ -513,7 +527,6 @@ int main()
 	incrementValue *= 0.001f;
 	float mixValue = 0.0f;
 
-
 	glEnable(GL_DEPTH_TEST);
 	while (!glfwWindowShouldClose(window))
 	{
@@ -542,7 +555,7 @@ int main()
 			// rendering commands here
 			//----------------------//
 			//glClearColor(1, 0, 0.75f, 1);
-			glClearColor(0.1f, 0.1f, 0.1f, 1);
+			glClearColor(globalSceneLight.x / 15 * globalSceneLight.w, globalSceneLight.y / 15 * globalSceneLight.w, globalSceneLight.z / 15 * globalSceneLight.w, 1);
 			glClear(GL_COLOR_BUFFER_BIT);
 			glClear(GL_DEPTH_BUFFER_BIT);
 
@@ -553,42 +566,53 @@ int main()
 			glBindTexture(GL_TEXTURE_2D, texture2);
 
 			glBindVertexArray(VAO);
-
+			glBindVertexArray(lightVAO);
 
 			float sine_time = sin(glfwGetTime()) + 1;
 			float cosine_time = cos(glfwGetTime()) + 1;
 
 			mixValue = clamp(mixValue, 0, 1);
 
-			shader.use();
+			lightingShader.use();
 
-			shader.setMatrix("perspective", projectionMat);
-			shader.setMatrix("view", view);
+			lightingShader.setMatrix("perspective", projectionMat);
+			lightingShader.setMatrix("view", view);
 
-			shader.setVector("offset", 0, 0, 0, sine_time);
-			shader.setInt("MinionTexture", 0);
-			shader.setBool("wireframe", inWireframe);
-			shader.setInt("OtherTexture", 1);
+			lightingShader.setVector("offset", 0, 0, 0, sine_time);
 
-			shader.setFloat("vertTruncAmount", vertTruncAmount);
-			shader.setBool("truncVerts", truncVerts);
-			shader.setBool("error", textureError);
+			lightingShader.setInt("Texture", 0);
+			lightingShader.setVector("globalSceneLight", globalSceneLight.x, globalSceneLight.y, globalSceneLight.z, globalSceneLight.w);
 
-			shader.setFloat("time", glfwGetTime());
-			glDrawElements(GL_TRIANGLES, sizeof(vertexData), GL_UNSIGNED_INT, 0);
+			lightingShader.setBool("wireframe", inWireframe);
+			lightingShader.setInt("OtherTexture", 1);
 
-			//-----------------------------------------//
-			// Check and call events and swap the buffers
-			// (Front buffer is current frame, swaps to
-			// back buffer. Front buffer is cleared and
-			// becomes the new back buffer.)
-			//-----------------------------------------//
+			lightingShader.setFloat("vertTruncAmount", vertTruncAmount);
+			lightingShader.setBool("truncVerts", truncVerts);
+			lightingShader.setBool("error", textureError);
 
-			glfwSwapBuffers(window);
-			glfwPollEvents();
+			lightingShader.setFloat("time", glfwGetTime());
+
+
 			mat4 transformMatrix = mat4(1.0f);
-			transformMatrix = transform.TranslateMatrix(transformMatrix, -cubePos);
-			shader.setMatrix("model", transformMatrix);
+
+			for (int i = 0; i < ((sizeof(cubeData) / sizeof(cubeData[0])) / 3); i++)
+			{
+
+				mat4 model = transformMatrix;
+
+				model = transform.TranslateMatrix(model, cubeData[(-3 + ((i + 1) * 3))]);
+
+				model = rotate(model, cubeData[(-1 + ((i + 1) * 3))].x * (engineInfo.pi / 180), vec3(1.0f, 0.0f, 0.0f));
+				model = rotate(model, cubeData[(-1 + ((i + 1) * 3))].y * (engineInfo.pi / 180), vec3(0.0f, 1.0f, 0.0f));
+				model = rotate(model, cubeData[(-1 + ((i + 1) * 3))].z * (engineInfo.pi / 180), vec3(0.0f, 0.0f, 1.0f));
+
+				model = scale(model, cubeData[(-2 + ((i + 1) * 3))]);
+
+				lightingShader.setMatrix("model", model);
+
+				glDrawElements(GL_TRIANGLES, sizeof(vertexData), GL_UNSIGNED_INT, 0);
+			}
+
 			if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
 			{
 				Camera.Position += (Camera.SpeedMultiplier * (float)frameTime) * Camera.forward;
@@ -614,6 +638,17 @@ int main()
 			{
 				Camera.Position -= (Camera.SpeedMultiplier * (float)frameTime) * Camera.up;
 			}
+			if (glfwGetKey(window, GLFW_KEY_DOWN) == GLFW_PRESS)
+			{
+				globalSceneLight.w -= 1.0f * frameTime;
+			}
+			if (glfwGetKey(window, GLFW_KEY_UP) == GLFW_PRESS)
+			{
+				globalSceneLight.w += 1.0f * frameTime;
+			}
+
+			glfwSwapBuffers(window);
+			glfwPollEvents();
 
 			endOfFrameTime = glfwGetTime();
 			frameTime = endOfFrameTime - endOfFrameTimeLastFrame;

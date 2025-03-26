@@ -27,6 +27,12 @@ public:
 	unsigned int ID;
 	Shader(const char* VERTEX_SHADER_PATH, const char* FRAGMENT_SHADER_PATH)
 	{
+		bool vertexNull = false;
+		bool fragmentNull = false;
+		if (VERTEX_SHADER_PATH == "null")
+			vertexNull = true;
+		if (FRAGMENT_SHADER_PATH == "null")
+			fragmentNull = true;
 		string VERTEX_SHADER_CODE;
 		string FRAGMENT_SHADER_CODE;
 		ifstream VERTEX_SHADER_FILE;
@@ -36,18 +42,24 @@ public:
 		FRAGMENT_SHADER_FILE.exceptions(ifstream::badbit || ifstream::failbit);
 		try
 		{
-			VERTEX_SHADER_FILE.open(VERTEX_SHADER_PATH);
-			FRAGMENT_SHADER_FILE.open(FRAGMENT_SHADER_PATH);
-			stringstream VERTEX_SHADER_STREAM, FRAGMENT_SHADER_STREAM;
+			if (!vertexNull)
+			{
+				VERTEX_SHADER_FILE.open(VERTEX_SHADER_PATH);
+				stringstream VERTEX_SHADER_STREAM;
+				VERTEX_SHADER_STREAM << VERTEX_SHADER_FILE.rdbuf();
+				VERTEX_SHADER_FILE.close();
+				VERTEX_SHADER_CODE = VERTEX_SHADER_STREAM.str();
+			}
 
-			VERTEX_SHADER_STREAM << VERTEX_SHADER_FILE.rdbuf();
-			FRAGMENT_SHADER_STREAM << FRAGMENT_SHADER_FILE.rdbuf();
-
-			VERTEX_SHADER_FILE.close();
-			FRAGMENT_SHADER_FILE.close();
-
-			VERTEX_SHADER_CODE = VERTEX_SHADER_STREAM.str();
-			FRAGMENT_SHADER_CODE = FRAGMENT_SHADER_STREAM.str();
+			if (!fragmentNull)
+			{
+				FRAGMENT_SHADER_FILE.open(FRAGMENT_SHADER_PATH);
+				stringstream FRAGMENT_SHADER_STREAM;
+				FRAGMENT_SHADER_FILE.open(FRAGMENT_SHADER_PATH);
+				FRAGMENT_SHADER_STREAM << FRAGMENT_SHADER_FILE.rdbuf();
+				FRAGMENT_SHADER_FILE.close();
+				FRAGMENT_SHADER_CODE = FRAGMENT_SHADER_STREAM.str();
+			}
 		}
 		catch (ifstream::failure)
 		{
@@ -60,23 +72,33 @@ public:
 		//Vertex Shader
 
 		VERTEX_SHADER = glCreateShader(GL_VERTEX_SHADER);
-		glShaderSource(VERTEX_SHADER, 1, &VSHADER_SOURCE, NULL);
-		glCompileShader(VERTEX_SHADER);
-		
-		checkCompileErrors(VERTEX_SHADER, "VERTEX_SHADER");
+		FRAGMENT_SHADER = glCreateShader(GL_FRAGMENT_SHADER);
+
+		if (!vertexNull)
+		{
+			glShaderSource(VERTEX_SHADER, 1, &VSHADER_SOURCE, NULL);
+			glCompileShader(VERTEX_SHADER);
+
+			checkCompileErrors(VERTEX_SHADER, "VERTEX_SHADER");
+		}
 
 		//Fragment Shader
 
-		FRAGMENT_SHADER = glCreateShader(GL_FRAGMENT_SHADER);
-		glShaderSource(FRAGMENT_SHADER, 1, &FSHADER_SOURCE, NULL);
-		glCompileShader(FRAGMENT_SHADER);
+		if (!fragmentNull)
+		{
+			glShaderSource(FRAGMENT_SHADER, 1, &FSHADER_SOURCE, NULL);
+			glCompileShader(FRAGMENT_SHADER);
 
-		checkCompileErrors(FRAGMENT_SHADER, "FRAGMENT_SHADER");
+			checkCompileErrors(FRAGMENT_SHADER, "FRAGMENT_SHADER");
+		}
 
 		//Shader Program
 		ID = glCreateProgram();
-		glAttachShader(ID, VERTEX_SHADER);
-		glAttachShader(ID, FRAGMENT_SHADER);
+		if (!vertexNull)
+			glAttachShader(ID, VERTEX_SHADER);
+
+		if (!fragmentNull)
+			glAttachShader(ID, FRAGMENT_SHADER);
 		glLinkProgram(ID);
 
 		checkCompileErrors(ID, "PROGRAM");

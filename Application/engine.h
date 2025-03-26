@@ -8,6 +8,8 @@ public:
 	string EngineVer =		"0.0.1";
 	string EngineAuthor =   "Faye Kendall";
 
+	float pi = 3.1415926535;
+
 	void LogEngineInfo()
 	{
 
