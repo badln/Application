@@ -7,6 +7,7 @@
 
 //general stuff
 #include <iostream>
+
 #include "shader.h"
 #include "engine.h";
 #include "transform.h"
@@ -28,20 +29,15 @@ vec2 windowSize(650, 650);
 
 //Scene colours
 
-vec4 globalSceneLight (
-	1.0f,	//r
-	1.0f,   //g
-	1.0f,   //b
-	1.0f    //brightness
-);
+LightSource globalSceneLight;
+LightSource lightSource1;
 
 vec3 cubeData[]{
 	//     Positions        |         Scales        |       Rotations
-	vec3( 1.5f, 0.0f, -4.0f), vec3(1.0f, 5.0f, 1.0f), vec3(0.0f, 45.0f, 0.0f),
-	vec3(-0.5f, 0.0f, -3.0f), vec3(1.0f, 5.0f, 1.0f), vec3(45.0f, 0.0f, 0.0f),
+	vec3( 1.5f, 0.0f, -4.0f), vec3(5.0f, 5.0f, 5.0f), vec3(0.0f, 0.0f, 0.0f),
+	vec3(-0.5f, 0.0f, -3.0f), vec3(5.0f, 5.0f, 5.0f), vec3(0.0f, 0.0f, 0.0f),
 };
-
-float vertTruncAmount = 7;
+float vertTruncAmount = 10;
 bool truncVerts = false;
 
 bool downArrowPressed, upArrowPressed, leftArrowPressed, rightArrowPressed, spacePressed, ctrlPressed, escPressed, inWireframe = false;
@@ -62,13 +58,48 @@ bool looking = true;
 float nearClipPlane = 0.1f;
 float farClipPlane = 100.0f;
 float fieldOfView = 45;
-float desiredFramerate = 144;
-float desiredFrametime = 1 / desiredFramerate;
+float desiredFrametime = 1 / engineInfo.desiredFramerate;
 double frameTime, endOfFrameTime, endOfFrameTimeLastFrame;
 float frameRate;
 
 mat4 orthoscopicMat;
 mat4 projectionMat;
+
+void DoAnimation(bool flag)
+{
+	if (!flag)
+	{
+		return;
+	}
+	cubeData[6].x += frameTime;
+	cubeData[9].x += frameTime;
+	cubeData[12].x += frameTime;
+
+	if (cubeData[6].x > -1.85f && cubeData[3].y > -4.5f)
+	{
+		cubeData[3].y -= frameTime * 3;
+		cubeData[4].y -= frameTime * 3;
+	}
+
+	if (cubeData[6].x > 0.15f && cubeData[0].y > -4.5f)
+	{
+		cubeData[0].y -= frameTime * 3;
+		cubeData[1].y -= frameTime * 3;
+	}
+
+	if (cubeData[6].x > 4)
+	{
+		cubeData[0].y = 0;
+		cubeData[1].y = 5;
+		cubeData[3].y = 0;
+		cubeData[4].y = 5;
+		cubeData[6].x = -4.0f;
+		cubeData[9].x = -3.75f;
+		cubeData[12].x = -5.0f;
+	}
+
+}
+
 
 struct {
 	vec3 zero = vec3(0.0f);
@@ -107,45 +138,50 @@ float AddRotation, xAngle, yAngle = 0;
 
 float vertexData[] = {
 
-	//----------------------------------------------//
-	// Vertex Position | Vertex Colour  |  TexCoords
-	//----------------------------------------------//
-	 0.5f,  0.5f,-0.5f, 1.0f, 0.0f, 0.0f,  1.0f,  1.0f,
-	 0.5f, -0.5f,-0.5f, 1.0f, 1.0f, 0.0f,  1.0f,  0.0f,
-	-0.5f, -0.5f,-0.5f, 0.0f, 1.0f, 0.0f,  0.0f,  0.0f,
-	-0.5f,  0.5f,-0.5f, 0.0f, 0.0f, 1.0f,  0.0f,  1.0f,
-	-0.5f,  0.5f, 0.5f, 0.0f, 0.0f, 0.0f,  1.0f,  1.0f,
-	-0.5f, -0.5f, 0.5f, 0.0f, 0.0f, 0.0f,  1.0f,  0.0f,
-	-0.5f,  0.5f, 0.5f, 0.0f, 0.0f, 0.0f,  0.0f,  0.0f,
-	 0.5f,  0.5f, 0.5f, 0.0f, 0.0f, 0.0f,  1.0f,  0.0f,
-	 0.5f, -0.5f, 0.5f, 0.0f, 0.0f, 0.0f,  0.0f,  0.0f,
-	 0.5f,  0.5f, 0.5f, 0.0f, 0.0f, 0.0f,  0.0f,  1.0f,
+	//---------------------------------------------------//
+	// Vertex Position  |   Vertex Normals   | TexCoords
+	//---------------------------------------------------//
+	-0.5f, -0.5f, -0.5f,  0.0f,  0.0f, -1.0f,  0.0f,  0.0f,
+	 0.5f, -0.5f, -0.5f,  0.0f,  0.0f, -1.0f,  1.0f,  0.0f,
+	 0.5f,  0.5f, -0.5f,  0.0f,  0.0f, -1.0f,  1.0f,  1.0f,
+	 0.5f,  0.5f, -0.5f,  0.0f,  0.0f, -1.0f,  1.0f,  1.0f,
+	-0.5f,  0.5f, -0.5f,  0.0f,  0.0f, -1.0f,  0.0f,  1.0f,
+	-0.5f, -0.5f, -0.5f,  0.0f,  0.0f, -1.0f,  0.0f,  0.0f,
 
-	-0.5f, -0.5f, 0.5f, 0.0f, 0.0f, 0.0f,  0.0f,  1.0f,
-	 0.5f, -0.5f, 0.5f, 0.0f, 0.0f, 0.0f,  1.0f,  1.0f,
-	 0.5f,  0.5f, 0.5f, 1.0f, 0.0f, 0.0f,  1.0f,  1.0f,
-	 0.5f, -0.5f, 0.5f, 1.0f, 1.0f, 0.0f,  1.0f,  0.0f,
-	-0.5f, -0.5f, 0.5f, 0.0f, 1.0f, 0.0f,  0.0f,  0.0f,
-	-0.5f,  0.5f, 0.5f, 0.0f, 0.0f, 1.0f,  0.0f,  1.0f,
+	-0.5f, -0.5f,  0.5f,  0.0f,  0.0f,  1.0f,  0.0f,  0.0f,
+	 0.5f, -0.5f,  0.5f,  0.0f,  0.0f,  1.0f,  1.0f,  0.0f,
+	 0.5f,  0.5f,  0.5f,  0.0f,  0.0f,  1.0f,  1.0f,  1.0f,
+	 0.5f,  0.5f,  0.5f,  0.0f,  0.0f,  1.0f,  1.0f,  1.0f,
+	-0.5f,  0.5f,  0.5f,  0.0f,  0.0f,  1.0f,  0.0f,  1.0f,
+	-0.5f, -0.5f,  0.5f,  0.0f,  0.0f,  1.0f,  0.0f,  0.0f,
 
-};
-unsigned int indicies[] = {
+	-0.5f,  0.5f,  0.5f, -1.0f,  0.0f,  0.0f,  1.0f,  0.0f,
+	-0.5f,  0.5f, -0.5f, -1.0f,  0.0f,  0.0f,  1.0f,  1.0f,
+	-0.5f, -0.5f, -0.5f, -1.0f,  0.0f,  0.0f,  0.0f,  1.0f,
+	-0.5f, -0.5f, -0.5f, -1.0f,  0.0f,  0.0f,  0.0f,  1.0f,
+	-0.5f, -0.5f,  0.5f, -1.0f,  0.0f,  0.0f,  0.0f,  0.0f,
+	-0.5f,  0.5f,  0.5f, -1.0f,  0.0f,  0.0f,  1.0f,  0.0f,
 
-	//-----------------------------------------//
-	// Defines which verts apply to what triangle
-	//-----------------------------------------//
-	0,  1,  3, // first triangle
-	1,  2,  3, // second triangle
-	2,  3,  4,
-	2,  4,  5,
-	0,  3,  7,
-	3,  7,  6,
-	1,  0,  8,
-	0,  8,  9,
-	1,  2,  10,
-	1,  10, 11,
-	12, 13, 15,
-	13, 14, 15,
+	 0.5f,  0.5f,  0.5f,  1.0f,  0.0f,  0.0f,  1.0f,  0.0f,
+	 0.5f,  0.5f, -0.5f,  1.0f,  0.0f,  0.0f,  1.0f,  1.0f,
+	 0.5f, -0.5f, -0.5f,  1.0f,  0.0f,  0.0f,  0.0f,  1.0f,
+	 0.5f, -0.5f, -0.5f,  1.0f,  0.0f,  0.0f,  0.0f,  1.0f,
+	 0.5f, -0.5f,  0.5f,  1.0f,  0.0f,  0.0f,  0.0f,  0.0f,
+	 0.5f,  0.5f,  0.5f,  1.0f,  0.0f,  0.0f,  1.0f,  0.0f,
+
+	-0.5f, -0.5f, -0.5f,  0.0f, -1.0f,  0.0f,  0.0f,  1.0f,
+	 0.5f, -0.5f, -0.5f,  0.0f, -1.0f,  0.0f,  1.0f,  1.0f,
+	 0.5f, -0.5f,  0.5f,  0.0f, -1.0f,  0.0f,  1.0f,  0.0f,
+	 0.5f, -0.5f,  0.5f,  0.0f, -1.0f,  0.0f,  1.0f,  0.0f,
+	-0.5f, -0.5f,  0.5f,  0.0f, -1.0f,  0.0f,  0.0f,  0.0f,
+	-0.5f, -0.5f, -0.5f,  0.0f, -1.0f,  0.0f,  0.0f,  1.0f,
+
+	-0.5f,  0.5f, -0.5f,  0.0f,  1.0f,  0.0f,  0.0f,  1.0f,
+	 0.5f,  0.5f, -0.5f,  0.0f,  1.0f,  0.0f,  1.0f,  1.0f,
+   	 0.5f,  0.5f,  0.5f,  0.0f,  1.0f,  0.0f,  1.0f,  0.0f,
+	 0.5f,  0.5f,  0.5f,  0.0f,  1.0f,  0.0f,  1.0f,  0.0f,
+	-0.5f,  0.5f,  0.5f,  0.0f,  1.0f,  0.0f,  0.0f,  0.0f,
+	-0.5f,  0.5f, -0.5f,  0.0f,  1.0f,  0.0f,  0.0f,  1.0f
 
 };
 
@@ -382,6 +418,8 @@ void GenErrorTex(unsigned char* ErrorTex, int texture)
 		textureError = true;
 	}
 }
+
+
 int main()
 {
 	//--------------------------//
@@ -454,7 +492,6 @@ int main()
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
 
 	glBufferData(GL_ARRAY_BUFFER, sizeof(vertexData), vertexData, GL_STATIC_DRAW);
-	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indicies), indicies, GL_STATIC_DRAW);
 
 	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)0);
 	glEnableVertexAttribArray(0);
@@ -464,7 +501,6 @@ int main()
 
 	glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(6 * sizeof(float)));
 	glEnableVertexAttribArray(2);
-
 
 	int width, height, nrChannels;
 	int width2, height2, nrChannels2;
@@ -501,33 +537,27 @@ int main()
 		Console.PushError("Texture not found or improperly loaded!");
 	}
 
-
-	/*
-	if (imageData2)
-	{
-		glBindTexture(GL_TEXTURE_2D, texture2);
-		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width2, height2, 0, GL_RGBA, GL_UNSIGNED_BYTE, imageData2);
-		glGenerateMipmap(GL_TEXTURE_2D);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, MODE_X);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, MODE_Y);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST_MIPMAP_LINEAR);
-	}
-	else
-	{
-		std::cout << "Image data (texture 2) not correctly loaded!\n";
-	}*/
 	stbi_image_free(imageData);
-	//stbi_image_free(imageData2);
-
 
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
 	glBindVertexArray(0);
 
 	float incrementValue = 1.0f;
 	incrementValue *= 0.001f;
-	float mixValue = 0.0f;
 
 	glEnable(GL_DEPTH_TEST);
+
+	globalSceneLight.colour = vec4(1.0f, 1.0f, 1.0f, 1.0f);
+	globalSceneLight.position = vec3(0.0f, 0.0f, 0.0f);
+	globalSceneLight.rotation = vec3(0.8f, 1.3f, 0.0f);
+
+	Material mat;
+	mat.ambient = 0.1f;
+	mat.diffuse = 1;
+	mat.shininess = 1;
+	mat.specular = 0.5f;
+	mat.colour = vec4(1.0f, 1.0f, 0.0f, 1.0f);
+
 	while (!glfwWindowShouldClose(window))
 	{
 
@@ -545,6 +575,8 @@ int main()
 
 		if (glfwGetTime() > endOfFrameTime + desiredFrametime)
 		{
+			globalSceneLight.position.x = sin(glfwGetTime()) * 10;
+			//globalSceneLight.position = Camera.Position;
 			//---------------//
 			// handling inputs
 			//---------------//
@@ -555,33 +587,36 @@ int main()
 			// rendering commands here
 			//----------------------//
 			//glClearColor(1, 0, 0.75f, 1);
-			glClearColor(globalSceneLight.x / 15 * globalSceneLight.w, globalSceneLight.y / 15 * globalSceneLight.w, globalSceneLight.z / 15 * globalSceneLight.w, 1);
+			glClearColor(globalSceneLight.colour.x / 15 * globalSceneLight.colour.w, globalSceneLight.colour.y / 15 * globalSceneLight.colour.w, globalSceneLight.colour.z / 15 * globalSceneLight.colour.w, 1);
 			glClear(GL_COLOR_BUFFER_BIT);
 			glClear(GL_DEPTH_BUFFER_BIT);
 
 			glActiveTexture(GL_TEXTURE0);
 			glBindTexture(GL_TEXTURE_2D, texture);
 
-			glActiveTexture(GL_TEXTURE1);
-			glBindTexture(GL_TEXTURE_2D, texture2);
-
 			glBindVertexArray(VAO);
 			glBindVertexArray(lightVAO);
 
-			float sine_time = sin(glfwGetTime()) + 1;
-			float cosine_time = cos(glfwGetTime()) + 1;
+			/*
+			float rainbowTime = 10.0f;
+			globalSceneLight.x = (sin((glfwGetTime() * rainbowTime) + 1) + 1) / 2;
+			globalSceneLight.y = (sin((glfwGetTime() * rainbowTime) + 3) + 1) / 2;
+			globalSceneLight.z = (sin((glfwGetTime() * rainbowTime) + 5) + 1) / 2;
 
-			mixValue = clamp(mixValue, 0, 1);
+			DoAnimation(true);
+			*/
 
 			lightingShader.use();
 
 			lightingShader.setMatrix("perspective", projectionMat);
 			lightingShader.setMatrix("view", view);
 
-			lightingShader.setVector("offset", 0, 0, 0, sine_time);
-
 			lightingShader.setInt("Texture", 0);
-			lightingShader.setVector("globalSceneLight", globalSceneLight.x, globalSceneLight.y, globalSceneLight.z, globalSceneLight.w);
+			lightingShader.setVector("globalSceneLight", globalSceneLight.colour.x, globalSceneLight.colour.y, globalSceneLight.colour.z, globalSceneLight.colour.w);
+			lightingShader.setVector("globalSceneLightPos", globalSceneLight.position.x, globalSceneLight.position.y, globalSceneLight.position.z);
+			lightingShader.setVector("cameraPos", Camera.Position.x, Camera.Position.y, Camera.Position.z);
+
+			lightingShader.setMaterial("mat", mat);
 
 			lightingShader.setBool("wireframe", inWireframe);
 			lightingShader.setInt("OtherTexture", 1);
@@ -610,7 +645,7 @@ int main()
 
 				lightingShader.setMatrix("model", model);
 
-				glDrawElements(GL_TRIANGLES, sizeof(vertexData), GL_UNSIGNED_INT, 0);
+				glDrawArrays(GL_TRIANGLES, 0, 36);
 			}
 
 			if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
@@ -640,11 +675,11 @@ int main()
 			}
 			if (glfwGetKey(window, GLFW_KEY_DOWN) == GLFW_PRESS)
 			{
-				globalSceneLight.w -= 1.0f * frameTime;
+				globalSceneLight.colour.w -= 1.0f * frameTime;
 			}
 			if (glfwGetKey(window, GLFW_KEY_UP) == GLFW_PRESS)
 			{
-				globalSceneLight.w += 1.0f * frameTime;
+				globalSceneLight.colour.w += 1.0f * frameTime;
 			}
 
 			glfwSwapBuffers(window);

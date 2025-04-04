@@ -1,12 +1,12 @@
 #version 330 core
 layout (location = 0) in vec3 aPos;
-layout (location = 1) in vec3 aColour;
+layout (location = 1) in vec3 aNormal;
 layout (location = 2) in vec2 aTexCoord;
 
-out vec4 vertex_colour;
 out vec2 TexCoord;
-
-uniform vec4 offset;
+out vec3 FragPos;
+out vec3 Normal;
+out vec3 Position;
 
 uniform mat4 model = mat4(1.0f);
 uniform mat4 view = mat4(1.0f);
@@ -22,8 +22,8 @@ float truncate(float num, float place)
 
 void main()
 {
-   gl_Position = mat4(2) * vec4(aPos.x, aPos.y, aPos.z, 1.0f); // + offset;
-   gl_Position = perspective * view * model * gl_Position;
+   FragPos = vec3(model * vec4(aPos, 1.0f));
+   gl_Position = perspective * view * vec4(FragPos, 1.0f);
    if (truncVerts)
    {
        gl_Position = vec4(
@@ -33,6 +33,7 @@ void main()
 			truncate(gl_Position.w, vertTruncAmount)
 			);
    }
-   vertex_colour = vec4(aColour, 1.0f);
    TexCoord = aTexCoord;
+   Normal = mat3(transpose(inverse(model))) * aNormal;
+   Position = vec3(gl_Position.x, gl_Position.y, gl_Position.z);
 };

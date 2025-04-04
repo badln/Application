@@ -2,9 +2,10 @@
 
 out vec4 FragColor;
 
-in vec4 vertex_colour;
-in vec4 vertex_position_frag;
+in vec3 Position;
 in vec2 TexCoord;
+in vec3 FragPos;
+in vec3 Normal;
 
 uniform float time;
 uniform sampler2D Texture;
@@ -12,10 +13,22 @@ uniform sampler2D OtherTexture;
 uniform float mixAmount;
 uniform bool wireframe;
 uniform bool error;
+uniform vec3 cameraPos;
 
 uniform vec4 globalSceneLight;
+uniform vec4 globalSceneLightPos;
 
 uniform vec3 wireframeCol = vec3(1, 1, 1);  //White by default
+
+struct Material
+{
+    float ambient;
+	float diffuse;
+	float specular;
+	float shininess;
+    vec4 colour;
+};
+uniform Material mat;
 
 float timeMultiplier = 2.5f;
 float flip(float num)
@@ -52,8 +65,6 @@ void main()
     }
     else
     {
-        //FragColor = texture(MinionTexture, TexCoord);
-    
         if (error)
         {
             FragColor = mix(texture(Texture, TexCoord), Checkerboard(), 0.5f); 
@@ -61,7 +72,30 @@ void main()
         }
         else
         {
-            FragColor = (texture(Texture, TexCoord) * globalSceneLight.w) * globalSceneLight;
+            //diffuse
+            float diffuseAmount = mat.diffuse * globalSceneLight.w;
+            vec3 normal = normalize(Normal);
+            vec3 globalLightDir = normalize(vec3(globalSceneLightPos.x, globalSceneLightPos.y, globalSceneLightPos.z) - FragPos);
+            float diff = max(dot(normal, globalLightDir), 0.0f);
+            vec4 diffuse = diff * globalSceneLight * diffuseAmount * globalSceneLight.w;
+
+            //specular
+            float specularStrength = mat.specular * globalSceneLight.w;
+            vec3 viewDir = normalize(cameraPos - FragPos);
+            vec3 reflectDir = reflect(-globalLightDir, normal);
+            float f_specular = pow(max(dot(viewDir, reflectDir),0),32);
+            vec4 specular = f_specular * globalSceneLight * specularStrength;
+
+            //ambient
+            float ambientStrength = mat.ambient * globalSceneLight.w;
+            vec4 ambient = ambientStrength * globalSceneLight;
+            vec4 pixelColours = texture(Texture, TexCoord);
+            
+            pixelColours = (ambient + diffuse + specular) * pixelColours;
+            pixelColours *= mat.colour;
+
+            //FragColor = vec4(normal * 0.5 + 0.5, 1.0);w
+            FragColor = vec4(pixelColours.x, pixelColours.y, pixelColours.z, 1.0f);
         }
         
     }

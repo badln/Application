@@ -5,6 +5,7 @@
     <ClCompile Include="main.cpp" />
     <ClCompile Include="transform.h" />
     <ClCompile Include="engine.h" />
+    <ClCompile Include="surfaces.h" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="resource.h" />
@@ -23,7 +24,6 @@
     <Image Include="IMG_2209.ico" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="FRAGMENT_SHADER.glsl" />
     <None Include="VERTEX_SHADER.glsl" />
     <None Include="LIGHTING_FRAGMENT_SHADER.glsl" />
   </ItemGroup>

@@ -8,6 +8,7 @@
 #include <sstream>
 #include <string>
 #include <vector>
+#include "surfaces.h"
 
 #include "GLFW/Include/glm/glm.hpp"
 #include "GLFW/Include/glm/gtc/matrix_transform.hpp"
@@ -133,6 +134,17 @@ public:
 	void setMatrix(const string& name, glm::mat4 matrix)
 	{
 		glUniformMatrix4fv(glGetUniformLocation(ID, name.c_str()), 1, GL_FALSE, glm::value_ptr(matrix));
+	}
+	void setMaterial(const string& name, Material material)
+	{
+		setFloat(name + ".diffuse",   material.diffuse);
+		setFloat(name + ".specular",  material.specular);
+		setFloat(name + ".ambient",   material.ambient);
+		setFloat(name + ".shininess", material.shininess);
+		setVector(name + ".colour",   material.colour.x,
+									  material.colour.y, 
+									  material.colour.z, 
+									  material.colour.w);
 	}
 private:
 
