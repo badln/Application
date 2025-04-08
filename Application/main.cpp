@@ -34,8 +34,8 @@ LightSource lightSource1;
 
 vec3 cubeData[]{
 	//     Positions        |         Scales        |       Rotations
-	vec3( 1.5f, 0.0f, -4.0f), vec3(5.0f, 5.0f, 5.0f), vec3(0.0f, 0.0f, 0.0f),
-	vec3(-0.5f, 0.0f, -3.0f), vec3(5.0f, 5.0f, 5.0f), vec3(0.0f, 0.0f, 0.0f),
+	vec3( 2.5f, 1.0f, -4.0f), vec3(5.0f, 5.0f, 5.0f), vec3(0.0f, 0.0f, 0.0f),
+	vec3(-2.5f, -1.0f, -3.0f), vec3(5.0f, 5.0f, 5.0f), vec3(0.0f, 0.0f, 0.0f),
 };
 float vertTruncAmount = 10;
 bool truncVerts = false;
@@ -50,6 +50,8 @@ float mouseYaw = -90.0f;
 float mousePitch = 0.0f;
 const float MouseSensitivity = 0.1f;
 void mouse_callback(GLFWwindow* window, double xpos, double ypos);
+void scroll_callback(GLFWwindow* window, double xOffset, double yOffset);
+float scrollDir;
 float xpos_LF = windowSize.x / 2;
 float ypos_LF = windowSize.y / 2;
 bool firstMouse = true;
@@ -58,47 +60,12 @@ bool looking = true;
 float nearClipPlane = 0.1f;
 float farClipPlane = 100.0f;
 float fieldOfView = 45;
-float desiredFrametime = 1 / engineInfo.desiredFramerate;
+float desiredFrametime = 1 / (engineInfo.desiredFramerate + 1);
 double frameTime, endOfFrameTime, endOfFrameTimeLastFrame;
 float frameRate;
 
 mat4 orthoscopicMat;
 mat4 projectionMat;
-
-void DoAnimation(bool flag)
-{
-	if (!flag)
-	{
-		return;
-	}
-	cubeData[6].x += frameTime;
-	cubeData[9].x += frameTime;
-	cubeData[12].x += frameTime;
-
-	if (cubeData[6].x > -1.85f && cubeData[3].y > -4.5f)
-	{
-		cubeData[3].y -= frameTime * 3;
-		cubeData[4].y -= frameTime * 3;
-	}
-
-	if (cubeData[6].x > 0.15f && cubeData[0].y > -4.5f)
-	{
-		cubeData[0].y -= frameTime * 3;
-		cubeData[1].y -= frameTime * 3;
-	}
-
-	if (cubeData[6].x > 4)
-	{
-		cubeData[0].y = 0;
-		cubeData[1].y = 5;
-		cubeData[3].y = 0;
-		cubeData[4].y = 5;
-		cubeData[6].x = -4.0f;
-		cubeData[9].x = -3.75f;
-		cubeData[12].x = -5.0f;
-	}
-
-}
 
 
 struct {
@@ -113,6 +80,15 @@ struct {
 
 	vec3 up = vec3(0.0f, 1.0f, 0.0f);
 	vec3 down = vec3(0.0f, -1.0f, 0.0f);
+
+	float Distance(vec3 v, vec3 w)
+	{
+		float x = pow((v.x - w.x), 2); 
+		float y = pow((v.y - w.y), 2);
+		float z = pow((v.z - w.z), 2);
+
+		return sqrt(x + y + z);
+	}
 }Vector3;
 
 struct {
@@ -204,6 +180,10 @@ void UpdateWindowSize(GLFWwindow* window)
 	glfwGetWindowSize(window, &width, &height);
 	windowSize.x = width;
 	windowSize.y = height;
+}
+void scroll_callback(GLFWwindow* window, double xOffset, double yOffset)
+{
+	scrollDir = yOffset;
 }
 void mouse_callback(GLFWwindow* window, double xposIn, double yposIn)
 {
@@ -464,19 +444,21 @@ int main()
 	InfoDump();
 	glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 	glfwSetCursorPosCallback(window, mouse_callback);
+	glfwSetScrollCallback(window, scroll_callback);
 
 	//---------------------//
 	// Creates shader program
 	//---------------------//
 
 	Shader lightingShader("VERTEX_SHADER.glsl", "LIGHTING_FRAGMENT_SHADER.glsl");
+	Shader lightGizmo("LIGHT_GIZMO_VERT.glsl", "LIGHT_GIZMO_FRAG.glsl");
 
 	//------------------------------------------------------------//
 	// Configuration of Vertex Array Object and Vertex Buffer Object
 	//------------------------------------------------------------//
 
-	unsigned int lightVAO, VAO, VBO, EBO, texture, texture2, ErrorTexture;
-	glGenVertexArrays(1, &VAO);
+	unsigned int lightVAO, cubeVAO, VBO, EBO, texture, texture2, ErrorTexture;
+	glGenVertexArrays(1, &cubeVAO);
 	glGenVertexArrays(1, &lightVAO);
 	glGenBuffers(1, &VBO);
 	glGenBuffers(1, &EBO);
@@ -485,13 +467,27 @@ int main()
 	glGenTextures(1, &texture);
 	glGenTextures(1, &texture2);
 
-	glBindVertexArray(VAO);
-	glBindVertexArray(lightVAO);
-
 	glBindBuffer(GL_ARRAY_BUFFER, VBO);
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
 
 	glBufferData(GL_ARRAY_BUFFER, sizeof(vertexData), vertexData, GL_STATIC_DRAW);
+	
+	//cubeVAO
+
+	glBindVertexArray(cubeVAO);
+
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)0);
+	glEnableVertexAttribArray(0);
+
+	glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(3 * sizeof(float)));
+	glEnableVertexAttribArray(1);
+
+	glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(6 * sizeof(float)));
+	glEnableVertexAttribArray(2);
+
+	//lightVAO
+
+	glBindVertexArray(lightVAO);
 
 	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)0);
 	glEnableVertexAttribArray(0);
@@ -548,15 +544,31 @@ int main()
 	glEnable(GL_DEPTH_TEST);
 
 	globalSceneLight.colour = vec4(1.0f, 1.0f, 1.0f, 1.0f);
-	globalSceneLight.position = vec3(0.0f, 0.0f, 0.0f);
-	globalSceneLight.rotation = vec3(0.8f, 1.3f, 0.0f);
+	globalSceneLight.position = vec3(0);
+	
+	globalSceneLight.ambient  = vec3(0.2f, 0.2f, 0.2f);
+	globalSceneLight.diffuse  = vec3(0.5f, 0.5f, 0.5f);
+	globalSceneLight.specular = vec3(1.0f, 1.0f, 1.0f);
 
-	Material mat;
-	mat.ambient = 0.1f;
-	mat.diffuse = 1;
-	mat.shininess = 1;
-	mat.specular = 0.5f;
-	mat.colour = vec4(1.0f, 1.0f, 0.0f, 1.0f);
+	Material redPlastic;
+	redPlastic.ambient  = vec3(0.1f, 0.1f, 0.1f);
+	redPlastic.diffuse  = vec3(0.5f, 0, 0);
+	redPlastic.specular = vec3(0.7f, 0.6f,	0.6f);
+
+	redPlastic.shininess = 0.25f;
+	redPlastic.colour = vec4(1.0f, 1.0f, 1.0f, 1.0f);
+	redPlastic.SetTexture(0, true);
+
+	Material silver;
+	silver.ambient = vec3(0.19225f, 0.19225f, 0.19225f);
+	silver.diffuse = vec3(0.50754f,	0.50754f, 0.50754f);
+	silver.specular = vec3(0.508273f,0.508273f,0.508273f);
+
+	silver.shininess = 0.4f;
+	silver.colour = vec4(1.0f, 1.0f, 1.0f, 1.0f);
+	silver.SetTexture(0, false);
+
+	float lightDistanceToCam;
 
 	while (!glfwWindowShouldClose(window))
 	{
@@ -575,8 +587,6 @@ int main()
 
 		if (glfwGetTime() > endOfFrameTime + desiredFrametime)
 		{
-			globalSceneLight.position.x = sin(glfwGetTime()) * 10;
-			//globalSceneLight.position = Camera.Position;
 			//---------------//
 			// handling inputs
 			//---------------//
@@ -593,33 +603,24 @@ int main()
 
 			glActiveTexture(GL_TEXTURE0);
 			glBindTexture(GL_TEXTURE_2D, texture);
-
-			glBindVertexArray(VAO);
-			glBindVertexArray(lightVAO);
-
-			/*
-			float rainbowTime = 10.0f;
-			globalSceneLight.x = (sin((glfwGetTime() * rainbowTime) + 1) + 1) / 2;
-			globalSceneLight.y = (sin((glfwGetTime() * rainbowTime) + 3) + 1) / 2;
-			globalSceneLight.z = (sin((glfwGetTime() * rainbowTime) + 5) + 1) / 2;
-
-			DoAnimation(true);
-			*/
+			glBindVertexArray(cubeVAO);
+			
+			float rainbowTime = 1.0f;
+			//globalSceneLight.colour.x = (sin((glfwGetTime() * rainbowTime) + 1) + 1) / 2;
+			//globalSceneLight.colour.y = (sin((glfwGetTime() * rainbowTime) + 3) + 1) / 2;
+			//globalSceneLight.colour.z = (sin((glfwGetTime() * rainbowTime) + 5) + 1) / 2;
 
 			lightingShader.use();
 
-			lightingShader.setMatrix("perspective", projectionMat);
+			lightingShader.setMatrix("projection", projectionMat);
 			lightingShader.setMatrix("view", view);
 
-			lightingShader.setInt("Texture", 0);
-			lightingShader.setVector("globalSceneLight", globalSceneLight.colour.x, globalSceneLight.colour.y, globalSceneLight.colour.z, globalSceneLight.colour.w);
-			lightingShader.setVector("globalSceneLightPos", globalSceneLight.position.x, globalSceneLight.position.y, globalSceneLight.position.z);
 			lightingShader.setVector("cameraPos", Camera.Position.x, Camera.Position.y, Camera.Position.z);
 
-			lightingShader.setMaterial("mat", mat);
+			lightingShader.setMaterial("mat", silver);
+			lightingShader.setLight("globalSceneLight", globalSceneLight);
 
 			lightingShader.setBool("wireframe", inWireframe);
-			lightingShader.setInt("OtherTexture", 1);
 
 			lightingShader.setFloat("vertTruncAmount", vertTruncAmount);
 			lightingShader.setBool("truncVerts", truncVerts);
@@ -627,9 +628,7 @@ int main()
 
 			lightingShader.setFloat("time", glfwGetTime());
 
-
 			mat4 transformMatrix = mat4(1.0f);
-
 			for (int i = 0; i < ((sizeof(cubeData) / sizeof(cubeData[0])) / 3); i++)
 			{
 
@@ -647,6 +646,21 @@ int main()
 
 				glDrawArrays(GL_TRIANGLES, 0, 36);
 			}
+			//light gizmo
+			lightGizmo.use();
+
+			lightGizmo.setMatrix("view", view);
+			lightGizmo.setMatrix("projection", projectionMat);
+
+			mat4 lightGizmoCube = transformMatrix;
+			lightGizmoCube = transform.ScaleMatrix(lightGizmoCube, vec3(0.2f));
+			lightGizmoCube = transform.TranslateMatrix(lightGizmoCube, globalSceneLight.position);
+			lightGizmo.setMatrix("model", lightGizmoCube);
+
+			lightGizmo.setVector("lightGizmoColour", globalSceneLight.colour.x, globalSceneLight.colour.y, globalSceneLight.colour.z, globalSceneLight.colour.w);
+
+			glBindVertexArray(lightVAO);
+			glDrawArrays(GL_TRIANGLES, 0, 36);
 
 			if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
 			{
@@ -681,7 +695,16 @@ int main()
 			{
 				globalSceneLight.colour.w += 1.0f * frameTime;
 			}
-
+			if (glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_RIGHT) == GLFW_PRESS)
+			{
+				lightDistanceToCam = clamp((lightDistanceToCam + scrollDir / 10), 1, 20);
+				vec3 camForward = Camera.Position + Camera.forward * lightDistanceToCam;
+				globalSceneLight.position = camForward;
+			}
+			else {
+				lightDistanceToCam = Vector3.Distance(globalSceneLight.position, Camera.Position);
+			}
+			scrollDir = 0;
 			glfwSwapBuffers(window);
 			glfwPollEvents();
 
@@ -689,7 +712,8 @@ int main()
 			frameTime = endOfFrameTime - endOfFrameTimeLastFrame;
 			frameRate = 1 / frameTime;
 			//cout << "Frametime: " << frameTime << ", Framerate: " << frameRate << "\n";
-			//cout << "Framerate: " << frameRate << "\n";
+			Console.PushLine(to_string(frameRate));
+			
 
 			//----------------------------------------------------------------------------------------------------//
 			//                                            END OF FRAME
@@ -697,8 +721,9 @@ int main()
 
 			endOfFrameTimeLastFrame = endOfFrameTime;
 		}
-
 	}
+	glDeleteVertexArrays(1, &cubeVAO);
+	glDeleteVertexArrays(1, &lightVAO);
 	glfwTerminate();
 
 	return 0;

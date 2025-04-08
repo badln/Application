@@ -16,6 +16,18 @@ public:
 			cout << newStr;
 		}
 	}
+	void PushLine(vec2 vec, bool newLine = true, int col = 37)
+	{
+		PushLine(to_string(vec.x) + ", " + to_string(vec.y));
+	}
+	void PushLine(vec3 vec, bool newLine = true, int col = 37)
+	{
+		PushLine(to_string(vec.x) + ", " + to_string(vec.y) + ", " + to_string(vec.z));
+	}
+	void PushLine(vec4 vec, bool newLine = true, int col = 37)
+	{
+		PushLine(to_string(vec.x) + ", " + to_string(vec.y) + ", " + to_string(vec.z) + ", " + to_string(vec.w));
+	}
 	void PushError(string str, bool newLine = true)
 	{
 		PushLine(str, newLine, 31);

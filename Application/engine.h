@@ -7,13 +7,12 @@ public:
 	string EngineName =	    "Graphics Engine";
 	string EngineVer =		"0.0.1";
 	string EngineAuthor =   "Faye Kendall";
-	float desiredFramerate = 60;
+	float desiredFramerate = 1000;
 
 	float pi = 3.1415926535;
 
 	void LogEngineInfo()
 	{
-
 		cout << EngineName << " Version " << EngineVer << ", Written by " << EngineAuthor << endl;
 	}
 };

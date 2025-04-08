@@ -5,7 +5,7 @@
     <ClCompile Include="main.cpp" />
     <ClCompile Include="transform.h" />
     <ClCompile Include="engine.h" />
-    <ClCompile Include="surfaces.h" />
+    <ClCompile Include="objects.h" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="resource.h" />
@@ -18,18 +18,31 @@
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <ResourceCompile Include="Application.rc" />
-  </ItemGroup>
-  <ItemGroup>
     <Image Include="IMG_2209.ico" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="VERTEX_SHADER.glsl" />
-    <None Include="LIGHTING_FRAGMENT_SHADER.glsl" />
+    <None Include="VERTEX_SHADER.glsl">
+      <Filter>Shaders</Filter>
+    </None>
+    <None Include="LIGHTING_FRAGMENT_SHADER.glsl">
+      <Filter>Shaders</Filter>
+    </None>
+    <None Include="LIGHT_GIZMO_FRAG.glsl">
+      <Filter>Shaders</Filter>
+    </None>
+    <None Include="LIGHT_GIZMO_VERT.glsl">
+      <Filter>Shaders</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="EngineResources">
       <UniqueIdentifier>{22d2c26a-6ce9-496d-8f08-5d54d994b8db}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Shaders">
+      <UniqueIdentifier>{c80c3031-2ad7-437c-9685-59bc905f6751}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="Application.rc" />
   </ItemGroup>
 </Project>

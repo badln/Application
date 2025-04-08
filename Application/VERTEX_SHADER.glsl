@@ -10,7 +10,7 @@ out vec3 Position;
 
 uniform mat4 model = mat4(1.0f);
 uniform mat4 view = mat4(1.0f);
-uniform mat4 perspective = mat4(1.0f);
+uniform mat4 projection = mat4(1.0f);
 
 uniform float vertTruncAmount = 10;
 uniform bool truncVerts;
@@ -23,7 +23,7 @@ float truncate(float num, float place)
 void main()
 {
    FragPos = vec3(model * vec4(aPos, 1.0f));
-   gl_Position = perspective * view * vec4(FragPos, 1.0f);
+   gl_Position = projection * view * vec4(FragPos, 1.0f);
    if (truncVerts)
    {
        gl_Position = vec4(

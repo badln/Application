@@ -8,7 +8,7 @@
 #include <sstream>
 #include <string>
 #include <vector>
-#include "surfaces.h"
+#include "objects.h"
 
 #include "GLFW/Include/glm/glm.hpp"
 #include "GLFW/Include/glm/gtc/matrix_transform.hpp"
@@ -137,14 +137,25 @@ public:
 	}
 	void setMaterial(const string& name, Material material)
 	{
-		setFloat(name + ".diffuse",   material.diffuse);
-		setFloat(name + ".specular",  material.specular);
-		setFloat(name + ".ambient",   material.ambient);
-		setFloat(name + ".shininess", material.shininess);
-		setVector(name + ".colour",   material.colour.x,
-									  material.colour.y, 
-									  material.colour.z, 
-									  material.colour.w);
+		setVector(name + ".diffuse",   material.diffuse.x,  material.diffuse.y,  material.diffuse.z);
+		setVector(name + ".specular",  material.specular.x, material.specular.y, material.specular.z);
+		setVector(name + ".ambient",   material.ambient.x,  material.ambient.y,  material.ambient.z);
+		setFloat (name + ".shininess", material.shininess);
+		setVector(name + ".colour",    material.colour.x,
+									   material.colour.y, 
+									   material.colour.z, 
+									   material.colour.w);
+		setInt   (name + ".texture",   material.texture); 
+		setBool  (name + ".as_tex",    material.textureAssigned);
+		
+	}
+	void setLight(const string& name, LightSource light)
+	{
+		setVector(name + ".diffuse",  light.diffuse.x,  light.diffuse.y,  light.diffuse.z);
+		setVector(name + ".specular", light.specular.x, light.specular.y, light.specular.z);
+		setVector(name + ".ambient",  light.ambient.x,  light.ambient.y,  light.ambient.z);
+		setVector(name + ".colour",   light.colour.x,   light.colour.y,   light.colour.z, light.colour.w);
+		setVector(name + ".position", light.position.x, light.position.y, light.position.z);
 	}
 private:
 

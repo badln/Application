@@ -8,25 +8,32 @@ in vec3 FragPos;
 in vec3 Normal;
 
 uniform float time;
-uniform sampler2D Texture;
-uniform sampler2D OtherTexture;
 uniform float mixAmount;
 uniform bool wireframe;
 uniform bool error;
-uniform vec3 cameraPos;
-
-uniform vec4 globalSceneLight;
-uniform vec4 globalSceneLightPos;
+uniform vec4 cameraPos;
 
 uniform vec3 wireframeCol = vec3(1, 1, 1);  //White by default
 
+struct Light
+{
+    vec4 ambient;
+	vec4 diffuse;
+	vec4 specular;
+	vec4 position;
+    vec4 colour;
+};
+uniform Light globalSceneLight;
+
 struct Material
 {
-    float ambient;
-	float diffuse;
-	float specular;
+    vec4 ambient;
+	vec4 diffuse;
+	vec4 specular;
 	float shininess;
     vec4 colour;
+    sampler2D texture;
+    bool as_tex;
 };
 uniform Material mat;
 
@@ -67,35 +74,37 @@ void main()
     {
         if (error)
         {
-            FragColor = mix(texture(Texture, TexCoord), Checkerboard(), 0.5f); 
+            FragColor = mix(texture(mat.texture, TexCoord), Checkerboard(), 0.5f); 
             //FragColor = Checkerboard();
         }
         else
         {
             //diffuse
-            float diffuseAmount = mat.diffuse * globalSceneLight.w;
             vec3 normal = normalize(Normal);
-            vec3 globalLightDir = normalize(vec3(globalSceneLightPos.x, globalSceneLightPos.y, globalSceneLightPos.z) - FragPos);
+            vec3 globalLightDir = normalize(vec3(globalSceneLight.position.x, globalSceneLight.position.y, globalSceneLight.position.z) - FragPos);
             float diff = max(dot(normal, globalLightDir), 0.0f);
-            vec4 diffuse = diff * globalSceneLight * diffuseAmount * globalSceneLight.w;
+            vec4 diffuse = globalSceneLight.diffuse * (diff * mat.diffuse);
 
             //specular
-            float specularStrength = mat.specular * globalSceneLight.w;
-            vec3 viewDir = normalize(cameraPos - FragPos);
+            vec3 viewDir = normalize(vec3(cameraPos.x, cameraPos.y, cameraPos.z) - FragPos);
             vec3 reflectDir = reflect(-globalLightDir, normal);
-            float f_specular = pow(max(dot(viewDir, reflectDir),0),32);
-            vec4 specular = f_specular * globalSceneLight * specularStrength;
+            float f_specular = pow(max(dot(viewDir, reflectDir),0), mat.shininess * 128);
+            vec4 specular = globalSceneLight.specular * (f_specular * mat.specular);
 
             //ambient
-            float ambientStrength = mat.ambient * globalSceneLight.w;
-            vec4 ambient = ambientStrength * globalSceneLight;
-            vec4 pixelColours = texture(Texture, TexCoord);
-            
-            pixelColours = (ambient + diffuse + specular) * pixelColours;
-            pixelColours *= mat.colour;
+            vec4 ambient = globalSceneLight.ambient * mat.ambient;
+            vec4 pixelColours;
+            if (mat.as_tex)
+            {
+               pixelColours = (ambient + diffuse) * texture(mat.texture, TexCoord) + specular;
+            }
+            else
+            {
+               pixelColours = ambient + diffuse + specular; 
+            }
 
             //FragColor = vec4(normal * 0.5 + 0.5, 1.0);w
-            FragColor = vec4(pixelColours.x, pixelColours.y, pixelColours.z, 1.0f);
+            FragColor = pixelColours * mat.colour * globalSceneLight.colour * globalSceneLight.colour.w;
         }
         
     }

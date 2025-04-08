@@ -150,12 +150,14 @@
   <ItemGroup>
     <ClCompile Include="glad.c" />
     <ClCompile Include="engine.h" />
-    <ClCompile Include="surfaces.h" />
+    <ClCompile Include="objects.h" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="transform.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="LIGHTING_FRAGMENT_SHADER.glsl" />
+    <None Include="LIGHT_GIZMO_FRAG.glsl" />
+    <None Include="LIGHT_GIZMO_VERT.glsl" />
     <None Include="VERTEX_SHADER.glsl" />
   </ItemGroup>
   <ItemGroup>
