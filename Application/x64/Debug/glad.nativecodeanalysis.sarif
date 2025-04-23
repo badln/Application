@@ -1,0 +1,51 @@
+{
+  "version": "2.1.0",
+  "$schema": "https://schemastore.azurewebsites.net/schemas/json/sarif-2.1.0-rtm.5.json",
+  "runs": [
+    {
+      "results": [],
+      "tool": {
+        "driver": {
+          "name": "PREfast",
+          "fullName": "PREfast Code Analysis",
+          "version": "14.42.34435.0",
+          "informationUri": "https://aka.ms/cpp/ca"
+        }
+      },
+      "invocations": [
+        {
+          "executionSuccessful": true
+        }
+      ],
+      "artifacts": [
+        {
+          "location": {
+            "uri": "file:///c:/users/faye/desktop/projects/application/application/glad.c"
+          },
+          "roles": [
+            "analysisTarget"
+          ],
+          "hashes": {
+            "sha-256": "fdb19ffb3ee19567556743891a75a678a2380c2446145b5187b309baed11d4d3"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///c:/users/faye/desktop/projects/application/application/glfw/include/glad/glad.h"
+          },
+          "hashes": {
+            "sha-256": "1baf34a7dc2f9ca78e78a6b0e6646658fca7ce54fda3c0d2746087668441be4d"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///c:/users/faye/desktop/projects/application/application/glfw/include/khr/khrplatform.h"
+          },
+          "hashes": {
+            "sha-256": "5ee5d5c2c6b2abd028cec8dc1a24e995bb47b075654a6fc55f3a1293de36943f"
+          }
+        }
+      ]
+    }
+  ]
+}

@@ -10,7 +10,6 @@ in vec3 Normal;
 uniform float time;
 uniform float mixAmount;
 uniform bool wireframe;
-uniform bool error;
 uniform vec4 cameraPos;
 
 uniform vec3 wireframeCol = vec3(1, 1, 1);  //White by default
@@ -22,8 +21,18 @@ struct Light
 	vec4 specular;
 	vec4 position;
     vec4 colour;
+
+    vec4 direction;
+    int type;
+
+    float linear;
+    float quadratic;
+    float constant;
+
+    float cutoff;
+    float outerCutoff;
 };
-uniform Light globalSceneLight;
+uniform Light light;
 
 struct Material
 {
@@ -31,9 +40,18 @@ struct Material
 	vec4 diffuse;
 	vec4 specular;
 	float shininess;
+    float emmissive;
     vec4 colour;
+
     sampler2D texture;
     bool as_tex;
+    sampler2D diffuseTex;
+    bool dif_tex;
+    sampler2D specularTex;
+    bool spec_tex;
+    sampler2D emmissiveTex;
+    bool em_tex;
+    bool texError;
 };
 uniform Material mat;
 
@@ -72,39 +90,92 @@ void main()
     }
     else
     {
-        if (error)
+        if (mat.texError)
         {
             FragColor = mix(texture(mat.texture, TexCoord), Checkerboard(), 0.5f); 
             //FragColor = Checkerboard();
         }
         else
         {
-            //diffuse
-            vec3 normal = normalize(Normal);
-            vec3 globalLightDir = normalize(vec3(globalSceneLight.position.x, globalSceneLight.position.y, globalSceneLight.position.z) - FragPos);
-            float diff = max(dot(normal, globalLightDir), 0.0f);
-            vec4 diffuse = globalSceneLight.diffuse * (diff * mat.diffuse);
-
-            //specular
-            vec3 viewDir = normalize(vec3(cameraPos.x, cameraPos.y, cameraPos.z) - FragPos);
-            vec3 reflectDir = reflect(-globalLightDir, normal);
-            float f_specular = pow(max(dot(viewDir, reflectDir),0), mat.shininess * 128);
-            vec4 specular = globalSceneLight.specular * (f_specular * mat.specular);
-
-            //ambient
-            vec4 ambient = globalSceneLight.ambient * mat.ambient;
-            vec4 pixelColours;
-            if (mat.as_tex)
+            vec4 diffuseTexture;
+            vec4 specularTexture;
+            vec4 emmissiveTexture;
+            if (mat.dif_tex)
             {
-               pixelColours = (ambient + diffuse) * texture(mat.texture, TexCoord) + specular;
+                diffuseTexture = vec4(texture(mat.diffuseTex, TexCoord));
             }
             else
             {
-               pixelColours = ambient + diffuse + specular; 
+                diffuseTexture = vec4(1.0f);
+            }
+            if (mat.spec_tex)
+            {
+                specularTexture = vec4(texture(mat.specularTex, TexCoord));
+            }
+            else
+            {
+                specularTexture = vec4(1.0f);
+            }
+            if (mat.em_tex)
+            {
+                emmissiveTexture = vec4(texture(mat.emmissiveTex, TexCoord));
+            }
+            else
+            {
+                emmissiveTexture = vec4(0.0f);
             }
 
-            //FragColor = vec4(normal * 0.5 + 0.5, 1.0);w
-            FragColor = pixelColours * mat.colour * globalSceneLight.colour * globalSceneLight.colour.w;
+            //diffuse
+            vec3 normal = normalize(Normal);
+            vec3 lightDir;
+            vec4 pixelColours;
+            lightDir = normalize(vec3(light.position) - FragPos);
+            if (light.type == 1){
+
+                lightDir = normalize(vec3(-light.direction));
+            }
+           
+            float diff = max(dot(normal, lightDir), 0.0f);
+            vec4 diffuse = light.diffuse * (diff * mat.diffuse * diffuseTexture);
+
+            //specular
+            vec3 viewDir = normalize(vec3(cameraPos.x, cameraPos.y, cameraPos.z) - FragPos);
+            vec3 reflectDir = reflect(-lightDir, normal);
+            float f_specular = pow(max(dot(viewDir, reflectDir),0), mat.shininess * 128);
+            vec4 specular = light.specular * (f_specular * mat.specular * specularTexture);
+
+            //ambient
+            vec4 ambient = light.ambient * mat.ambient * diffuseTexture;
+
+            if (light.type == 2){
+                
+
+                float theta = dot(lightDir, normalize(vec3(-light.direction)));
+                float epsilon = light.cutoff - light.outerCutoff;
+                float intensity = clamp((theta - light.outerCutoff) / epsilon, 0.0, 1.0);    
+
+                diffuse *= intensity;
+                specular *= intensity;
+
+            }
+
+            float distance = length(vec3(light.position) - FragPos);
+            float attenuation = 1.0f / (light.constant + light.linear * distance + light.quadratic * (distance * distance));
+
+            ambient *= attenuation;
+            diffuse *= attenuation;
+            specular *= attenuation;
+
+            if (mat.as_tex)
+            {
+               pixelColours = (ambient + diffuse) * texture(mat.texture, TexCoord) + specular + emmissiveTexture;
+            }
+            else
+            {
+               pixelColours = ambient + diffuse + specular + emmissiveTexture; 
+            }
+            //FragColor = emmissiveTexture;
+            FragColor = pixelColours * mat.colour * light.colour * (light.colour.w + mat.emmissive);
         }
         
     }

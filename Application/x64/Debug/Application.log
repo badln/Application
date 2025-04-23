@@ -1,5 +1,5 @@
 ﻿  main.cpp
-C:\Users\faye\Desktop\Projects\Application\Application\main.cpp(12,10): warning C4067: unexpected tokens following preprocessor directive - expected a newline
+C:\Users\faye\Desktop\Projects\Application\Application\main.cpp(11,10): warning C4067: unexpected tokens following preprocessor directive - expected a newline
 C:\Users\faye\Desktop\Projects\Application\Application\engine.h(12,13): warning C4305: 'initializing': truncation from 'double' to 'float'
   (compiling source file 'main.cpp')
   
@@ -8,49 +8,44 @@ C:\Program Files (x86)\Windows Kits\10\Include\10.0.22621.0\shared\minwindef.h(1
       C:\Users\faye\Desktop\Projects\Application\Application\GLFW\Include\glad\glad.h(32,9):
       see previous definition of 'APIENTRY'
   
+C:\Users\faye\Desktop\Projects\Application\Application\main.cpp(85,11): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
 C:\Users\faye\Desktop\Projects\Application\Application\main.cpp(86,11): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
 C:\Users\faye\Desktop\Projects\Application\Application\main.cpp(87,11): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
-C:\Users\faye\Desktop\Projects\Application\Application\main.cpp(88,11): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
+C:\Users\faye\Desktop\Projects\Application\Application\main.cpp(149,10): warning C4244: 'initializing': conversion from 'float' to 'int', possible loss of data
+C:\Users\faye\Desktop\Projects\Application\Application\main.cpp(159,10): warning C4244: 'initializing': conversion from 'float' to 'int', possible loss of data
+C:\Users\faye\Desktop\Projects\Application\Application\main.cpp(180,17): warning C4244: '=': conversion from 'int' to 'T', possible loss of data
+C:\Users\faye\Desktop\Projects\Application\Application\main.cpp(180,17): warning C4244:         with
+C:\Users\faye\Desktop\Projects\Application\Application\main.cpp(180,17): warning C4244:         [
+C:\Users\faye\Desktop\Projects\Application\Application\main.cpp(180,17): warning C4244:             T=float
+C:\Users\faye\Desktop\Projects\Application\Application\main.cpp(180,17): warning C4244:         ]
 C:\Users\faye\Desktop\Projects\Application\Application\main.cpp(181,17): warning C4244: '=': conversion from 'int' to 'T', possible loss of data
 C:\Users\faye\Desktop\Projects\Application\Application\main.cpp(181,17): warning C4244:         with
 C:\Users\faye\Desktop\Projects\Application\Application\main.cpp(181,17): warning C4244:         [
 C:\Users\faye\Desktop\Projects\Application\Application\main.cpp(181,17): warning C4244:             T=float
 C:\Users\faye\Desktop\Projects\Application\Application\main.cpp(181,17): warning C4244:         ]
-C:\Users\faye\Desktop\Projects\Application\Application\main.cpp(182,17): warning C4244: '=': conversion from 'int' to 'T', possible loss of data
-C:\Users\faye\Desktop\Projects\Application\Application\main.cpp(182,17): warning C4244:         with
-C:\Users\faye\Desktop\Projects\Application\Application\main.cpp(182,17): warning C4244:         [
-C:\Users\faye\Desktop\Projects\Application\Application\main.cpp(182,17): warning C4244:             T=float
-C:\Users\faye\Desktop\Projects\Application\Application\main.cpp(182,17): warning C4244:         ]
-C:\Users\faye\Desktop\Projects\Application\Application\main.cpp(186,14): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
-C:\Users\faye\Desktop\Projects\Application\Application\main.cpp(350,24): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
-C:\Users\faye\Desktop\Projects\Application\Application\main.cpp(351,24): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
-C:\Users\faye\Desktop\Projects\Application\Application\main.cpp(360,23): warning C4244: '+=': conversion from 'double' to 'float', possible loss of data
-C:\Users\faye\Desktop\Projects\Application\Application\main.cpp(365,23): warning C4244: '-=': conversion from 'double' to 'float', possible loss of data
-C:\Users\faye\Desktop\Projects\Application\Application\main.cpp(374,23): warning C4244: '+=': conversion from 'double' to 'float', possible loss of data
-C:\Users\faye\Desktop\Projects\Application\Application\main.cpp(379,23): warning C4244: '-=': conversion from 'double' to 'float', possible loss of data
-C:\Users\faye\Desktop\Projects\Application\Application\main.cpp(419,64): warning C4244: 'argument': conversion from 'T' to 'int', possible loss of data
-C:\Users\faye\Desktop\Projects\Application\Application\main.cpp(419,64): warning C4244:         with
-C:\Users\faye\Desktop\Projects\Application\Application\main.cpp(419,64): warning C4244:         [
-C:\Users\faye\Desktop\Projects\Application\Application\main.cpp(419,64): warning C4244:             T=float
-C:\Users\faye\Desktop\Projects\Application\Application\main.cpp(419,64): warning C4244:         ]
-C:\Users\faye\Desktop\Projects\Application\Application\main.cpp(419,50): warning C4244: 'argument': conversion from 'T' to 'int', possible loss of data
-C:\Users\faye\Desktop\Projects\Application\Application\main.cpp(419,50): warning C4244:         with
-C:\Users\faye\Desktop\Projects\Application\Application\main.cpp(419,50): warning C4244:         [
-C:\Users\faye\Desktop\Projects\Application\Application\main.cpp(419,50): warning C4244:             T=float
-C:\Users\faye\Desktop\Projects\Application\Application\main.cpp(419,50): warning C4244:         ]
-C:\Users\faye\Desktop\Projects\Application\Application\main.cpp(629,47): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
-C:\Users\faye\Desktop\Projects\Application\Application\main.cpp(692,39): warning C4244: '-=': conversion from 'double' to 'T', possible loss of data
-C:\Users\faye\Desktop\Projects\Application\Application\main.cpp(692,39): warning C4244:         with
-C:\Users\faye\Desktop\Projects\Application\Application\main.cpp(692,39): warning C4244:         [
-C:\Users\faye\Desktop\Projects\Application\Application\main.cpp(692,39): warning C4244:             T=float
-C:\Users\faye\Desktop\Projects\Application\Application\main.cpp(692,39): warning C4244:         ]
-C:\Users\faye\Desktop\Projects\Application\Application\main.cpp(696,39): warning C4244: '+=': conversion from 'double' to 'T', possible loss of data
-C:\Users\faye\Desktop\Projects\Application\Application\main.cpp(696,39): warning C4244:         with
-C:\Users\faye\Desktop\Projects\Application\Application\main.cpp(696,39): warning C4244:         [
-C:\Users\faye\Desktop\Projects\Application\Application\main.cpp(696,39): warning C4244:             T=float
-C:\Users\faye\Desktop\Projects\Application\Application\main.cpp(696,39): warning C4244:         ]
-C:\Users\faye\Desktop\Projects\Application\Application\main.cpp(713,18): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
-C:\Users\faye\Desktop\Projects\Application\Application\main.cpp(502,23): warning C4101: 'nrChannels2': unreferenced local variable
-C:\Users\faye\Desktop\Projects\Application\Application\main.cpp(502,14): warning C4101: 'height2': unreferenced local variable
-C:\Users\faye\Desktop\Projects\Application\Application\main.cpp(502,6): warning C4101: 'width2': unreferenced local variable
+C:\Users\faye\Desktop\Projects\Application\Application\main.cpp(185,14): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
+C:\Users\faye\Desktop\Projects\Application\Application\main.cpp(356,64): warning C4244: 'argument': conversion from 'T' to 'int', possible loss of data
+C:\Users\faye\Desktop\Projects\Application\Application\main.cpp(356,64): warning C4244:         with
+C:\Users\faye\Desktop\Projects\Application\Application\main.cpp(356,64): warning C4244:         [
+C:\Users\faye\Desktop\Projects\Application\Application\main.cpp(356,64): warning C4244:             T=float
+C:\Users\faye\Desktop\Projects\Application\Application\main.cpp(356,64): warning C4244:         ]
+C:\Users\faye\Desktop\Projects\Application\Application\main.cpp(356,50): warning C4244: 'argument': conversion from 'T' to 'int', possible loss of data
+C:\Users\faye\Desktop\Projects\Application\Application\main.cpp(356,50): warning C4244:         with
+C:\Users\faye\Desktop\Projects\Application\Application\main.cpp(356,50): warning C4244:         [
+C:\Users\faye\Desktop\Projects\Application\Application\main.cpp(356,50): warning C4244:             T=float
+C:\Users\faye\Desktop\Projects\Application\Application\main.cpp(356,50): warning C4244:         ]
+C:\Users\faye\Desktop\Projects\Application\Application\main.cpp(417,30): warning C4305: '=': truncation from 'double' to 'float'
+C:\Users\faye\Desktop\Projects\Application\Application\main.cpp(492,71): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+C:\Users\faye\Desktop\Projects\Application\Application\main.cpp(551,38): warning C4244: '-=': conversion from 'double' to 'T', possible loss of data
+C:\Users\faye\Desktop\Projects\Application\Application\main.cpp(551,38): warning C4244:         with
+C:\Users\faye\Desktop\Projects\Application\Application\main.cpp(551,38): warning C4244:         [
+C:\Users\faye\Desktop\Projects\Application\Application\main.cpp(551,38): warning C4244:             T=float
+C:\Users\faye\Desktop\Projects\Application\Application\main.cpp(551,38): warning C4244:         ]
+C:\Users\faye\Desktop\Projects\Application\Application\main.cpp(555,38): warning C4244: '+=': conversion from 'double' to 'T', possible loss of data
+C:\Users\faye\Desktop\Projects\Application\Application\main.cpp(555,38): warning C4244:         with
+C:\Users\faye\Desktop\Projects\Application\Application\main.cpp(555,38): warning C4244:         [
+C:\Users\faye\Desktop\Projects\Application\Application\main.cpp(555,38): warning C4244:             T=float
+C:\Users\faye\Desktop\Projects\Application\Application\main.cpp(555,38): warning C4244:         ]
+C:\Users\faye\Desktop\Projects\Application\Application\main.cpp(574,18): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
+C:\Users\faye\Desktop\Projects\Application\Application\main.cpp(346,13): warning C4101: 'transform': unreferenced local variable
   Application.vcxproj -> C:\Users\faye\Desktop\Projects\Application\x64\Debug\Application.exe

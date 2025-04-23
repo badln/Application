@@ -1,17 +1,17 @@
-#define STB_IMAGE_IMPLEMENTATION
 
 //Some specific OpenGL stuff
-#include "stb_image.h"
 #include "GLFW\Include\glad\glad.h"
 #include "GLFW\Include\glfw3.h"
 
 //general stuff
 #include <iostream>
-
-#include "shader.h"
+#include <fstream>
+#include <sstream>
+#include "objects.h"
 #include "engine.h";
 #include "transform.h"
 #include <windows.h>
+#include <list>
 #include "EngineResources/Console.h"
 
 //OpenGL Mathematics
@@ -22,6 +22,7 @@
 using namespace std;
 using namespace glm;
 
+
 EngineInfo engineInfo;
 WindowConsole Console;
 
@@ -29,21 +30,17 @@ vec2 windowSize(650, 650);
 
 //Scene colours
 
-LightSource globalSceneLight;
-LightSource lightSource1;
-
-vec3 cubeData[]{
-	//     Positions        |         Scales        |       Rotations
-	vec3( 2.5f, 1.0f, -4.0f), vec3(5.0f, 5.0f, 5.0f), vec3(0.0f, 0.0f, 0.0f),
-	vec3(-2.5f, -1.0f, -3.0f), vec3(5.0f, 5.0f, 5.0f), vec3(0.0f, 0.0f, 0.0f),
-};
 float vertTruncAmount = 10;
 bool truncVerts = false;
 
+int frame = 0;
+int generatedTexture = -1;
+vector <Texture*> textures;
+vector <unsigned int> VAOs;
+vector <ObjContainer*> objects;
 bool downArrowPressed, upArrowPressed, leftArrowPressed, rightArrowPressed, spacePressed, ctrlPressed, escPressed, inWireframe = false;
 bool ambientRotation = false;
 bool LookAtMouse = false;
-bool textureError = false;
 int ambientRotationMultiplier = 50;
 
 float mouseYaw = -90.0f;
@@ -59,14 +56,16 @@ bool looking = true;
 
 float nearClipPlane = 0.1f;
 float farClipPlane = 100.0f;
-float fieldOfView = 45;
 float desiredFrametime = 1 / (engineInfo.desiredFramerate + 1);
 double frameTime, endOfFrameTime, endOfFrameTimeLastFrame;
 float frameRate;
 
+vec2 MousePos;
+
 mat4 orthoscopicMat;
 mat4 projectionMat;
 
+Camera mainCamera;
 
 struct {
 	vec3 zero = vec3(0.0f);
@@ -90,25 +89,6 @@ struct {
 		return sqrt(x + y + z);
 	}
 }Vector3;
-
-struct {
-
-	vec3 Position = vec3(0.0f, 0.0f, 3.0f);
-
-	vec3 Target = Vector3.zero;
-
-	vec3 Direction = normalize(Position - Target);
-
-	float SpeedMultiplier = 3;
-	vec3 zero = vec3(0.0f);
-	vec3 one = vec3(1.0f);
-
-	vec3 forward = vec3(0.0f, 0.0f, -1.0f);
-	vec3 up =	   vec3(0.0f, 1.0f, 0.0f);
-	vec3 right =   vec3(1.0f, 0.0f, 0.0f);
-	vec3 lookDirection;
-
-} Camera ;
 
 float AddRotation, xAngle, yAngle = 0;
 
@@ -160,18 +140,37 @@ float vertexData[] = {
 	-0.5f,  0.5f, -0.5f,  0.0f,  1.0f,  0.0f,  0.0f,  1.0f
 
 };
-
-float clamp(float val, float min, float max)
+float clamp(float val, float min, float max, bool loop = false)
 {
 	if (val < min)
 	{
-		val = min;
+		if (loop)
+		{
+			int c = (int)val / -max;
+			val += max * (c + 1);
+		}
+		else
+			val = min;
 	}
 	if (val > max)
 	{
-		val = max;
+		if (loop)
+		{
+			int c = (int)val / max;
+			val -= max * c;
+		}
+		else
+			val = max;
 	}
 	return val;
+}
+
+string bool_str(bool b)
+{
+	if (to_string(b) == "0")
+		return "False";
+	else
+		return "True";
 }
 
 void UpdateWindowSize(GLFWwindow* window)
@@ -191,20 +190,20 @@ void mouse_callback(GLFWwindow* window, double xposIn, double yposIn)
 	{
 		return;
 	}
-	float xpos = static_cast<float>(xposIn);
-	float ypos = static_cast<float>(yposIn);
+	MousePos.x = static_cast<float>(xposIn);
+	MousePos.y = static_cast<float>(yposIn);
 
 	if (firstMouse)
 	{
-		xpos_LF = xpos;
-		ypos_LF = ypos;
+		xpos_LF = MousePos.x;
+		ypos_LF = MousePos.y;
 		firstMouse = false;
 	}
-	float xOffset = xpos - xpos_LF;
-	float yOffset = -(ypos - ypos_LF);
+	float xOffset = MousePos.x - xpos_LF;
+	float yOffset = -(MousePos.y - ypos_LF);
 
-	xpos_LF = xpos;
-	ypos_LF = ypos;
+	xpos_LF = MousePos.x;
+	ypos_LF = MousePos.y;
 
 	xOffset *= MouseSensitivity;
 	yOffset *= MouseSensitivity;
@@ -214,10 +213,10 @@ void mouse_callback(GLFWwindow* window, double xposIn, double yposIn)
 
 	mousePitch = clamp(mousePitch, -89.0f, 89.0f);
 
-	Camera.lookDirection.x = cos(radians(mouseYaw)) * cos(radians(mousePitch));
-	Camera.lookDirection.y = sin(radians(mousePitch));
-	Camera.lookDirection.z = sin(radians(mouseYaw)) * cos(radians(mousePitch));
-	Camera.forward = normalize(Camera.lookDirection);
+	mainCamera.lookDirection.x = cos(radians(mouseYaw)) * cos(radians(mousePitch));
+	mainCamera.lookDirection.y = sin(radians(mousePitch));
+	mainCamera.lookDirection.z = sin(radians(mouseYaw)) * cos(radians(mousePitch));
+	mainCamera.forward = normalize(mainCamera.lookDirection);
 }
 
 void framebuffer_size_callback(GLFWwindow* window, int width, int height)
@@ -248,6 +247,7 @@ void processInput(GLFWwindow* window)
 			glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 		}
 	}
+	//if (glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_LEFT) == GLFW_PRESS)
 	if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_RELEASE)
 	{
 		escPressed = false;
@@ -263,6 +263,7 @@ void processInput(GLFWwindow* window)
 		// Toggles wireframe rendering on or off
 		//------------------------------------//
 		ctrlPressed = true;
+		
 		if (inWireframe)
 		{
 			glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
@@ -334,79 +335,15 @@ void InfoDump()
 	engineInfo.LogEngineInfo();
 	string displayAdaptor(reinterpret_cast<const char*>(glGetString(GL_RENDERER)));
 	string glVersion(reinterpret_cast<const char*>(glGetString(GL_SHADING_LANGUAGE_VERSION)));
-	Console.PushLine("Display Adaptor: " + displayAdaptor + ", OpenGL Version " + glVersion + ", " + to_string(sysInfo.dwNumberOfProcessors) + " CPU threads avaliable.");
+	Console.Log("Display Adaptor: " + displayAdaptor + ", OpenGL Version " + glVersion + ", " + to_string(sysInfo.dwNumberOfProcessors) + " CPU threads avaliable.");
 }
-struct
-{
-	double x;
-	double y;
-} MousePos;
-mat4 RotateHandler(Transform transform, Shader shader)
-{
-	mat4 transformMatrix = mat4(1.0f);
-	float MouseX, MouseY;
-	if (LookAtMouse)
-	{
-		MouseX = -MousePos.y / 3;
-		MouseY = -MousePos.x / 3;
-	}
-	else
-	{
-		MouseX = 0;
-		MouseY = 0;
-	}
-	if (upArrowPressed)
-	{
-		xAngle += frameTime * 200;
-		transformMatrix = transform.RotateMatrix(transformMatrix, MouseX + xAngle, vec3(1, 0, 0));
-	}
-	else if (downArrowPressed)
-	{
-		xAngle -= frameTime * 200;
-		transformMatrix = transform.RotateMatrix(transformMatrix, MouseX + xAngle, vec3(1, 0, 0));
-	}
-	else
-	{
-		transformMatrix = transform.RotateMatrix(transformMatrix, MouseX + xAngle, vec3(1, 0, 0));
-	}
-	if (leftArrowPressed)
-	{
-		yAngle += frameTime * 200;
-		transformMatrix = transform.RotateMatrix(transformMatrix, MouseY + yAngle, vec3(0, 1, 0));
-	}
-	else if (rightArrowPressed)
-	{
-		yAngle -= frameTime * 200;
-		transformMatrix = transform.RotateMatrix(transformMatrix, MouseY + yAngle, vec3(0, 1, 0));
-	}
-	else
-	{
-		transformMatrix = transform.RotateMatrix(transformMatrix, MouseY + yAngle, vec3(0, 1, 0));
-	}
-	return transformMatrix;
-}
-void GenErrorTex(unsigned char* ErrorTex, int texture)
-{
-	if (ErrorTex)
-	{
-		glBindTexture(GL_TEXTURE_2D, texture);
-		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, 256, 256, 0, GL_RGBA, GL_UNSIGNED_BYTE, ErrorTex);
-		glGenerateMipmap(GL_TEXTURE_2D);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST_MIPMAP_LINEAR);
-		textureError = true;
-	}
-}
-
-
 int main()
 {
 	//--------------------------//
 	// Initialises Window and GLFW
 	//--------------------------//
 
-	Transform transform;
+	Transforms transform;
 	glfwInit();
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
@@ -436,11 +373,7 @@ int main()
 	//-------------//
 	// Window icon
 	//-------------//
-
-	GLFWimage images[1];
-	images[0].pixels = stbi_load("image/IMG_4766.png", &images[0].width, &images[0].height, 0, 4);
-	glfwSetWindowIcon(window, 1, images);
-	stbi_image_free(images[0].pixels);
+	SetWindowIcon("image/IMG_4766.png", window);
 	InfoDump();
 	glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 	glfwSetCursorPosCallback(window, mouse_callback);
@@ -450,279 +383,208 @@ int main()
 	// Creates shader program
 	//---------------------//
 
-	Shader lightingShader("VERTEX_SHADER.glsl", "LIGHTING_FRAGMENT_SHADER.glsl");
-	Shader lightGizmo("LIGHT_GIZMO_VERT.glsl", "LIGHT_GIZMO_FRAG.glsl");
+	Shader litShader("VERTEX_SHADER.glsl", "LIGHTING_FRAGMENT_SHADER.glsl", "litShader");
+	Shader lightGizmo("LIGHT_GIZMO_VERT.glsl", "LIGHT_GIZMO_FRAG.glsl", "lightGizmo");
 
 	//------------------------------------------------------------//
 	// Configuration of Vertex Array Object and Vertex Buffer Object
 	//------------------------------------------------------------//
 
-	unsigned int lightVAO, cubeVAO, VBO, EBO, texture, texture2, ErrorTexture;
-	glGenVertexArrays(1, &cubeVAO);
+	unsigned int lightVAO, VBO, EBO;
 	glGenVertexArrays(1, &lightVAO);
 	glGenBuffers(1, &VBO);
 	glGenBuffers(1, &EBO);
 
-	glGenTextures(1, &ErrorTexture);
-	glGenTextures(1, &texture);
-	glGenTextures(1, &texture2);
-
 	glBindBuffer(GL_ARRAY_BUFFER, VBO);
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
 
-	glBufferData(GL_ARRAY_BUFFER, sizeof(vertexData), vertexData, GL_STATIC_DRAW);
-	
-	//cubeVAO
-
-	glBindVertexArray(cubeVAO);
-
-	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)0);
-	glEnableVertexAttribArray(0);
-
-	glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(3 * sizeof(float)));
-	glEnableVertexAttribArray(1);
-
-	glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(6 * sizeof(float)));
-	glEnableVertexAttribArray(2);
-
-	//lightVAO
-
-	glBindVertexArray(lightVAO);
-
-	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)0);
-	glEnableVertexAttribArray(0);
-
-	glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(3 * sizeof(float)));
-	glEnableVertexAttribArray(1);
-
-	glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(6 * sizeof(float)));
-	glEnableVertexAttribArray(2);
-
-	int width, height, nrChannels;
-	int width2, height2, nrChannels2;
-	int ErrorW, ErrorH, ErrorNrChannels;
-	stbi_set_flip_vertically_on_load(true);
-
-	unsigned char* ErrorTex = stbi_load("EngineResources/ERROR.bmp", &ErrorW, &ErrorH, &ErrorNrChannels, 4);
-	unsigned char* imageData = stbi_load("image/IMG_4766.png", &width, &height, &nrChannels, 4);
-	//unsigned char* imageData2 = stbi_load("image.png", &width2, &height2, &nrChannels2, 4);
-
-	nrChannels = 4;
-
-	//-------------------------------------------------//
-	// Define Texture wrapping modes for X , Y and Z axis
-	//-------------------------------------------------//
-
-	GLint MODE_X = GL_REPEAT;
-	GLint MODE_Y = GL_REPEAT;
-	GLint MODE_Z = GL_REPEAT;
-
-
-	if (imageData)
-	{
-		glBindTexture(GL_TEXTURE_2D, texture);
-		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, imageData);
-		glGenerateMipmap(GL_TEXTURE_2D);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, MODE_X);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, MODE_Y);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST_MIPMAP_NEAREST);
-	}
-	else
-	{
-		GenErrorTex(ErrorTex, texture);
-		Console.PushError("Texture not found or improperly loaded!");
-	}
-
-	stbi_image_free(imageData);
-
-	glBindBuffer(GL_ARRAY_BUFFER, 0);
-	glBindVertexArray(0);
-
-	float incrementValue = 1.0f;
-	incrementValue *= 0.001f;
-
 	glEnable(GL_DEPTH_TEST);
 
-	globalSceneLight.colour = vec4(1.0f, 1.0f, 1.0f, 1.0f);
-	globalSceneLight.position = vec3(0);
-	
-	globalSceneLight.ambient  = vec3(0.2f, 0.2f, 0.2f);
-	globalSceneLight.diffuse  = vec3(0.5f, 0.5f, 0.5f);
-	globalSceneLight.specular = vec3(1.0f, 1.0f, 1.0f);
+	Mesh cubeMesh;
+	cubeMesh.Set(vertexData, sizeof(vertexData));
 
-	Material redPlastic;
-	redPlastic.ambient  = vec3(0.1f, 0.1f, 0.1f);
-	redPlastic.diffuse  = vec3(0.5f, 0, 0);
-	redPlastic.specular = vec3(0.7f, 0.6f,	0.6f);
+	ObjContainer lightCube("LightSource");
+	lightCube.renderer.mesh = cubeMesh;
+	lightCube.renderer.material.shader = &lightGizmo;
+	lightCube.transform.scale = vec3(0.2f);
 
-	redPlastic.shininess = 0.25f;
-	redPlastic.colour = vec4(1.0f, 1.0f, 1.0f, 1.0f);
-	redPlastic.SetTexture(0, true);
+	lightCube.transform.position = vec3(0.0f, 3.0f, -3.0f);
 
-	Material silver;
-	silver.ambient = vec3(0.19225f, 0.19225f, 0.19225f);
-	silver.diffuse = vec3(0.50754f,	0.50754f, 0.50754f);
-	silver.specular = vec3(0.508273f,0.508273f,0.508273f);
+	lightCube.light.direction = vec3(0.0f, -1.0f, 0.0f);
+	lightCube.light.type = 0;
 
-	silver.shininess = 0.4f;
-	silver.colour = vec4(1.0f, 1.0f, 1.0f, 1.0f);
-	silver.SetTexture(0, false);
+	lightCube.light.linear = 0.045f;
+	lightCube.light.quadratic = 0.0075;
 
+	lightCube.light.cutoff = 17.5;
+	lightCube.light.outerCutoff = 20.5;
+
+	ObjContainer object;
+	object.renderer.material.diffuseTex = Texture("image/emerald_ore/emerald_ore.png");
+	object.renderer.material.specularTex = Texture("image/emerald_ore/emerald_ore_s.png");
+	object.renderer.material.emmissiveTex = Texture("image/emerald_ore/emerald_ore_e.png");
+	object.renderer.mesh = cubeMesh;
+
+	object.transform.scale = vec3(5.0f);
+	object.transform.position = vec3(0.0f, 0.0f, -3.0f);
+
+	mainCamera.Position = vec3(0.0f, 4.0f, 0.0f);
+
+	mainCamera.fov = 75;
 	float lightDistanceToCam;
-
 	while (!glfwWindowShouldClose(window))
 	{
 
 		//----------------------------------------------------------------------------------------------------//
 		//                                       BEGGINING OF FRAME
 		//----------------------------------------------------------------------------------------------------//
-
 		UpdateWindowSize(window);
 
 		orthoscopicMat = glm::ortho(0.0f, windowSize.x, 0.0f, windowSize.y, 0.1f, 100.0f);
-		projectionMat = glm::perspective(glm::radians(fieldOfView), windowSize.x / windowSize.y, nearClipPlane, farClipPlane);
+		projectionMat = glm::perspective(glm::radians(mainCamera.fov), windowSize.x / windowSize.y, nearClipPlane, farClipPlane);
 
 		mat4 view = mat4(1.0f);
-		view = lookAt(Camera.Position, Camera.Position + Camera.forward, Camera.up);
+		view = lookAt(mainCamera.Position, mainCamera.Position + mainCamera.forward, mainCamera.up);
+
+		lightCube.renderer.material.colour = lightCube.light.colour;
 
 		if (glfwGetTime() > endOfFrameTime + desiredFrametime)
 		{
 			//---------------//
-			// handling inputs
+			// stuff
 			//---------------//
 
 			processInput(window);
+			MousePos.x = clamp(MousePos.x, 0, windowSize.x, true);
+			MousePos.y = clamp(MousePos.y, 0, windowSize.y, true);
 
 			//----------------------//
 			// rendering commands here
 			//----------------------//
-			//glClearColor(1, 0, 0.75f, 1);
-			glClearColor(globalSceneLight.colour.x / 15 * globalSceneLight.colour.w, globalSceneLight.colour.y / 15 * globalSceneLight.colour.w, globalSceneLight.colour.z / 15 * globalSceneLight.colour.w, 1);
+			glClearColor(lightCube.light.colour.x / 15 * lightCube.light.colour.w, lightCube.light.colour.y / 15 * lightCube.light.colour.w, lightCube.light.colour.z / 15 * lightCube.light.colour.w, 1);
 			glClear(GL_COLOR_BUFFER_BIT);
 			glClear(GL_DEPTH_BUFFER_BIT);
 
-			glActiveTexture(GL_TEXTURE0);
-			glBindTexture(GL_TEXTURE_2D, texture);
-			glBindVertexArray(cubeVAO);
-			
-			float rainbowTime = 1.0f;
-			//globalSceneLight.colour.x = (sin((glfwGetTime() * rainbowTime) + 1) + 1) / 2;
-			//globalSceneLight.colour.y = (sin((glfwGetTime() * rainbowTime) + 3) + 1) / 2;
-			//globalSceneLight.colour.z = (sin((glfwGetTime() * rainbowTime) + 5) + 1) / 2;
-
-			lightingShader.use();
-
-			lightingShader.setMatrix("projection", projectionMat);
-			lightingShader.setMatrix("view", view);
-
-			lightingShader.setVector("cameraPos", Camera.Position.x, Camera.Position.y, Camera.Position.z);
-
-			lightingShader.setMaterial("mat", silver);
-			lightingShader.setLight("globalSceneLight", globalSceneLight);
-
-			lightingShader.setBool("wireframe", inWireframe);
-
-			lightingShader.setFloat("vertTruncAmount", vertTruncAmount);
-			lightingShader.setBool("truncVerts", truncVerts);
-			lightingShader.setBool("error", textureError);
-
-			lightingShader.setFloat("time", glfwGetTime());
-
-			mat4 transformMatrix = mat4(1.0f);
-			for (int i = 0; i < ((sizeof(cubeData) / sizeof(cubeData[0])) / 3); i++)
+			for (int i = 0; i < generatedTexture + 1; i++)
 			{
-
-				mat4 model = transformMatrix;
-
-				model = transform.TranslateMatrix(model, cubeData[(-3 + ((i + 1) * 3))]);
-
-				model = rotate(model, cubeData[(-1 + ((i + 1) * 3))].x * (engineInfo.pi / 180), vec3(1.0f, 0.0f, 0.0f));
-				model = rotate(model, cubeData[(-1 + ((i + 1) * 3))].y * (engineInfo.pi / 180), vec3(0.0f, 1.0f, 0.0f));
-				model = rotate(model, cubeData[(-1 + ((i + 1) * 3))].z * (engineInfo.pi / 180), vec3(0.0f, 0.0f, 1.0f));
-
-				model = scale(model, cubeData[(-2 + ((i + 1) * 3))]);
-
-				lightingShader.setMatrix("model", model);
-
+				glActiveTexture(GL_TEXTURE0 + i);
+				glBindTexture(GL_TEXTURE_2D, i + 1);
+				if (frame == 0)
+				{
+					if (!textures[i]->manualFiltering()) {
+						textures[i]->filterMode(engineInfo.defaultFiltering);
+					}
+					textures[i]->Set();
+				}
+			}
+			
+			for (int i = 0; i < objects.size(); i++)
+			{
+				if (objects[i]->renderer.material.shader == NULL)
+				{
+					objects[i]->renderer.material.shader = &litShader;
+				}
+				objects[i]->renderer.material.shader->use();
+				objects[i]->renderer.material.shader->setMatrix("projection", projectionMat);
+				objects[i]->renderer.material.shader->setMatrix("view", view);
+				objects[i]->renderer.material.shader->setVector("cameraPos", mainCamera.Position.x, mainCamera.Position.y, mainCamera.Position.z);
+				objects[i]->renderer.material.shader->setLight("light", lightCube.light, lightCube.transform.position);
+				objects[i]->renderer.material.shader->setFloat("time", glfwGetTime());
+				objects[i]->renderer.material.shader->setBool("wireframe", inWireframe);
+				objects[i]->renderer.material.shader->setVector("colour", objects[i]->renderer.material.colour.x, objects[i]->renderer.material.colour.y, objects[i]->renderer.material.colour.z);
+				objects[i]->renderer.material.shader->setMaterial("mat", objects[i]->renderer.material.diffuse,
+					objects[i]->renderer.material.specular,
+					objects[i]->renderer.material.ambient,
+					objects[i]->renderer.material.shininess,
+					objects[i]->renderer.material.colour,
+					objects[i]->renderer.material.texture.colour,
+					objects[i]->renderer.material.texture.id(),
+					objects[i]->renderer.material.texture.texAssigned(),
+					objects[i]->renderer.material.diffuseTex.id(),
+					objects[i]->renderer.material.diffuseTex.texAssigned(),
+					objects[i]->renderer.material.specularTex.id(),
+					objects[i]->renderer.material.specularTex.texAssigned(),
+					objects[i]->renderer.material.texture.error(),
+					objects[i]->renderer.material.diffuseTex.error(),
+					objects[i]->renderer.material.specularTex.error(),
+					objects[i]->renderer.material.emmissive,
+					objects[i]->renderer.material.emmissiveTex.id(),
+					objects[i]->renderer.material.emmissiveTex.texAssigned(),
+					objects[i]->renderer.material.emmissiveTex.error());
+				mat4 model = mat4(1.0f);
+				model = translate(model, objects[i]->transform.position + objects[i]->transform.localPosition);
+				model = rotate(   model, objects[i]->transform.rotation.x * (engineInfo.pi / 180), vec3(1.0f, 0.0f, 0.0f));
+				model = rotate(   model, objects[i]->transform.rotation.x * (engineInfo.pi / 180), vec3(0.0f, 1.0f, 0.0f));
+				model = rotate(   model, objects[i]->transform.rotation.x * (engineInfo.pi / 180), vec3(0.0f, 0.0f, 1.0f));
+				model = scale(	  model, objects[i]->transform.scale);
+				objects[i]->renderer.material.shader->setMatrix("model", model);
+				glBindVertexArray(objects[i]->renderer.mesh.VAO());
 				glDrawArrays(GL_TRIANGLES, 0, 36);
 			}
-			//light gizmo
-			lightGizmo.use();
-
-			lightGizmo.setMatrix("view", view);
-			lightGizmo.setMatrix("projection", projectionMat);
-
-			mat4 lightGizmoCube = transformMatrix;
-			lightGizmoCube = transform.ScaleMatrix(lightGizmoCube, vec3(0.2f));
-			lightGizmoCube = transform.TranslateMatrix(lightGizmoCube, globalSceneLight.position);
-			lightGizmo.setMatrix("model", lightGizmoCube);
-
-			lightGizmo.setVector("lightGizmoColour", globalSceneLight.colour.x, globalSceneLight.colour.y, globalSceneLight.colour.z, globalSceneLight.colour.w);
-
-			glBindVertexArray(lightVAO);
-			glDrawArrays(GL_TRIANGLES, 0, 36);
-
 			if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
 			{
-				Camera.Position += (Camera.SpeedMultiplier * (float)frameTime) * Camera.forward;
+				mainCamera.Position += (mainCamera.SpeedMultiplier * (float)frameTime) * mainCamera.forward;
 			}
 			if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS)
 			{
-				Camera.Position -= (Camera.SpeedMultiplier * (float)frameTime) * Camera.forward;
+				mainCamera.Position -= (mainCamera.SpeedMultiplier * (float)frameTime) * mainCamera.forward;
 			}
 
 			if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS)
 			{
-				Camera.Position -= normalize(cross(Camera.forward, Camera.up)) * (Camera.SpeedMultiplier * (float)frameTime);
+				mainCamera.Position -= normalize(cross(mainCamera.forward, mainCamera.up)) * (mainCamera.SpeedMultiplier * (float)frameTime);
 			}
 			if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS)
 			{
-				Camera.Position += normalize(cross(Camera.forward, Camera.up)) * (Camera.SpeedMultiplier * (float)frameTime);
+				mainCamera.Position += normalize(cross(mainCamera.forward, mainCamera.up)) * (mainCamera.SpeedMultiplier * (float)frameTime);
 			}
 			if (glfwGetKey(window, GLFW_KEY_E) == GLFW_PRESS)
 			{
-				Camera.Position += (Camera.SpeedMultiplier * (float)frameTime) * Camera.up;
+				mainCamera.Position += (mainCamera.SpeedMultiplier * (float)frameTime) * mainCamera.up;
 			}
 			if (glfwGetKey(window, GLFW_KEY_Q) == GLFW_PRESS)
 			{
-				Camera.Position -= (Camera.SpeedMultiplier * (float)frameTime) * Camera.up;
+				mainCamera.Position -= (mainCamera.SpeedMultiplier * (float)frameTime) * mainCamera.up;
 			}
 			if (glfwGetKey(window, GLFW_KEY_DOWN) == GLFW_PRESS)
 			{
-				globalSceneLight.colour.w -= 1.0f * frameTime;
+				lightCube.light.colour.w -= 1.0f * frameTime;
 			}
 			if (glfwGetKey(window, GLFW_KEY_UP) == GLFW_PRESS)
 			{
-				globalSceneLight.colour.w += 1.0f * frameTime;
+				lightCube.light.colour.w += 1.0f * frameTime;
 			}
 			if (glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_RIGHT) == GLFW_PRESS)
 			{
 				lightDistanceToCam = clamp((lightDistanceToCam + scrollDir / 10), 1, 20);
-				vec3 camForward = Camera.Position + Camera.forward * lightDistanceToCam;
-				globalSceneLight.position = camForward;
+				vec3 camForward = mainCamera.Position + mainCamera.forward * lightDistanceToCam;
+				lightCube.transform.position = camForward;
+				lightCube.light.direction = mainCamera.forward;
 			}
 			else {
-				lightDistanceToCam = Vector3.Distance(globalSceneLight.position, Camera.Position);
+				lightDistanceToCam = Vector3.Distance(lightCube.transform.position, mainCamera.Position);
 			}
 			scrollDir = 0;
 			glfwSwapBuffers(window);
 			glfwPollEvents();
 
+			frame++;
 			endOfFrameTime = glfwGetTime();
 			frameTime = endOfFrameTime - endOfFrameTimeLastFrame;
 			frameRate = 1 / frameTime;
-			//cout << "Frametime: " << frameTime << ", Framerate: " << frameRate << "\n";
-			Console.PushLine(to_string(frameRate));
-			
-
+			//Console.Log(to_string(frameRate));
 			//----------------------------------------------------------------------------------------------------//
 			//                                            END OF FRAME
 			//----------------------------------------------------------------------------------------------------//	
-
 			endOfFrameTimeLastFrame = endOfFrameTime;
 		}
 	}
-	glDeleteVertexArrays(1, &cubeVAO);
+	
+	for (int i = 0; i < VAOs.size(); i++)
+	{
+		glDeleteVertexArrays(1, &VAOs[i]);
+	}
+
 	glDeleteVertexArrays(1, &lightVAO);
 	glfwTerminate();
 

@@ -151,6 +151,7 @@
     <ClCompile Include="glad.c" />
     <ClCompile Include="engine.h" />
     <ClCompile Include="objects.h" />
+    <ClCompile Include="objects.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="transform.h" />
   </ItemGroup>
@@ -163,8 +164,6 @@
   <ItemGroup>
     <ClInclude Include="EngineResources\Colour.h" />
     <ClInclude Include="EngineResources\Console.h" />
-    <ClInclude Include="resource.h" />
-    <ClInclude Include="shader.h" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="Application.rc" />

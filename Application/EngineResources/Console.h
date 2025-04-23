@@ -4,7 +4,7 @@ using namespace std;
 
 class WindowConsole {
 public:
-	void PushLine(string str, bool newLine = true, int col = 37)
+	void Log(string str, bool newLine = true, int col = 37)
 	{
 		string newStr = "\033[" + to_string(col) + "m" + str + "\033[37m";
 		switch (newLine)
@@ -16,21 +16,29 @@ public:
 			cout << newStr;
 		}
 	}
-	void PushLine(vec2 vec, bool newLine = true, int col = 37)
+	void Log(vec2 vec, bool newLine = true, int col = 37)
 	{
-		PushLine(to_string(vec.x) + ", " + to_string(vec.y));
+		Log(to_string(vec.x) + ", " + to_string(vec.y));
 	}
-	void PushLine(vec3 vec, bool newLine = true, int col = 37)
+	void Log(vec3 vec, bool newLine = true, int col = 37)
 	{
-		PushLine(to_string(vec.x) + ", " + to_string(vec.y) + ", " + to_string(vec.z));
+		Log(to_string(vec.x) + ", " + to_string(vec.y) + ", " + to_string(vec.z));
 	}
-	void PushLine(vec4 vec, bool newLine = true, int col = 37)
+	void Log(vec4 vec, bool newLine = true, int col = 37)
 	{
-		PushLine(to_string(vec.x) + ", " + to_string(vec.y) + ", " + to_string(vec.z) + ", " + to_string(vec.w));
+		Log(to_string(vec.x) + ", " + to_string(vec.y) + ", " + to_string(vec.z) + ", " + to_string(vec.w));
+	}
+	void Log(int i, bool newLine = true, int col = 37)
+	{
+		Log(to_string(i), newLine, col);
+	}
+	void Log(float f, bool newLine = true, int col = 37)
+	{
+		Log(to_string(f), newLine, col);
 	}
 	void PushError(string str, bool newLine = true)
 	{
-		PushLine(str, newLine, 31);
+		Log(str, newLine, 31);
 	}
 	void PushError(exception e, bool newLine = false)
 	{
@@ -39,6 +47,6 @@ public:
 	}
 	void PushWarning(string str, bool newLine = true)
 	{
-		PushLine(str, newLine, 35);
+		Log(str, newLine, 35);
 	}
 };

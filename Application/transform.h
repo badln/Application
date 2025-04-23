@@ -3,7 +3,7 @@
 
 //general stuff
 #include <iostream>
-#include "shader.h"
+#include <string>
 
 //OpenGL Mathematics
 #include "GLFW/Include/glm/glm.hpp"
@@ -13,7 +13,8 @@
 using namespace std;
 using namespace glm;
 
-class Transform
+
+class Transforms
 {
 public:
 	string VecToString(vec3 vec)
