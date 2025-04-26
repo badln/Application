@@ -23,6 +23,7 @@ float truncate(float num, float place)
 void main()
 {
    FragPos = vec3(model * vec4(aPos, 1.0f));
+   Normal = mat3(transpose(inverse(model))) * aNormal;
    gl_Position = projection * view * vec4(FragPos, 1.0f);
    if (truncVerts)
    {
@@ -34,6 +35,5 @@ void main()
 			);
    }
    TexCoord = aTexCoord;
-   Normal = mat3(transpose(inverse(model))) * aNormal;
    Position = vec3(gl_Position.x, gl_Position.y, gl_Position.z);
 };

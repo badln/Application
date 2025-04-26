@@ -22,7 +22,6 @@
 using namespace std;
 using namespace glm;
 
-
 EngineInfo engineInfo;
 WindowConsole Console;
 
@@ -38,6 +37,8 @@ int generatedTexture = -1;
 vector <Texture*> textures;
 vector <unsigned int> VAOs;
 vector <ObjContainer*> objects;
+int pointLightNum = 1;
+int spotLightNum = 1;
 bool downArrowPressed, upArrowPressed, leftArrowPressed, rightArrowPressed, spacePressed, ctrlPressed, escPressed, inWireframe = false;
 bool ambientRotation = false;
 bool LookAtMouse = false;
@@ -46,6 +47,7 @@ int ambientRotationMultiplier = 50;
 float mouseYaw = -90.0f;
 float mousePitch = 0.0f;
 const float MouseSensitivity = 0.1f;
+bool mouseClickedThisFrame = false;
 void mouse_callback(GLFWwindow* window, double xpos, double ypos);
 void scroll_callback(GLFWwindow* window, double xOffset, double yOffset);
 float scrollDir;
@@ -97,12 +99,12 @@ float vertexData[] = {
 	//---------------------------------------------------//
 	// Vertex Position  |   Vertex Normals   | TexCoords
 	//---------------------------------------------------//
-	-0.5f, -0.5f, -0.5f,  0.0f,  0.0f, -1.0f,  0.0f,  0.0f,
+	 0.5f,  0.5f, -0.5f,  0.0f,  0.0f, -1.0f,  0.0f,  0.0f,
 	 0.5f, -0.5f, -0.5f,  0.0f,  0.0f, -1.0f,  1.0f,  0.0f,
-	 0.5f,  0.5f, -0.5f,  0.0f,  0.0f, -1.0f,  1.0f,  1.0f,
-	 0.5f,  0.5f, -0.5f,  0.0f,  0.0f, -1.0f,  1.0f,  1.0f,
+	-0.5f, -0.5f, -0.5f,  0.0f,  0.0f, -1.0f,  1.0f,  1.0f,
+	-0.5f, -0.5f, -0.5f,  0.0f,  0.0f, -1.0f,  1.0f,  1.0f,
 	-0.5f,  0.5f, -0.5f,  0.0f,  0.0f, -1.0f,  0.0f,  1.0f,
-	-0.5f, -0.5f, -0.5f,  0.0f,  0.0f, -1.0f,  0.0f,  0.0f,
+	 0.5f,  0.5f, -0.5f,  0.0f,  0.0f, -1.0f,  0.0f,  0.0f,
 
 	-0.5f, -0.5f,  0.5f,  0.0f,  0.0f,  1.0f,  0.0f,  0.0f,
 	 0.5f, -0.5f,  0.5f,  0.0f,  0.0f,  1.0f,  1.0f,  0.0f,
@@ -118,12 +120,12 @@ float vertexData[] = {
 	-0.5f, -0.5f,  0.5f, -1.0f,  0.0f,  0.0f,  0.0f,  0.0f,
 	-0.5f,  0.5f,  0.5f, -1.0f,  0.0f,  0.0f,  1.0f,  0.0f,
 
-	 0.5f,  0.5f,  0.5f,  1.0f,  0.0f,  0.0f,  1.0f,  0.0f,
+	 0.5f, -0.5f, -0.5f,  1.0f,  0.0f,  0.0f,  1.0f,  0.0f,
 	 0.5f,  0.5f, -0.5f,  1.0f,  0.0f,  0.0f,  1.0f,  1.0f,
-	 0.5f, -0.5f, -0.5f,  1.0f,  0.0f,  0.0f,  0.0f,  1.0f,
-	 0.5f, -0.5f, -0.5f,  1.0f,  0.0f,  0.0f,  0.0f,  1.0f,
+	 0.5f,  0.5f,  0.5f,  1.0f,  0.0f,  0.0f,  0.0f,  1.0f,
+	 0.5f,  0.5f,  0.5f,  1.0f,  0.0f,  0.0f,  0.0f,  1.0f,
 	 0.5f, -0.5f,  0.5f,  1.0f,  0.0f,  0.0f,  0.0f,  0.0f,
-	 0.5f,  0.5f,  0.5f,  1.0f,  0.0f,  0.0f,  1.0f,  0.0f,
+	 0.5f, -0.5f, -0.5f,  1.0f,  0.0f,  0.0f,  1.0f,  0.0f,
 
 	-0.5f, -0.5f, -0.5f,  0.0f, -1.0f,  0.0f,  0.0f,  1.0f,
 	 0.5f, -0.5f, -0.5f,  0.0f, -1.0f,  0.0f,  1.0f,  1.0f,
@@ -132,12 +134,12 @@ float vertexData[] = {
 	-0.5f, -0.5f,  0.5f,  0.0f, -1.0f,  0.0f,  0.0f,  0.0f,
 	-0.5f, -0.5f, -0.5f,  0.0f, -1.0f,  0.0f,  0.0f,  1.0f,
 
-	-0.5f,  0.5f, -0.5f,  0.0f,  1.0f,  0.0f,  0.0f,  1.0f,
+	 0.5f,  0.5f,  0.5f,  0.0f,  1.0f,  0.0f,  0.0f,  1.0f,
 	 0.5f,  0.5f, -0.5f,  0.0f,  1.0f,  0.0f,  1.0f,  1.0f,
-   	 0.5f,  0.5f,  0.5f,  0.0f,  1.0f,  0.0f,  1.0f,  0.0f,
-	 0.5f,  0.5f,  0.5f,  0.0f,  1.0f,  0.0f,  1.0f,  0.0f,
+   	-0.5f,  0.5f, -0.5f,  0.0f,  1.0f,  0.0f,  1.0f,  0.0f,
+	-0.5f,  0.5f, -0.5f,  0.0f,  1.0f,  0.0f,  1.0f,  0.0f,
 	-0.5f,  0.5f,  0.5f,  0.0f,  1.0f,  0.0f,  0.0f,  0.0f,
-	-0.5f,  0.5f, -0.5f,  0.0f,  1.0f,  0.0f,  0.0f,  1.0f
+	 0.5f,  0.5f,  0.5f,  0.0f,  1.0f,  0.0f,  0.0f,  1.0f
 
 };
 float clamp(float val, float min, float max, bool loop = false)
@@ -164,7 +166,6 @@ float clamp(float val, float min, float max, bool loop = false)
 	}
 	return val;
 }
-
 string bool_str(bool b)
 {
 	if (to_string(b) == "0")
@@ -399,39 +400,59 @@ int main()
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
 
 	glEnable(GL_DEPTH_TEST);
+	glEnable(GL_CULL_FACE);
 
 	Mesh cubeMesh;
 	cubeMesh.Set(vertexData, sizeof(vertexData));
 
-	ObjContainer lightCube("LightSource");
+	ObjContainer Sun("Sun");
+	Sun.light.enabled = true;
+	Sun.light.colour = vec4(1);
+	Sun.light.type = LightType.Ambient;
+
+	ObjContainer lightCube("Gay porn");
+	lightCube.light.enabled = true;
 	lightCube.renderer.mesh = cubeMesh;
 	lightCube.renderer.material.shader = &lightGizmo;
 	lightCube.transform.scale = vec3(0.2f);
-
-	lightCube.transform.position = vec3(0.0f, 3.0f, -3.0f);
+	lightCube.transform.position = vec3(0.0f, 6.0f, -1.0f);
 
 	lightCube.light.direction = vec3(0.0f, -1.0f, 0.0f);
-	lightCube.light.type = 0;
-
-	lightCube.light.linear = 0.045f;
-	lightCube.light.quadratic = 0.0075;
-
+	lightCube.light.colour = vec4(1.0f);
 	lightCube.light.cutoff = 17.5;
 	lightCube.light.outerCutoff = 20.5;
+	lightCube.light.type = LightType.Spot;
+	lightCube.light.colour = vec4(1.0f, 0.0f, 0.0f, 1.0f);
+
+	ObjContainer lightCube2;
+	lightCube2.name("lightCube2");
+	lightCube2 = lightCube;
+	lightCube2.transform.position += vec3(1.5f, 0.0f, -2.0f);
+	lightCube2.light.colour = vec4(0.0f, 1.0f, 0.0f, 1.0f);
+
+	ObjContainer lightCube3;
+	lightCube3 = lightCube;
+	lightCube3.name("lightSource3");
+	lightCube3.transform.position += vec3(-1.5f, 0.0f, -2.0f);
+	lightCube3.light.colour = vec4(0.0f, 0.0f, 1.0f, 1.0f);
+
 
 	ObjContainer object;
 	object.renderer.material.diffuseTex = Texture("image/emerald_ore/emerald_ore.png");
 	object.renderer.material.specularTex = Texture("image/emerald_ore/emerald_ore_s.png");
 	object.renderer.material.emmissiveTex = Texture("image/emerald_ore/emerald_ore_e.png");
 	object.renderer.mesh = cubeMesh;
-
+	object.renderer.material.shininess = 100.0f;
 	object.transform.scale = vec3(5.0f);
 	object.transform.position = vec3(0.0f, 0.0f, -3.0f);
+	object.renderer.material.culling = FaceCulling.Back;
 
 	mainCamera.Position = vec3(0.0f, 4.0f, 0.0f);
 
 	mainCamera.fov = 75;
 	float lightDistanceToCam;
+	int num{ 0 };
+	float distance{ 0 };
 	while (!glfwWindowShouldClose(window))
 	{
 
@@ -446,8 +467,6 @@ int main()
 		mat4 view = mat4(1.0f);
 		view = lookAt(mainCamera.Position, mainCamera.Position + mainCamera.forward, mainCamera.up);
 
-		lightCube.renderer.material.colour = lightCube.light.colour;
-
 		if (glfwGetTime() > endOfFrameTime + desiredFrametime)
 		{
 			//---------------//
@@ -457,11 +476,6 @@ int main()
 			processInput(window);
 			MousePos.x = clamp(MousePos.x, 0, windowSize.x, true);
 			MousePos.y = clamp(MousePos.y, 0, windowSize.y, true);
-
-			//----------------------//
-			// rendering commands here
-			//----------------------//
-			glClearColor(lightCube.light.colour.x / 15 * lightCube.light.colour.w, lightCube.light.colour.y / 15 * lightCube.light.colour.w, lightCube.light.colour.z / 15 * lightCube.light.colour.w, 1);
 			glClear(GL_COLOR_BUFFER_BIT);
 			glClear(GL_DEPTH_BUFFER_BIT);
 
@@ -471,24 +485,32 @@ int main()
 				glBindTexture(GL_TEXTURE_2D, i + 1);
 				if (frame == 0)
 				{
-					if (!textures[i]->manualFiltering()) {
+					if (textures[i]->manualFiltering() == false) {
 						textures[i]->filterMode(engineInfo.defaultFiltering);
 					}
 					textures[i]->Set();
 				}
 			}
 			
+			//-------------------------------------------------------------------------------//
+			// Drawing objects and sending their respective properties to their shader program.
+			//-------------------------------------------------------------------------------//
+
 			for (int i = 0; i < objects.size(); i++)
 			{
 				if (objects[i]->renderer.material.shader == NULL)
 				{
 					objects[i]->renderer.material.shader = &litShader;
 				}
+				if (objects[i]->light.enabled)
+				{
+					litShader.use();
+					litShader.setLight(objects[i]->light, objects[i]->transform.position);
+				}
 				objects[i]->renderer.material.shader->use();
 				objects[i]->renderer.material.shader->setMatrix("projection", projectionMat);
 				objects[i]->renderer.material.shader->setMatrix("view", view);
 				objects[i]->renderer.material.shader->setVector("cameraPos", mainCamera.Position.x, mainCamera.Position.y, mainCamera.Position.z);
-				objects[i]->renderer.material.shader->setLight("light", lightCube.light, lightCube.transform.position);
 				objects[i]->renderer.material.shader->setFloat("time", glfwGetTime());
 				objects[i]->renderer.material.shader->setBool("wireframe", inWireframe);
 				objects[i]->renderer.material.shader->setVector("colour", objects[i]->renderer.material.colour.x, objects[i]->renderer.material.colour.y, objects[i]->renderer.material.colour.z);
@@ -518,9 +540,21 @@ int main()
 				model = rotate(   model, objects[i]->transform.rotation.x * (engineInfo.pi / 180), vec3(0.0f, 0.0f, 1.0f));
 				model = scale(	  model, objects[i]->transform.scale);
 				objects[i]->renderer.material.shader->setMatrix("model", model);
+				if (objects[i]->renderer.material.culling == FaceCulling.Back)
+					glCullFace(GL_BACK);
+				else if (objects[i]->renderer.material.culling == FaceCulling.Front)
+					glCullFace(GL_FRONT);
+				else if (objects[i]->renderer.material.culling == FaceCulling.BackAndFront)
+					glCullFace(GL_FRONT_AND_BACK);
+				else if (objects[i]->renderer.material.culling == FaceCulling.None)
+					glDisable(GL_CULL_FACE);
+
 				glBindVertexArray(objects[i]->renderer.mesh.VAO());
 				glDrawArrays(GL_TRIANGLES, 0, 36);
+				if (objects[i]->renderer.material.culling == FaceCulling.None)
+					glEnable(GL_CULL_FACE);
 			}
+
 			if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
 			{
 				mainCamera.Position += (mainCamera.SpeedMultiplier * (float)frameTime) * mainCamera.forward;
@@ -548,21 +582,48 @@ int main()
 			}
 			if (glfwGetKey(window, GLFW_KEY_DOWN) == GLFW_PRESS)
 			{
-				lightCube.light.colour.w -= 1.0f * frameTime;
+				Sun.light.colour.w -= 1.0f * frameTime;
 			}
 			if (glfwGetKey(window, GLFW_KEY_UP) == GLFW_PRESS)
 			{
-				lightCube.light.colour.w += 1.0f * frameTime;
+				Sun.light.colour.w += 1.0f * frameTime;
+			}
+			if (glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_RIGHT) == GLFW_PRESS && mouseClickedThisFrame == false)
+			{
+				distance = 0;
+				mouseClickedThisFrame = true;
+				for (int i = 0; i < objects.size(); i++)
+				{
+					if (objects[i]->light.enabled && objects[i]->light.type != LightType.Ambient)
+					{
+						objects[i]->renderer.material.colour = vec4(1);
+						float new_distance = Vector3.Distance(objects[i]->transform.position, mainCamera.Position);
+						if (new_distance <= distance || distance == 0)
+						{
+							distance = new_distance;
+							num = i;
+						}
+						else {
+						}
+					}
+				}
+				lightDistanceToCam = Vector3.Distance(objects[num]->transform.position, mainCamera.Position);
+			}
+			else if (glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_RIGHT) == GLFW_RELEASE && mouseClickedThisFrame)
+			{
+				objects[num]->renderer.material.colour = vec4(1.0f);
+				mouseClickedThisFrame = false;
 			}
 			if (glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_RIGHT) == GLFW_PRESS)
 			{
+				objects[num]->renderer.material.colour = vec4(1.0f, 1.0f, ((sin(glfwGetTime() * 10) / 2) + 1), 1.0f);
 				lightDistanceToCam = clamp((lightDistanceToCam + scrollDir / 10), 1, 20);
 				vec3 camForward = mainCamera.Position + mainCamera.forward * lightDistanceToCam;
-				lightCube.transform.position = camForward;
-				lightCube.light.direction = mainCamera.forward;
+				objects[num]->transform.position = camForward;
+				objects[num]->light.direction = mainCamera.forward;
 			}
 			else {
-				lightDistanceToCam = Vector3.Distance(lightCube.transform.position, mainCamera.Position);
+				lightDistanceToCam = Vector3.Distance(objects[num]->transform.position, mainCamera.Position);
 			}
 			scrollDir = 0;
 			glfwSwapBuffers(window);

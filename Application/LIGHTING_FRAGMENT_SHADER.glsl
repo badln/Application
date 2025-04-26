@@ -11,29 +11,57 @@ uniform float time;
 uniform float mixAmount;
 uniform bool wireframe;
 uniform vec4 cameraPos;
+uniform vec3 wireframeCol = vec3(0);
 
-uniform vec3 wireframeCol = vec3(1, 1, 1);  //White by default
+struct AmbientLight {
+    
+    vec4 colour;
+};
 
-struct Light
-{
+struct DirLight {
+
+    vec4 colour;
+    vec4 direction;
+	
     vec4 ambient;
-	vec4 diffuse;
-	vec4 specular;
-	vec4 position;
+    vec4 diffuse;
+    vec4 specular;
+};
+
+struct PointLight {
     vec4 colour;
 
-    vec4 direction;
-    int type;
-
+    vec4 position;
+    
+    float constant;
     float linear;
     float quadratic;
-    float constant;
+	
+    vec4 ambient;
+    vec4 diffuse;
+    vec4 specular;
+};
 
+struct SpotLight {
+
+    vec4 colour;
+    vec4 position;
+    vec4 direction;
     float cutoff;
     float outerCutoff;
+  
+    float constant;
+    float linear;
+    float quadratic;
+  
+    vec4 ambient;
+    vec4 diffuse;
+    vec4 specular;       
 };
-uniform Light light;
-
+uniform DirLight dirLight;
+uniform PointLight pLight[4];
+uniform SpotLight sLight[4];
+uniform AmbientLight aLight;
 struct Material
 {
     vec4 ambient;
@@ -58,7 +86,58 @@ uniform Material mat;
 float timeMultiplier = 2.5f;
 float flip(float num)
 {
-    return abs(num - 1);
+    return abs(num - 1.0f);
+}
+vec3 CalcDirLight(DirLight light, vec3 normal, vec3 viewDir, vec4 difTex, vec4 specTex)
+{
+    vec3 lightDir = normalize(-vec3(light.direction));
+    float diff = max(dot(normal, lightDir), 0.0);
+    vec3 reflectDir = reflect(-lightDir, normal);
+    float spec = pow(max(dot(viewDir, reflectDir), 0.0), mat.shininess);
+    vec3 ambient = vec3(light.ambient) * vec3(difTex);
+    vec3 diffuse = vec3(light.ambient) * diff * vec3(difTex);   
+    vec3 specular = vec3(light.specular) * spec * vec3(specTex);
+    return clamp((ambient + diffuse + specular), 0, 1) * vec3(light.colour);
+}  
+vec3 CalcPointLight(PointLight light, vec3 normal, vec3 fragPos, vec3 viewDir, vec4 difTex, vec4 specTex)
+{
+    vec3 lightDir = normalize(vec3(light.position) - fragPos);
+    float diff = max(dot(normal, lightDir), 0.0);
+    vec3 reflectDir = reflect(-lightDir, normal);
+    float spec = pow(max(dot(viewDir, reflectDir), 0.0), mat.shininess);
+    float distance = length(vec3(light.position) - fragPos);
+    float attenuation = 1.0 / (light.constant + light.linear * distance + light.quadratic * (distance * distance));    
+    vec3 ambient = vec3(light.ambient) * vec3(difTex);
+    vec3 diffuse = vec3(light.ambient) * diff * vec3(difTex);
+    vec3 specular = vec3(light.specular) * spec * vec3(specTex);
+    ambient *= attenuation;
+    diffuse *= attenuation;
+    specular *= attenuation;
+    return clamp((ambient + diffuse + specular), 0, 1) * vec3(light.colour);
+}
+vec3 CalcSpotLight(SpotLight light, vec3 normal, vec3 fragPos, vec3 viewDir, vec4 difTex, vec4 specTex)
+{
+    vec3 lightDir = normalize(vec3(light.position) - fragPos);
+    float diff = max(dot(normal, lightDir), 0.0);
+    vec3 reflectDir = reflect(-lightDir, normal);
+    float spec = pow(max(dot(viewDir, reflectDir), 0.0), mat.shininess);
+    float distance = length(vec3(light.position) - fragPos);
+    float attenuation = 1.0 / (light.constant + light.linear * distance + light.quadratic * (distance * distance));    
+    if (dot(normal, lightDir) < 0)
+    {
+        return vec3(0.0f, 0.0f, 0.0f);
+    }
+    float theta = dot(lightDir, normalize(vec3(-light.direction))); 
+    float epsilon = light.cutoff - light.outerCutoff;
+    float intensity = clamp((theta - light.outerCutoff) / epsilon, 0.0, 1.0);
+
+    vec3 ambient = vec3(light.ambient) * vec3(difTex);
+    vec3 diffuse = vec3(light.ambient) * diff * vec3(difTex);
+    vec3 specular = vec3(light.specular) * spec * vec3(specTex);
+    ambient *= attenuation * intensity;
+    diffuse *= attenuation * intensity;
+    specular *= attenuation * intensity;
+    return clamp((ambient + diffuse + specular), 0, 1) * vec3(light.colour);
 }
 
 vec4 Checkerboard()
@@ -97,91 +176,49 @@ void main()
         }
         else
         {
-            vec4 diffuseTexture;
-            vec4 specularTexture;
-            vec4 emmissiveTexture;
-            if (mat.dif_tex)
-            {
-                diffuseTexture = vec4(texture(mat.diffuseTex, TexCoord));
-            }
-            else
-            {
-                diffuseTexture = vec4(1.0f);
-            }
-            if (mat.spec_tex)
-            {
-                specularTexture = vec4(texture(mat.specularTex, TexCoord));
-            }
-            else
-            {
-                specularTexture = vec4(1.0f);
-            }
+            vec3 pixelColours;
+            vec4 emTex;
+            vec4 specTex;
+            vec4 difTex;
+            vec4 tex;
+
             if (mat.em_tex)
-            {
-                emmissiveTexture = vec4(texture(mat.emmissiveTex, TexCoord));
-            }
-            else
-            {
-                emmissiveTexture = vec4(0.0f);
-            }
-
-            //diffuse
-            vec3 normal = normalize(Normal);
-            vec3 lightDir;
-            vec4 pixelColours;
-            lightDir = normalize(vec3(light.position) - FragPos);
-            if (light.type == 1){
-
-                lightDir = normalize(vec3(-light.direction));
-            }
-           
-            float diff = max(dot(normal, lightDir), 0.0f);
-            vec4 diffuse = light.diffuse * (diff * mat.diffuse * diffuseTexture);
-
-            //specular
-            vec3 viewDir = normalize(vec3(cameraPos.x, cameraPos.y, cameraPos.z) - FragPos);
-            vec3 reflectDir = reflect(-lightDir, normal);
-            float f_specular = pow(max(dot(viewDir, reflectDir),0), mat.shininess * 128);
-            vec4 specular = light.specular * (f_specular * mat.specular * specularTexture);
-
-            //ambient
-            vec4 ambient = light.ambient * mat.ambient * diffuseTexture;
-
-            if (light.type == 2){
-                
-
-                float theta = dot(lightDir, normalize(vec3(-light.direction)));
-                float epsilon = light.cutoff - light.outerCutoff;
-                float intensity = clamp((theta - light.outerCutoff) / epsilon, 0.0, 1.0);    
-
-                diffuse *= intensity;
-                specular *= intensity;
-
-            }
-
-            float distance = length(vec3(light.position) - FragPos);
-            float attenuation = 1.0f / (light.constant + light.linear * distance + light.quadratic * (distance * distance));
-
-            ambient *= attenuation;
-            diffuse *= attenuation;
-            specular *= attenuation;
+            {   emTex = texture(mat.emmissiveTex, TexCoord); }
+            else { emTex = vec4(0.0f); }
 
             if (mat.as_tex)
+            {   tex = texture(mat.texture, TexCoord); }
+            else { tex = vec4(1.0f); }
+
+            if (mat.dif_tex)
+            {   difTex = texture(mat.diffuseTex, TexCoord); }
+            else { difTex = vec4(1.0f);}
+
+            if (mat.spec_tex)
+            {   specTex = texture(mat.specularTex, TexCoord); }
+            else { specTex = vec4(1.0f); } 
+
+            vec3 norm = normalize(Normal);
+            vec3 viewDir = normalize(vec3(cameraPos) - FragPos);
+            
+            pixelColours = CalcDirLight(dirLight, norm, viewDir, difTex, specTex);
+            for (int i = 0; i < 4; i++)
             {
-               pixelColours = (ambient + diffuse) * texture(mat.texture, TexCoord) + specular + emmissiveTexture;
+                pixelColours += CalcPointLight(pLight[i], norm, FragPos, viewDir, difTex, specTex);
             }
-            else
+            for (int i = 0; i < 4; i++)
             {
-               pixelColours = ambient + diffuse + specular + emmissiveTexture; 
+                pixelColours += CalcSpotLight(sLight[i], norm, FragPos, viewDir, difTex, specTex);
             }
-            //FragColor = emmissiveTexture;
-            FragColor = pixelColours * mat.colour * light.colour * (light.colour.w + mat.emmissive);
+
+            FragColor = emTex + vec4(pixelColours, 1.0f) * ((mat.colour + emTex) * aLight.colour.w) * aLight.colour;
+            //FragColor = vec4(norm, 1);    //Test normals
         }
         
     }
      
      //FragColor += -vertex_colour;
-     //FragColor = vec4(TexCoord, 0, 0);
+     //FragColor = vec4(TexCoord, 0, 0);|
      //FragColor = vertex_colour;
      //FragColor = vec4(abs(vertex_position_frag)) * vertex_colour;
 };

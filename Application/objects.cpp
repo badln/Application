@@ -14,6 +14,7 @@ void Texture::Set(const char* location, int size)
 {
 	if (!texAssigned_)
 	{
+
 		path = location;
 		stbi_set_flip_vertically_on_load(true);
 		unsigned int tex;
@@ -29,13 +30,6 @@ void Texture::Set(const char* location, int size)
 			GenErrorTex(ErrorTex, errorTex);
 		}
 		else {
-			if (!idAssigned_)
-			{
-				generatedTexture++;
-				id_ = generatedTexture;
-				idAssigned_ = true;
-				textures.push_back(this);
-			}
 
 			GLenum format;
 			if (nrChannels == 1)
@@ -51,6 +45,13 @@ void Texture::Set(const char* location, int size)
 			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, wrapMode_);
 			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, filterMode_);
 			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, magFilterMode_);
+			if (!idAssigned_)
+			{
+				generatedTexture++;
+				id_ = generatedTexture;
+				idAssigned_ = true;
+				textures.push_back(this);
+			}
 			texAssigned_ = true;
 		}
 		data_ = tex;
@@ -79,7 +80,7 @@ void Texture::wrapMode(GLenum mode)
 	wrapMode_ = mode;
 	Set();
 }
-void Texture::filterMode(GLenum mode)
+void Texture::filterMode(GLenum mode, bool update)
 {
 	if (mode == GL_NEAREST_MIPMAP_NEAREST || mode == GL_NEAREST_MIPMAP_LINEAR) {
 		magFilterMode_ = GL_NEAREST;
@@ -98,6 +99,11 @@ void Texture::filterMode(GLenum mode)
 		{
 			Set();
 		}
+
+	}
+	if (!update)
+	{
+		textures[id()]->filterMode(mode, true);
 	}
 }
 
@@ -130,6 +136,7 @@ void Mesh::Set(float* vertData, int vertDataSize)
 {
 	for (int i = 0; i < ((vertDataSize / sizeof(float)) / 8); i++)
 	{
+
 		vec3 pos;
 		pos.x = vertData[(-8 + ((i + 1) * 8))];
 		pos.y = vertData[(-7 + ((i + 1) * 8))];
@@ -318,21 +325,66 @@ void Shader::setMaterial(const string& name, vec3 diffuse, vec3 specular, vec3 a
 	}
 	catch (exception e) {}
 }
-void Shader::setLight(const string& name, const LightSource light, vec3 parentObjPos)
+void Shader::setLight(LightSource& light, vec3 parentObjPos)
 {
 	try {
-		setVector(name + ".diffuse", light.diffuse.x, light.diffuse.y, light.diffuse.z);
-		setVector(name + ".specular", light.specular.x, light.specular.y, light.specular.z);
-		setVector(name + ".ambient", light.ambient.x, light.ambient.y, light.ambient.z);
-		setVector(name + ".colour", light.colour.x, light.colour.y, light.colour.z, light.colour.w);
-		setVector(name + ".position", light.position.x + parentObjPos.x, light.position.y + parentObjPos.y, light.position.z + parentObjPos.z);
-		setVector(name + ".direction", light.direction.x, light.direction.y, light.direction.z);
-		setInt(name + ".type", light.type);
-		setFloat(name + ".linear", light.linear);
-		setFloat(name + ".quadratic", light.quadratic);
-		setFloat(name + ".constant", light.constant);
-		setFloat(name + ".cutoff",  cos(radians(light.cutoff)));
-		setFloat(name + ".outerCutoff",  cos(radians(light.outerCutoff)));
+		// 0 = point
+		// 1 = direction
+		// 2 = spot
+		// 3 = ambient
+		string name;
+		switch (light.type)
+		{
+		case 0:
+			name = "pLight";
+			if (light.renderQueue == 0)
+			{
+				light.renderQueue = pointLightNum;
+				pointLightNum++;
+			}
+			setVector(name + "[" + to_string(light.renderQueue) + "].diffuse", light.diffuse.x, light.diffuse.y, light.diffuse.z);
+			setVector(name + "[" + to_string(light.renderQueue) + "].specular", light.specular.x, light.specular.y, light.specular.z);
+			setVector(name + "[" + to_string(light.renderQueue) + "].ambient", light.ambient.x, light.ambient.y, light.ambient.z);
+			setVector(name + "[" + to_string(light.renderQueue) + "].colour", light.colour.x, light.colour.y, light.colour.z, light.colour.w);
+			setVector(name + "[" + to_string(light.renderQueue) + "].position", light.position.x + parentObjPos.x, light.position.y + parentObjPos.y, light.position.z + parentObjPos.z);
+			setFloat(name +  "[" + to_string(light.renderQueue) + "].linear", light.linear);
+			setFloat(name +  "[" + to_string(light.renderQueue) + "].quadratic", light.quadratic);
+			setFloat(name +  "[" + to_string(light.renderQueue) + "].constant", light.constant);
+			break;
+		case 1:
+			name = "dirLight";
+			setVector(name + ".diffuse", light.diffuse.x, light.diffuse.y, light.diffuse.z);
+			setVector(name + ".specular", light.specular.x, light.specular.y, light.specular.z);
+			setVector(name + ".ambient", light.ambient.x, light.ambient.y, light.ambient.z);
+			setVector(name + ".colour", light.colour.x, light.colour.y, light.colour.z, light.colour.w);
+			setVector(name + ".direction", light.direction.x, light.direction.y, light.direction.z);
+			break;
+		case 2:
+			name = "sLight";
+			if (light.renderQueue == 0)
+			{ 
+				light.renderQueue = spotLightNum;
+				spotLightNum++;
+			}
+			setFloat(name +  "[" + to_string(light.renderQueue - 1) + "].linear", light.linear);
+			setFloat(name +  "[" + to_string(light.renderQueue - 1) + "].quadratic", light.quadratic);
+			setFloat(name +  "[" + to_string(light.renderQueue - 1) + "].constant", light.constant);
+			setVector(name + "[" + to_string(light.renderQueue - 1) + "].diffuse", light.diffuse.x, light.diffuse.y, light.diffuse.z);
+			setVector(name + "[" + to_string(light.renderQueue - 1) + "].specular", light.specular.x, light.specular.y, light.specular.z);
+			setVector(name + "[" + to_string(light.renderQueue - 1) + "].ambient", light.ambient.x, light.ambient.y, light.ambient.z);
+			setVector(name + "[" + to_string(light.renderQueue - 1) + "].colour", light.colour.x, light.colour.y, light.colour.z, light.colour.w);
+			setVector(name + "[" + to_string(light.renderQueue - 1) + "].position", light.position.x + parentObjPos.x, light.position.y + parentObjPos.y, light.position.z + parentObjPos.z);
+			setVector(name + "[" + to_string(light.renderQueue - 1) + "].direction", light.direction.x, light.direction.y, light.direction.z);
+			setFloat(name +  "[" + to_string(light.renderQueue - 1) + "].cutoff", cos(radians(light.cutoff)));
+			setFloat(name +  "[" + to_string(light.renderQueue - 1) + "].outerCutoff", cos(radians(light.outerCutoff)));
+			break;
+		case 3:
+			name = "aLight";
+			setVector(name + ".colour", light.colour.x, light.colour.y, light.colour.z, light.colour.w);
+			glClearColor(light.colour.x / 15 * light.colour.w, light.colour.y / 15 * light.colour.w, light.colour.z / 15 * light.colour.w, 1);
+			break;
+		}
+
 	}
 	catch (exception e) {}
 
@@ -368,6 +420,7 @@ ObjContainer::ObjContainer(const char* objectName)
 }
 ObjContainer::ObjContainer()
 {
+
 	name_ = "New Object";
 	objects.push_back(this);
 }

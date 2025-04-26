@@ -14,7 +14,6 @@
 #include <string>
 #include <vector>
 
-
 using namespace glm;
 using namespace std;
 
@@ -43,11 +42,21 @@ public:
 	float fov = 90;
 
 };
+
+struct {
+	const int Point	      { 0 };  //LightType.Point	      (is equal to 0)
+	const int Directional { 1 };  //LightType.Directional (is equal to 1)
+	const int Spot	      { 2 };  //LightType.Spot        (is equal to 2)
+	const int Ambient	  { 3 };  //LightType.Ambient     (is equal to 3)
+} LightType ;
+
 class LightSource
 {
 public:
-	float linear = 0.09f;
-	float quadratic = 0.032f;
+	int renderQueue = 0;
+	bool enabled = false;
+	float linear = 0.07f;
+	float quadratic = 0.017f;
 	float constant = 1.0f;
 	float cutoff = 1.5f;
 	float outerCutoff = 17.5f;
@@ -63,6 +72,14 @@ public:
 	LightSource(int lightType, vec3 lightDirection);
 	LightSource();
 };
+extern int pointLightNum;
+extern int spotLightNum;
+struct {
+	const GLenum Nearest =		 GL_NEAREST_MIPMAP_NEAREST;
+	const GLenum NearestLinear = GL_NEAREST_MIPMAP_LINEAR;
+	const GLenum Linear =	     GL_LINEAR_MIPMAP_LINEAR;
+	const GLenum LinearNearest = GL_LINEAR_MIPMAP_NEAREST;
+} TextureFilter ;
 class Texture
 {
 	bool texAssigned_ = false;
@@ -71,7 +88,7 @@ class Texture
 	unsigned int data_;
 	int id_;
 	bool error_ = false;
-	GLenum filterMode_ = GL_LINEAR_MIPMAP_LINEAR;
+	GLenum filterMode_ = TextureFilter.Linear;
 	GLenum magFilterMode_ = GL_LINEAR;
 	GLenum wrapMode_ = GL_REPEAT;
 public:
@@ -87,9 +104,10 @@ public:
 	Texture(const char* location, int size = 1);
 	Texture();
 	void wrapMode(GLenum mode);
-	void filterMode(GLenum mode);
+	void filterMode(GLenum mode, bool update = false);
 
 	vec4 colour = vec4(1.0f);
+
 
 	void Set(const char* location, int size = 1);
 	void Set();
@@ -112,16 +130,23 @@ public:
 	void setVector(const string& name, float valueX, float valueY, float valueZ, float valueW = 1) const;
 	void setMatrix(const string& name, mat4 matrix);
 	void setMaterial(const string& name, vec3 diffuse, vec3 specular, vec3 ambient, float shininess, vec4 colour, vec4 texColour, int texId, bool texAssigned, int difTexId, bool difTexAssigned, int specTexId, bool specTexAssigned, bool texError, bool difTexError, bool specTexError, float emmissive, int emmissiveTexId, bool emmissiveTexAssigned, bool emmissiveError);
-	void setLight(const string& name, const LightSource light, vec3 parentObjPos);
+	void setLight(LightSource& light, vec3 parentObjPos);
 private:
 
 	void checkCompileErrors(unsigned int shader, string type);
 };
 extern vector <Texture*> textures;
 
+struct {
+	int Back = 0;
+	int Front = 1;
+	int BackAndFront = 2;
+	int None = 3;
+} FaceCulling ;
 class Material
 {
 public:
+	int culling = FaceCulling.Back;
 	vec3 ambient = vec3(0.1f);
 	vec3 diffuse = vec3(1.0f);
 	Texture diffuseTex;
@@ -129,7 +154,7 @@ public:
 	Texture specularTex;
 	float emmissive;
 	Texture emmissiveTex;
-	float shininess = 1.0f;
+	float shininess = 100.0f;
 	vec4 colour = vec4(1.0f);
 	Texture texture;
 	Shader *shader;
