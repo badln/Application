@@ -1,257 +1,67 @@
-﻿  Scanning sources for module dependencies...
-  main.cpp
-C:\Users\faye\Desktop\Projects\Application\Application\main.cpp(11,18): warning C4067: unexpected tokens following preprocessor directive - expected a newline
+﻿  main.cpp
+C:\Users\faye\Desktop\Projects\Application\Application\main.cpp(11,10): warning C4067: unexpected tokens following preprocessor directive - expected a newline
+C:\Users\faye\Desktop\Projects\Application\Application\engine.h(11,13): warning C4305: 'initializing': truncation from 'double' to 'float'
+  (compiling source file 'main.cpp')
+  
 C:\Program Files (x86)\Windows Kits\10\Include\10.0.22621.0\shared\minwindef.h(130,9): warning C4005: 'APIENTRY': macro redefinition
   (compiling source file 'main.cpp')
-      C:\Users\faye\Desktop\Projects\Application\Application\GLFW\Include\glad\glad.h(32,9):
+      C:\Users\faye\Desktop\Projects\Application\Application\Libraries\Include\glad\glad.h(32,9):
       see previous definition of 'APIENTRY'
   
-C:\Program Files (x86)\Windows Kits\10\Include\10.0.22621.0\shared\rpcndr.h(203,9): error C2872: 'byte': ambiguous symbol
-  (compiling source file 'main.cpp')
-      C:\Program Files (x86)\Windows Kits\10\Include\10.0.22621.0\shared\rpcndr.h(202,23):
-      could be 'unsigned char byte'
-      C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.42.34433\include\cstddef(34,24):
-      or       'std::byte'
-  
-C:\Program Files (x86)\Windows Kits\10\Include\10.0.22621.0\shared\rpcndr.h(975,6): error C2872: 'byte': ambiguous symbol
-  (compiling source file 'main.cpp')
-      C:\Program Files (x86)\Windows Kits\10\Include\10.0.22621.0\shared\rpcndr.h(202,23):
-      could be 'unsigned char byte'
-      C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.42.34433\include\cstddef(34,24):
-      or       'std::byte'
-  
-C:\Program Files (x86)\Windows Kits\10\Include\10.0.22621.0\shared\rpcndr.h(983,6): error C2872: 'byte': ambiguous symbol
-  (compiling source file 'main.cpp')
-      C:\Program Files (x86)\Windows Kits\10\Include\10.0.22621.0\shared\rpcndr.h(202,23):
-      could be 'unsigned char byte'
-      C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.42.34433\include\cstddef(34,24):
-      or       'std::byte'
-  
-C:\Program Files (x86)\Windows Kits\10\Include\10.0.22621.0\shared\wtypesbase.h(447,21): error C2872: 'byte': ambiguous symbol
-  (compiling source file 'main.cpp')
-      C:\Program Files (x86)\Windows Kits\10\Include\10.0.22621.0\shared\rpcndr.h(202,23):
-      could be 'unsigned char byte'
-      C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.42.34433\include\cstddef(34,24):
-      or       'std::byte'
-  
-C:\Program Files (x86)\Windows Kits\10\Include\10.0.22621.0\shared\wtypesbase.h(472,21): error C2872: 'byte': ambiguous symbol
-  (compiling source file 'main.cpp')
-      C:\Program Files (x86)\Windows Kits\10\Include\10.0.22621.0\shared\rpcndr.h(202,23):
-      could be 'unsigned char byte'
-      C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.42.34433\include\cstddef(34,24):
-      or       'std::byte'
-  
-C:\Program Files (x86)\Windows Kits\10\Include\10.0.22621.0\shared\wtypesbase.h(489,21): error C2872: 'byte': ambiguous symbol
-  (compiling source file 'main.cpp')
-      C:\Program Files (x86)\Windows Kits\10\Include\10.0.22621.0\shared\rpcndr.h(202,23):
-      could be 'unsigned char byte'
-      C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.42.34433\include\cstddef(34,24):
-      or       'std::byte'
-  
-C:\Program Files (x86)\Windows Kits\10\Include\10.0.22621.0\shared\wtypes.h(85,21): error C2872: 'byte': ambiguous symbol
-  (compiling source file 'main.cpp')
-      C:\Program Files (x86)\Windows Kits\10\Include\10.0.22621.0\shared\rpcndr.h(202,23):
-      could be 'unsigned char byte'
-      C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.42.34433\include\cstddef(34,24):
-      or       'std::byte'
-  
-C:\Program Files (x86)\Windows Kits\10\Include\10.0.22621.0\shared\wtypes.h(94,21): error C2872: 'byte': ambiguous symbol
-  (compiling source file 'main.cpp')
-      C:\Program Files (x86)\Windows Kits\10\Include\10.0.22621.0\shared\rpcndr.h(202,23):
-      could be 'unsigned char byte'
-      C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.42.34433\include\cstddef(34,24):
-      or       'std::byte'
-  
-C:\Program Files (x86)\Windows Kits\10\Include\10.0.22621.0\shared\wtypes.h(100,21): error C2872: 'byte': ambiguous symbol
-  (compiling source file 'main.cpp')
-      C:\Program Files (x86)\Windows Kits\10\Include\10.0.22621.0\shared\rpcndr.h(202,23):
-      could be 'unsigned char byte'
-      C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.42.34433\include\cstddef(34,24):
-      or       'std::byte'
-  
-C:\Program Files (x86)\Windows Kits\10\Include\10.0.22621.0\shared\wtypes.h(106,21): error C2872: 'byte': ambiguous symbol
-  (compiling source file 'main.cpp')
-      C:\Program Files (x86)\Windows Kits\10\Include\10.0.22621.0\shared\rpcndr.h(202,23):
-      could be 'unsigned char byte'
-      C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.42.34433\include\cstddef(34,24):
-      or       'std::byte'
-  
-C:\Program Files (x86)\Windows Kits\10\Include\10.0.22621.0\shared\wtypes.h(112,21): error C2872: 'byte': ambiguous symbol
-  (compiling source file 'main.cpp')
-      C:\Program Files (x86)\Windows Kits\10\Include\10.0.22621.0\shared\rpcndr.h(202,23):
-      could be 'unsigned char byte'
-      C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.42.34433\include\cstddef(34,24):
-      or       'std::byte'
-  
-C:\Program Files (x86)\Windows Kits\10\Include\10.0.22621.0\shared\wtypes.h(118,21): error C2872: 'byte': ambiguous symbol
-  (compiling source file 'main.cpp')
-      C:\Program Files (x86)\Windows Kits\10\Include\10.0.22621.0\shared\rpcndr.h(202,23):
-      could be 'unsigned char byte'
-      C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.42.34433\include\cstddef(34,24):
-      or       'std::byte'
-  
-C:\Program Files (x86)\Windows Kits\10\Include\10.0.22621.0\shared\wtypes.h(493,21): error C2872: 'byte': ambiguous symbol
-  (compiling source file 'main.cpp')
-      C:\Program Files (x86)\Windows Kits\10\Include\10.0.22621.0\shared\rpcndr.h(202,23):
-      could be 'unsigned char byte'
-      C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.42.34433\include\cstddef(34,24):
-      or       'std::byte'
-  
-C:\Program Files (x86)\Windows Kits\10\Include\10.0.22621.0\um\objidlbase.h(2275,74): error C2872: 'byte': ambiguous symbol
-  (compiling source file 'main.cpp')
-      C:\Program Files (x86)\Windows Kits\10\Include\10.0.22621.0\shared\rpcndr.h(202,23):
-      could be 'unsigned char byte'
-      C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.42.34433\include\cstddef(34,24):
-      or       'std::byte'
-  
-C:\Program Files (x86)\Windows Kits\10\Include\10.0.22621.0\um\objidlbase.h(2289,57): error C2872: 'byte': ambiguous symbol
-  (compiling source file 'main.cpp')
-      C:\Program Files (x86)\Windows Kits\10\Include\10.0.22621.0\shared\rpcndr.h(202,23):
-      could be 'unsigned char byte'
-      C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.42.34433\include\cstddef(34,24):
-      or       'std::byte'
-  
-C:\Program Files (x86)\Windows Kits\10\Include\10.0.22621.0\um\objidlbase.h(8492,74): error C2872: 'byte': ambiguous symbol
-  (compiling source file 'main.cpp')
-      C:\Program Files (x86)\Windows Kits\10\Include\10.0.22621.0\shared\rpcndr.h(202,23):
-      could be 'unsigned char byte'
-      C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.42.34433\include\cstddef(34,24):
-      or       'std::byte'
-  
-C:\Program Files (x86)\Windows Kits\10\Include\10.0.22621.0\um\objidlbase.h(8508,57): error C2872: 'byte': ambiguous symbol
-  (compiling source file 'main.cpp')
-      C:\Program Files (x86)\Windows Kits\10\Include\10.0.22621.0\shared\rpcndr.h(202,23):
-      could be 'unsigned char byte'
-      C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.42.34433\include\cstddef(34,24):
-      or       'std::byte'
-  
-C:\Program Files (x86)\Windows Kits\10\Include\10.0.22621.0\um\objidl.h(10444,64): error C2872: 'byte': ambiguous symbol
-  (compiling source file 'main.cpp')
-      C:\Program Files (x86)\Windows Kits\10\Include\10.0.22621.0\shared\rpcndr.h(202,23):
-      could be 'unsigned char byte'
-      C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.42.34433\include\cstddef(34,24):
-      or       'std::byte'
-  
-C:\Program Files (x86)\Windows Kits\10\Include\10.0.22621.0\um\objidl.h(11002,72): error C2872: 'byte': ambiguous symbol
-  (compiling source file 'main.cpp')
-      C:\Program Files (x86)\Windows Kits\10\Include\10.0.22621.0\shared\rpcndr.h(202,23):
-      could be 'unsigned char byte'
-      C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.42.34433\include\cstddef(34,24):
-      or       'std::byte'
-  
-C:\Program Files (x86)\Windows Kits\10\Include\10.0.22621.0\um\objidl.h(11034,72): error C2872: 'byte': ambiguous symbol
-  (compiling source file 'main.cpp')
-      C:\Program Files (x86)\Windows Kits\10\Include\10.0.22621.0\shared\rpcndr.h(202,23):
-      could be 'unsigned char byte'
-      C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.42.34433\include\cstddef(34,24):
-      or       'std::byte'
-  
-C:\Program Files (x86)\Windows Kits\10\Include\10.0.22621.0\um\objidl.h(11542,74): error C2872: 'byte': ambiguous symbol
-  (compiling source file 'main.cpp')
-      C:\Program Files (x86)\Windows Kits\10\Include\10.0.22621.0\shared\rpcndr.h(202,23):
-      could be 'unsigned char byte'
-      C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.42.34433\include\cstddef(34,24):
-      or       'std::byte'
-  
-C:\Program Files (x86)\Windows Kits\10\Include\10.0.22621.0\um\objidl.h(11557,57): error C2872: 'byte': ambiguous symbol
-  (compiling source file 'main.cpp')
-      C:\Program Files (x86)\Windows Kits\10\Include\10.0.22621.0\shared\rpcndr.h(202,23):
-      could be 'unsigned char byte'
-      C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.42.34433\include\cstddef(34,24):
-      or       'std::byte'
-  
-C:\Program Files (x86)\Windows Kits\10\Include\10.0.22621.0\um\objidl.h(12018,21): error C2872: 'byte': ambiguous symbol
-  (compiling source file 'main.cpp')
-      C:\Program Files (x86)\Windows Kits\10\Include\10.0.22621.0\shared\rpcndr.h(202,23):
-      could be 'unsigned char byte'
-      C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.42.34433\include\cstddef(34,24):
-      or       'std::byte'
-  
-C:\Program Files (x86)\Windows Kits\10\Include\10.0.22621.0\um\objidl.h(13832,57): error C2872: 'byte': ambiguous symbol
-  (compiling source file 'main.cpp')
-      C:\Program Files (x86)\Windows Kits\10\Include\10.0.22621.0\shared\rpcndr.h(202,23):
-      could be 'unsigned char byte'
-      C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.42.34433\include\cstddef(34,24):
-      or       'std::byte'
-  
-C:\Program Files (x86)\Windows Kits\10\Include\10.0.22621.0\um\objidl.h(13847,57): error C2872: 'byte': ambiguous symbol
-  (compiling source file 'main.cpp')
-      C:\Program Files (x86)\Windows Kits\10\Include\10.0.22621.0\shared\rpcndr.h(202,23):
-      could be 'unsigned char byte'
-      C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.42.34433\include\cstddef(34,24):
-      or       'std::byte'
-  
-C:\Program Files (x86)\Windows Kits\10\Include\10.0.22621.0\um\objidl.h(15586,74): error C2872: 'byte': ambiguous symbol
-  (compiling source file 'main.cpp')
-      C:\Program Files (x86)\Windows Kits\10\Include\10.0.22621.0\shared\rpcndr.h(202,23):
-      could be 'unsigned char byte'
-      C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.42.34433\include\cstddef(34,24):
-      or       'std::byte'
-  
-C:\Program Files (x86)\Windows Kits\10\Include\10.0.22621.0\um\objidl.h(15602,57): error C2872: 'byte': ambiguous symbol
-  (compiling source file 'main.cpp')
-      C:\Program Files (x86)\Windows Kits\10\Include\10.0.22621.0\shared\rpcndr.h(202,23):
-      could be 'unsigned char byte'
-      C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.42.34433\include\cstddef(34,24):
-      or       'std::byte'
-  
-C:\Program Files (x86)\Windows Kits\10\Include\10.0.22621.0\um\objidl.h(15749,72): error C2872: 'byte': ambiguous symbol
-  (compiling source file 'main.cpp')
-      C:\Program Files (x86)\Windows Kits\10\Include\10.0.22621.0\shared\rpcndr.h(202,23):
-      could be 'unsigned char byte'
-      C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.42.34433\include\cstddef(34,24):
-      or       'std::byte'
-  
-C:\Program Files (x86)\Windows Kits\10\Include\10.0.22621.0\um\objidl.h(15788,72): error C2872: 'byte': ambiguous symbol
-  (compiling source file 'main.cpp')
-      C:\Program Files (x86)\Windows Kits\10\Include\10.0.22621.0\shared\rpcndr.h(202,23):
-      could be 'unsigned char byte'
-      C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.42.34433\include\cstddef(34,24):
-      or       'std::byte'
-  
-C:\Program Files (x86)\Windows Kits\10\Include\10.0.22621.0\um\objidl.h(15805,74): error C2872: 'byte': ambiguous symbol
-  (compiling source file 'main.cpp')
-      C:\Program Files (x86)\Windows Kits\10\Include\10.0.22621.0\shared\rpcndr.h(202,23):
-      could be 'unsigned char byte'
-      C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.42.34433\include\cstddef(34,24):
-      or       'std::byte'
-  
-C:\Program Files (x86)\Windows Kits\10\Include\10.0.22621.0\um\objidl.h(15822,57): error C2872: 'byte': ambiguous symbol
-  (compiling source file 'main.cpp')
-      C:\Program Files (x86)\Windows Kits\10\Include\10.0.22621.0\shared\rpcndr.h(202,23):
-      could be 'unsigned char byte'
-      C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.42.34433\include\cstddef(34,24):
-      or       'std::byte'
-  
-C:\Program Files (x86)\Windows Kits\10\Include\10.0.22621.0\um\objidl.h(16067,57): error C2872: 'byte': ambiguous symbol
-  (compiling source file 'main.cpp')
-      C:\Program Files (x86)\Windows Kits\10\Include\10.0.22621.0\shared\rpcndr.h(202,23):
-      could be 'unsigned char byte'
-      C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.42.34433\include\cstddef(34,24):
-      or       'std::byte'
-  
-C:\Program Files (x86)\Windows Kits\10\Include\10.0.22621.0\um\objidl.h(16086,57): error C2872: 'byte': ambiguous symbol
-  (compiling source file 'main.cpp')
-      C:\Program Files (x86)\Windows Kits\10\Include\10.0.22621.0\shared\rpcndr.h(202,23):
-      could be 'unsigned char byte'
-      C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.42.34433\include\cstddef(34,24):
-      or       'std::byte'
-  
-C:\Program Files (x86)\Windows Kits\10\Include\10.0.22621.0\um\oaidl.h(571,21): error C2872: 'byte': ambiguous symbol
-  (compiling source file 'main.cpp')
-      C:\Program Files (x86)\Windows Kits\10\Include\10.0.22621.0\shared\rpcndr.h(202,23):
-      could be 'unsigned char byte'
-      C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.42.34433\include\cstddef(34,24):
-      or       'std::byte'
-  
-C:\Users\faye\Desktop\Projects\Application\Application\main.cpp(205,24): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
-C:\Users\faye\Desktop\Projects\Application\Application\main.cpp(206,24): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
-C:\Users\faye\Desktop\Projects\Application\Application\main.cpp(215,23): warning C4244: '+=': conversion from 'double' to 'float', possible loss of data
-C:\Users\faye\Desktop\Projects\Application\Application\main.cpp(220,23): warning C4244: '-=': conversion from 'double' to 'float', possible loss of data
-C:\Users\faye\Desktop\Projects\Application\Application\main.cpp(229,23): warning C4244: '+=': conversion from 'double' to 'float', possible loss of data
-C:\Users\faye\Desktop\Projects\Application\Application\main.cpp(234,23): warning C4244: '-=': conversion from 'double' to 'float', possible loss of data
-C:\Users\faye\Desktop\Projects\Application\Application\main.cpp(420,20): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
-C:\Users\faye\Desktop\Projects\Application\Application\main.cpp(421,22): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
-C:\Users\faye\Desktop\Projects\Application\Application\main.cpp(453,21): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
-C:\Users\faye\Desktop\Projects\Application\Application\main.cpp(454,21): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
-C:\Users\faye\Desktop\Projects\Application\Application\main.cpp(462,18): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
+C:\Users\faye\Desktop\Projects\Application\Application\main.cpp(89,11): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
+C:\Users\faye\Desktop\Projects\Application\Application\main.cpp(90,11): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
+C:\Users\faye\Desktop\Projects\Application\Application\main.cpp(91,11): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
+C:\Users\faye\Desktop\Projects\Application\Application\main.cpp(104,10): warning C4244: 'initializing': conversion from 'float' to 'int', possible loss of data
+C:\Users\faye\Desktop\Projects\Application\Application\main.cpp(114,10): warning C4244: 'initializing': conversion from 'float' to 'int', possible loss of data
+C:\Users\faye\Desktop\Projects\Application\Application\main.cpp(136,17): warning C4244: '=': conversion from 'int' to 'T', possible loss of data
+C:\Users\faye\Desktop\Projects\Application\Application\main.cpp(136,17): warning C4244:         with
+C:\Users\faye\Desktop\Projects\Application\Application\main.cpp(136,17): warning C4244:         [
+C:\Users\faye\Desktop\Projects\Application\Application\main.cpp(136,17): warning C4244:             T=float
+C:\Users\faye\Desktop\Projects\Application\Application\main.cpp(136,17): warning C4244:         ]
+C:\Users\faye\Desktop\Projects\Application\Application\main.cpp(137,17): warning C4244: '=': conversion from 'int' to 'T', possible loss of data
+C:\Users\faye\Desktop\Projects\Application\Application\main.cpp(137,17): warning C4244:         with
+C:\Users\faye\Desktop\Projects\Application\Application\main.cpp(137,17): warning C4244:         [
+C:\Users\faye\Desktop\Projects\Application\Application\main.cpp(137,17): warning C4244:             T=float
+C:\Users\faye\Desktop\Projects\Application\Application\main.cpp(137,17): warning C4244:         ]
+C:\Users\faye\Desktop\Projects\Application\Application\main.cpp(141,14): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
+C:\Users\faye\Desktop\Projects\Application\Application\main.cpp(314,64): warning C4244: 'argument': conversion from 'T' to 'int', possible loss of data
+C:\Users\faye\Desktop\Projects\Application\Application\main.cpp(314,64): warning C4244:         with
+C:\Users\faye\Desktop\Projects\Application\Application\main.cpp(314,64): warning C4244:         [
+C:\Users\faye\Desktop\Projects\Application\Application\main.cpp(314,64): warning C4244:             T=float
+C:\Users\faye\Desktop\Projects\Application\Application\main.cpp(314,64): warning C4244:         ]
+C:\Users\faye\Desktop\Projects\Application\Application\main.cpp(314,50): warning C4244: 'argument': conversion from 'T' to 'int', possible loss of data
+C:\Users\faye\Desktop\Projects\Application\Application\main.cpp(314,50): warning C4244:         with
+C:\Users\faye\Desktop\Projects\Application\Application\main.cpp(314,50): warning C4244:         [
+C:\Users\faye\Desktop\Projects\Application\Application\main.cpp(314,50): warning C4244:             T=float
+C:\Users\faye\Desktop\Projects\Application\Application\main.cpp(314,50): warning C4244:         ]
+C:\Users\faye\Desktop\Projects\Application\Application\main.cpp(458,71): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+C:\Users\faye\Desktop\Projects\Application\Application\main.cpp(560,18): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
+C:\Users\faye\Desktop\Projects\Application\Application\main.cpp(303,13): warning C4101: 'transform': unreferenced local variable
+LINK : warning LNK4098: defaultlib 'MSVCRTD' conflicts with use of other libs; use /NODEFAULTLIB:library
+  Generating code
+  6 of 955 functions ( 0.6%) were compiled, the rest were copied from previous compilation.
+    0 functions were new in current compilation
+    27 functions had inline decision re-evaluated but remain unchanged
+  Finished generating code
+glfw3.lib(window.obj) : warning LNK4099: PDB '' was not found with 'glfw3.lib(window.obj)' or at ''; linking object as if no debug info
+glfw3.lib(context.obj) : warning LNK4099: PDB '' was not found with 'glfw3.lib(context.obj)' or at ''; linking object as if no debug info
+glfw3.lib(input.obj) : warning LNK4099: PDB '' was not found with 'glfw3.lib(input.obj)' or at ''; linking object as if no debug info
+glfw3.lib(init.obj) : warning LNK4099: PDB '' was not found with 'glfw3.lib(init.obj)' or at ''; linking object as if no debug info
+glfw3.lib(win32_thread.obj) : warning LNK4099: PDB '' was not found with 'glfw3.lib(win32_thread.obj)' or at ''; linking object as if no debug info
+glfw3.lib(win32_time.obj) : warning LNK4099: PDB '' was not found with 'glfw3.lib(win32_time.obj)' or at ''; linking object as if no debug info
+glfw3.lib(platform.obj) : warning LNK4099: PDB '' was not found with 'glfw3.lib(platform.obj)' or at ''; linking object as if no debug info
+glfw3.lib(monitor.obj) : warning LNK4099: PDB '' was not found with 'glfw3.lib(monitor.obj)' or at ''; linking object as if no debug info
+glfw3.lib(vulkan.obj) : warning LNK4099: PDB '' was not found with 'glfw3.lib(vulkan.obj)' or at ''; linking object as if no debug info
+glfw3.lib(win32_init.obj) : warning LNK4099: PDB '' was not found with 'glfw3.lib(win32_init.obj)' or at ''; linking object as if no debug info
+glfw3.lib(null_init.obj) : warning LNK4099: PDB '' was not found with 'glfw3.lib(null_init.obj)' or at ''; linking object as if no debug info
+glfw3.lib(win32_module.obj) : warning LNK4099: PDB '' was not found with 'glfw3.lib(win32_module.obj)' or at ''; linking object as if no debug info
+glfw3.lib(win32_monitor.obj) : warning LNK4099: PDB '' was not found with 'glfw3.lib(win32_monitor.obj)' or at ''; linking object as if no debug info
+glfw3.lib(win32_window.obj) : warning LNK4099: PDB '' was not found with 'glfw3.lib(win32_window.obj)' or at ''; linking object as if no debug info
+glfw3.lib(win32_joystick.obj) : warning LNK4099: PDB '' was not found with 'glfw3.lib(win32_joystick.obj)' or at ''; linking object as if no debug info
+glfw3.lib(wgl_context.obj) : warning LNK4099: PDB '' was not found with 'glfw3.lib(wgl_context.obj)' or at ''; linking object as if no debug info
+glfw3.lib(egl_context.obj) : warning LNK4099: PDB '' was not found with 'glfw3.lib(egl_context.obj)' or at ''; linking object as if no debug info
+glfw3.lib(osmesa_context.obj) : warning LNK4099: PDB '' was not found with 'glfw3.lib(osmesa_context.obj)' or at ''; linking object as if no debug info
+glfw3.lib(null_monitor.obj) : warning LNK4099: PDB '' was not found with 'glfw3.lib(null_monitor.obj)' or at ''; linking object as if no debug info
+glfw3.lib(null_window.obj) : warning LNK4099: PDB '' was not found with 'glfw3.lib(null_window.obj)' or at ''; linking object as if no debug info
+glfw3.lib(null_joystick.obj) : warning LNK4099: PDB '' was not found with 'glfw3.lib(null_joystick.obj)' or at ''; linking object as if no debug info
+  Application.vcxproj -> C:\Users\faye\Desktop\Projects\Application\x64\Release\Application.exe

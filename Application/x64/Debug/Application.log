@@ -1,51 +1,40 @@
 ﻿  main.cpp
-C:\Users\felix\source\repos\Application\Application\main.cpp(11,10): warning C4067: unexpected tokens following preprocessor directive - expected a newline
-C:\Users\felix\source\repos\Application\Application\engine.h(12,13): warning C4305: 'initializing': truncation from 'double' to 'float'
+C:\Users\faye\Desktop\Projects\Application\Application\main.cpp(11,10): warning C4067: unexpected tokens following preprocessor directive - expected a newline
+C:\Users\faye\Desktop\Projects\Application\Application\engine.h(11,13): warning C4305: 'initializing': truncation from 'double' to 'float'
   (compiling source file 'main.cpp')
   
 C:\Program Files (x86)\Windows Kits\10\Include\10.0.22621.0\shared\minwindef.h(130,9): warning C4005: 'APIENTRY': macro redefinition
   (compiling source file 'main.cpp')
-      C:\Users\felix\source\repos\Application\Application\GLFW\Include\glad\glad.h(32,9):
+      C:\Users\faye\Desktop\Projects\Application\Application\Libraries\Include\glad\glad.h(32,9):
       see previous definition of 'APIENTRY'
   
-C:\Users\felix\source\repos\Application\Application\main.cpp(87,11): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
-C:\Users\felix\source\repos\Application\Application\main.cpp(88,11): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
-C:\Users\felix\source\repos\Application\Application\main.cpp(89,11): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
-C:\Users\felix\source\repos\Application\Application\main.cpp(151,10): warning C4244: 'initializing': conversion from 'float' to 'int', possible loss of data
-C:\Users\felix\source\repos\Application\Application\main.cpp(161,10): warning C4244: 'initializing': conversion from 'float' to 'int', possible loss of data
-C:\Users\felix\source\repos\Application\Application\main.cpp(181,17): warning C4244: '=': conversion from 'int' to 'T', possible loss of data
-C:\Users\felix\source\repos\Application\Application\main.cpp(181,17): warning C4244:         with
-C:\Users\felix\source\repos\Application\Application\main.cpp(181,17): warning C4244:         [
-C:\Users\felix\source\repos\Application\Application\main.cpp(181,17): warning C4244:             T=float
-C:\Users\felix\source\repos\Application\Application\main.cpp(181,17): warning C4244:         ]
-C:\Users\felix\source\repos\Application\Application\main.cpp(182,17): warning C4244: '=': conversion from 'int' to 'T', possible loss of data
-C:\Users\felix\source\repos\Application\Application\main.cpp(182,17): warning C4244:         with
-C:\Users\felix\source\repos\Application\Application\main.cpp(182,17): warning C4244:         [
-C:\Users\felix\source\repos\Application\Application\main.cpp(182,17): warning C4244:             T=float
-C:\Users\felix\source\repos\Application\Application\main.cpp(182,17): warning C4244:         ]
-C:\Users\felix\source\repos\Application\Application\main.cpp(186,14): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
-C:\Users\felix\source\repos\Application\Application\main.cpp(357,64): warning C4244: 'argument': conversion from 'T' to 'int', possible loss of data
-C:\Users\felix\source\repos\Application\Application\main.cpp(357,64): warning C4244:         with
-C:\Users\felix\source\repos\Application\Application\main.cpp(357,64): warning C4244:         [
-C:\Users\felix\source\repos\Application\Application\main.cpp(357,64): warning C4244:             T=float
-C:\Users\felix\source\repos\Application\Application\main.cpp(357,64): warning C4244:         ]
-C:\Users\felix\source\repos\Application\Application\main.cpp(357,50): warning C4244: 'argument': conversion from 'T' to 'int', possible loss of data
-C:\Users\felix\source\repos\Application\Application\main.cpp(357,50): warning C4244:         with
-C:\Users\felix\source\repos\Application\Application\main.cpp(357,50): warning C4244:         [
-C:\Users\felix\source\repos\Application\Application\main.cpp(357,50): warning C4244:             T=float
-C:\Users\felix\source\repos\Application\Application\main.cpp(357,50): warning C4244:         ]
-C:\Users\felix\source\repos\Application\Application\main.cpp(514,71): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
-C:\Users\felix\source\repos\Application\Application\main.cpp(585,32): warning C4244: '-=': conversion from 'double' to 'T', possible loss of data
-C:\Users\felix\source\repos\Application\Application\main.cpp(585,32): warning C4244:         with
-C:\Users\felix\source\repos\Application\Application\main.cpp(585,32): warning C4244:         [
-C:\Users\felix\source\repos\Application\Application\main.cpp(585,32): warning C4244:             T=float
-C:\Users\felix\source\repos\Application\Application\main.cpp(585,32): warning C4244:         ]
-C:\Users\felix\source\repos\Application\Application\main.cpp(589,32): warning C4244: '+=': conversion from 'double' to 'T', possible loss of data
-C:\Users\felix\source\repos\Application\Application\main.cpp(589,32): warning C4244:         with
-C:\Users\felix\source\repos\Application\Application\main.cpp(589,32): warning C4244:         [
-C:\Users\felix\source\repos\Application\Application\main.cpp(589,32): warning C4244:             T=float
-C:\Users\felix\source\repos\Application\Application\main.cpp(589,32): warning C4244:         ]
-C:\Users\felix\source\repos\Application\Application\main.cpp(635,18): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
-C:\Users\felix\source\repos\Application\Application\main.cpp(347,13): warning C4101: 'transform': unreferenced local variable
-glfw3.lib(input.obj) : warning LNK4099: PDB '' was not found with 'glfw3.lib(input.obj)' or at ''; linking object as if no debug info
-  Application.vcxproj -> C:\Users\felix\source\repos\Application\x64\Debug\Application.exe
+C:\Users\faye\Desktop\Projects\Application\Application\main.cpp(89,11): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
+C:\Users\faye\Desktop\Projects\Application\Application\main.cpp(90,11): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
+C:\Users\faye\Desktop\Projects\Application\Application\main.cpp(91,11): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
+C:\Users\faye\Desktop\Projects\Application\Application\main.cpp(104,10): warning C4244: 'initializing': conversion from 'float' to 'int', possible loss of data
+C:\Users\faye\Desktop\Projects\Application\Application\main.cpp(114,10): warning C4244: 'initializing': conversion from 'float' to 'int', possible loss of data
+C:\Users\faye\Desktop\Projects\Application\Application\main.cpp(136,17): warning C4244: '=': conversion from 'int' to 'T', possible loss of data
+C:\Users\faye\Desktop\Projects\Application\Application\main.cpp(136,17): warning C4244:         with
+C:\Users\faye\Desktop\Projects\Application\Application\main.cpp(136,17): warning C4244:         [
+C:\Users\faye\Desktop\Projects\Application\Application\main.cpp(136,17): warning C4244:             T=float
+C:\Users\faye\Desktop\Projects\Application\Application\main.cpp(136,17): warning C4244:         ]
+C:\Users\faye\Desktop\Projects\Application\Application\main.cpp(137,17): warning C4244: '=': conversion from 'int' to 'T', possible loss of data
+C:\Users\faye\Desktop\Projects\Application\Application\main.cpp(137,17): warning C4244:         with
+C:\Users\faye\Desktop\Projects\Application\Application\main.cpp(137,17): warning C4244:         [
+C:\Users\faye\Desktop\Projects\Application\Application\main.cpp(137,17): warning C4244:             T=float
+C:\Users\faye\Desktop\Projects\Application\Application\main.cpp(137,17): warning C4244:         ]
+C:\Users\faye\Desktop\Projects\Application\Application\main.cpp(141,14): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
+C:\Users\faye\Desktop\Projects\Application\Application\main.cpp(315,64): warning C4244: 'argument': conversion from 'T' to 'int', possible loss of data
+C:\Users\faye\Desktop\Projects\Application\Application\main.cpp(315,64): warning C4244:         with
+C:\Users\faye\Desktop\Projects\Application\Application\main.cpp(315,64): warning C4244:         [
+C:\Users\faye\Desktop\Projects\Application\Application\main.cpp(315,64): warning C4244:             T=float
+C:\Users\faye\Desktop\Projects\Application\Application\main.cpp(315,64): warning C4244:         ]
+C:\Users\faye\Desktop\Projects\Application\Application\main.cpp(315,50): warning C4244: 'argument': conversion from 'T' to 'int', possible loss of data
+C:\Users\faye\Desktop\Projects\Application\Application\main.cpp(315,50): warning C4244:         with
+C:\Users\faye\Desktop\Projects\Application\Application\main.cpp(315,50): warning C4244:         [
+C:\Users\faye\Desktop\Projects\Application\Application\main.cpp(315,50): warning C4244:             T=float
+C:\Users\faye\Desktop\Projects\Application\Application\main.cpp(315,50): warning C4244:         ]
+C:\Users\faye\Desktop\Projects\Application\Application\main.cpp(462,72): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+C:\Users\faye\Desktop\Projects\Application\Application\main.cpp(567,18): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
+C:\Users\faye\Desktop\Projects\Application\Application\main.cpp(304,13): warning C4101: 'transform': unreferenced local variable
+  Application.vcxproj -> C:\Users\faye\Desktop\Projects\Application\x64\Debug\Application.exe

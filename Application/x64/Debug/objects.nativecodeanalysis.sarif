@@ -657,7 +657,7 @@
         {
           "ruleId": "C26495",
           "message": {
-            "text": "Variable 'Material::emmissive' is uninitialized. Always initialize a member variable (type.6)."
+            "text": "Variable 'Material::emissive' is uninitialized. Always initialize a member variable (type.6)."
           },
           "analysisTarget": {
             "uri": "file:///c:/users/faye/desktop/projects/application/application/objects.cpp"
@@ -683,7 +683,7 @@
             }
           ],
           "properties": {
-            "targetSymbol": "Material::emmissive"
+            "targetSymbol": "Material::emissive"
           }
         },
         {

@@ -3,10 +3,7 @@
   <ItemGroup>
     <ClCompile Include="glad.c" />
     <ClCompile Include="main.cpp" />
-    <ClCompile Include="transform.h" />
-    <ClCompile Include="engine.h" />
     <ClCompile Include="objects.cpp" />
-    <ClCompile Include="objects.h" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="EngineResources\Colour.h">
@@ -15,23 +12,12 @@
     <ClInclude Include="EngineResources\Console.h">
       <Filter>EngineResources</Filter>
     </ClInclude>
+    <ClInclude Include="objects.h" />
+    <ClInclude Include="transform.h" />
+    <ClInclude Include="engine.h" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="IMG_2209.ico" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="VERTEX_SHADER.glsl">
-      <Filter>Shaders</Filter>
-    </None>
-    <None Include="LIGHTING_FRAGMENT_SHADER.glsl">
-      <Filter>Shaders</Filter>
-    </None>
-    <None Include="LIGHT_GIZMO_FRAG.glsl">
-      <Filter>Shaders</Filter>
-    </None>
-    <None Include="LIGHT_GIZMO_VERT.glsl">
-      <Filter>Shaders</Filter>
-    </None>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="EngineResources">
@@ -43,5 +29,22 @@
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="Application.rc" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Shaders\LIGHT_GIZMO_FRAG.glsl">
+      <Filter>Shaders</Filter>
+    </None>
+    <None Include="Shaders\LIGHT_GIZMO_VERT.glsl">
+      <Filter>Shaders</Filter>
+    </None>
+    <None Include="Shaders\LIGHTING_FRAGMENT_SHADER.glsl">
+      <Filter>Shaders</Filter>
+    </None>
+    <None Include="Shaders\VERTEX_SHADER.glsl">
+      <Filter>Shaders</Filter>
+    </None>
+    <None Include="Shaders\GEOMETRY_SHADER.glsl">
+      <Filter>Shaders</Filter>
+    </None>
   </ItemGroup>
 </Project>

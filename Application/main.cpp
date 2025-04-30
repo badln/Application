@@ -1,7 +1,7 @@
 
 //Some specific OpenGL stuff
-#include "GLFW\Include\glad\glad.h"
-#include "GLFW\Include\glfw3.h"
+#include "Libraries/Include/glad/glad.h"
+#include "Libraries/Include/glfw3.h"
 
 //general stuff
 #include <iostream>
@@ -13,14 +13,17 @@
 #include <windows.h>
 #include <list>
 #include "EngineResources/Console.h"
+#include <vector>
 
 //OpenGL Mathematics
-#include "GLFW/Include/glm/glm.hpp"
-#include "GLFW/Include/glm/gtc/matrix_transform.hpp"
-#include "GLFW/Include/glm/gtc/type_ptr.hpp"
+#include "Libraries/Include/glm/glm.hpp"
+#include "Libraries/Include/glm/gtc/matrix_transform.hpp"
+#include "Libraries/Include/glm/gtc/type_ptr.hpp"
 
-using namespace std;
 using namespace glm;
+
+typedef unsigned char Byte;
+typedef Byte cs_byte;
 
 EngineInfo engineInfo;
 WindowConsole Console;
@@ -33,10 +36,9 @@ float vertTruncAmount = 10;
 bool truncVerts = false;
 
 int frame = 0;
-int generatedTexture = -1;
-vector <Texture*> textures;
-vector <unsigned int> VAOs;
-vector <ObjContainer*> objects;
+int generatedTexture = 0;
+std::vector <Texture> globalTextures;
+std::vector <ObjContainer*> objects;
 int pointLightNum = 1;
 int spotLightNum = 1;
 bool downArrowPressed, upArrowPressed, leftArrowPressed, rightArrowPressed, spacePressed, ctrlPressed, escPressed, inWireframe = false;
@@ -93,55 +95,6 @@ struct {
 }Vector3;
 
 float AddRotation, xAngle, yAngle = 0;
-
-float vertexData[] = {
-
-	//---------------------------------------------------//
-	// Vertex Position  |   Vertex Normals   | TexCoords
-	//---------------------------------------------------//
-	 0.5f,  0.5f, -0.5f,  0.0f,  0.0f, -1.0f,  0.0f,  0.0f,
-	 0.5f, -0.5f, -0.5f,  0.0f,  0.0f, -1.0f,  1.0f,  0.0f,
-	-0.5f, -0.5f, -0.5f,  0.0f,  0.0f, -1.0f,  1.0f,  1.0f,
-	-0.5f, -0.5f, -0.5f,  0.0f,  0.0f, -1.0f,  1.0f,  1.0f,
-	-0.5f,  0.5f, -0.5f,  0.0f,  0.0f, -1.0f,  0.0f,  1.0f,
-	 0.5f,  0.5f, -0.5f,  0.0f,  0.0f, -1.0f,  0.0f,  0.0f,
-
-	-0.5f, -0.5f,  0.5f,  0.0f,  0.0f,  1.0f,  0.0f,  0.0f,
-	 0.5f, -0.5f,  0.5f,  0.0f,  0.0f,  1.0f,  1.0f,  0.0f,
-	 0.5f,  0.5f,  0.5f,  0.0f,  0.0f,  1.0f,  1.0f,  1.0f,
-	 0.5f,  0.5f,  0.5f,  0.0f,  0.0f,  1.0f,  1.0f,  1.0f,
-	-0.5f,  0.5f,  0.5f,  0.0f,  0.0f,  1.0f,  0.0f,  1.0f,
-	-0.5f, -0.5f,  0.5f,  0.0f,  0.0f,  1.0f,  0.0f,  0.0f,
-
-	-0.5f,  0.5f,  0.5f, -1.0f,  0.0f,  0.0f,  1.0f,  0.0f,
-	-0.5f,  0.5f, -0.5f, -1.0f,  0.0f,  0.0f,  1.0f,  1.0f,
-	-0.5f, -0.5f, -0.5f, -1.0f,  0.0f,  0.0f,  0.0f,  1.0f,
-	-0.5f, -0.5f, -0.5f, -1.0f,  0.0f,  0.0f,  0.0f,  1.0f,
-	-0.5f, -0.5f,  0.5f, -1.0f,  0.0f,  0.0f,  0.0f,  0.0f,
-	-0.5f,  0.5f,  0.5f, -1.0f,  0.0f,  0.0f,  1.0f,  0.0f,
-
-	 0.5f, -0.5f, -0.5f,  1.0f,  0.0f,  0.0f,  1.0f,  0.0f,
-	 0.5f,  0.5f, -0.5f,  1.0f,  0.0f,  0.0f,  1.0f,  1.0f,
-	 0.5f,  0.5f,  0.5f,  1.0f,  0.0f,  0.0f,  0.0f,  1.0f,
-	 0.5f,  0.5f,  0.5f,  1.0f,  0.0f,  0.0f,  0.0f,  1.0f,
-	 0.5f, -0.5f,  0.5f,  1.0f,  0.0f,  0.0f,  0.0f,  0.0f,
-	 0.5f, -0.5f, -0.5f,  1.0f,  0.0f,  0.0f,  1.0f,  0.0f,
-
-	-0.5f, -0.5f, -0.5f,  0.0f, -1.0f,  0.0f,  0.0f,  1.0f,
-	 0.5f, -0.5f, -0.5f,  0.0f, -1.0f,  0.0f,  1.0f,  1.0f,
-	 0.5f, -0.5f,  0.5f,  0.0f, -1.0f,  0.0f,  1.0f,  0.0f,
-	 0.5f, -0.5f,  0.5f,  0.0f, -1.0f,  0.0f,  1.0f,  0.0f,
-	-0.5f, -0.5f,  0.5f,  0.0f, -1.0f,  0.0f,  0.0f,  0.0f,
-	-0.5f, -0.5f, -0.5f,  0.0f, -1.0f,  0.0f,  0.0f,  1.0f,
-
-	 0.5f,  0.5f,  0.5f,  0.0f,  1.0f,  0.0f,  0.0f,  1.0f,
-	 0.5f,  0.5f, -0.5f,  0.0f,  1.0f,  0.0f,  1.0f,  1.0f,
-   	-0.5f,  0.5f, -0.5f,  0.0f,  1.0f,  0.0f,  1.0f,  0.0f,
-	-0.5f,  0.5f, -0.5f,  0.0f,  1.0f,  0.0f,  1.0f,  0.0f,
-	-0.5f,  0.5f,  0.5f,  0.0f,  1.0f,  0.0f,  0.0f,  0.0f,
-	 0.5f,  0.5f,  0.5f,  0.0f,  1.0f,  0.0f,  0.0f,  1.0f
-
-};
 float clamp(float val, float min, float max, bool loop = false)
 {
 	if (val < min)
@@ -166,9 +119,9 @@ float clamp(float val, float min, float max, bool loop = false)
 	}
 	return val;
 }
-string bool_str(bool b)
+std::string bool_str(bool b)
 {
-	if (to_string(b) == "0")
+	if (std::to_string(b) == "0")
 		return "False";
 	else
 		return "True";
@@ -178,6 +131,8 @@ void UpdateWindowSize(GLFWwindow* window)
 {
 	int width, height;
 	glfwGetWindowSize(window, &width, &height);
+	if (width == 0 || height == 0)
+		return;
 	windowSize.x = width;
 	windowSize.y = height;
 }
@@ -225,7 +180,7 @@ void framebuffer_size_callback(GLFWwindow* window, int width, int height)
 	glViewport(0, 0, width, height);
 }
 
-string windowName = "3D Renderer (Prototype)";
+std::string windowName = "3D Renderer (Prototype)";
 
 //-------------//
 // Inputs go here
@@ -334,18 +289,21 @@ void InfoDump()
 	GetSystemInfo(&sysInfo);
 
 	engineInfo.LogEngineInfo();
-	string displayAdaptor(reinterpret_cast<const char*>(glGetString(GL_RENDERER)));
-	string glVersion(reinterpret_cast<const char*>(glGetString(GL_SHADING_LANGUAGE_VERSION)));
-	Console.Log("Display Adaptor: " + displayAdaptor + ", OpenGL Version " + glVersion + ", " + to_string(sysInfo.dwNumberOfProcessors) + " CPU threads avaliable.");
+	std::string displayAdaptor(reinterpret_cast<const char*>(glGetString(GL_RENDERER)));
+	std::string glVersion(reinterpret_cast<const char*>(glGetString(GL_SHADING_LANGUAGE_VERSION)));
+	Console.Log("Display Adaptor: " + displayAdaptor + ", OpenGL Version " + glVersion + ", " + std::to_string(sysInfo.dwNumberOfProcessors) + " CPU threads avaliable.");
 }
+
 int main()
 {
+	
 	//--------------------------//
 	// Initialises Window and GLFW
 	//--------------------------//
 
 	Transforms transform;
 	glfwInit();
+	glfwWindowHint(GLFW_SAMPLES, 16);
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
 	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
@@ -354,7 +312,7 @@ int main()
 		Console.PushError("Failed to initialise GLFW.");
 	}
 
-	GLFWwindow* window = glfwCreateWindow(windowSize.x, windowSize.y, windowName.c_str(), NULL, NULL);
+	GLFWwindow* window = glfwCreateWindow(windowSize.x, windowSize.y, "Loading objects...", NULL, NULL);
 	if (window == NULL)
 	{
 		Console.PushError("Window creation failed for unknown reason.");
@@ -368,18 +326,17 @@ int main()
 		Console.PushError("Failed to initialize GLAD");
 		return -1;
 	}
-
 	glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
 
 	//-------------//
 	// Window icon
 	//-------------//
-	SetWindowIcon("image/IMG_4766.png", window);
+	SetWindowIcon("Images/IMG_4766.png", window);
 	InfoDump();
 	glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 	glfwSetCursorPosCallback(window, mouse_callback);
 	glfwSetScrollCallback(window, scroll_callback);
-
+	
 	//---------------------//
 	// Creates shader program
 	//---------------------//
@@ -387,43 +344,27 @@ int main()
 	Shader litShader("VERTEX_SHADER.glsl", "LIGHTING_FRAGMENT_SHADER.glsl", "litShader");
 	Shader lightGizmo("LIGHT_GIZMO_VERT.glsl", "LIGHT_GIZMO_FRAG.glsl", "lightGizmo");
 
-	//------------------------------------------------------------//
-	// Configuration of Vertex Array Object and Vertex Buffer Object
-	//------------------------------------------------------------//
-
-	unsigned int lightVAO, VBO, EBO;
-	glGenVertexArrays(1, &lightVAO);
-	glGenBuffers(1, &VBO);
-	glGenBuffers(1, &EBO);
-
-	glBindBuffer(GL_ARRAY_BUFFER, VBO);
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
-
+	glClearColor(0.1f, 0.1f, 0.1f, 0.1f);
 	glEnable(GL_DEPTH_TEST);
 	glEnable(GL_CULL_FACE);
+	glEnable(GL_MULTISAMPLE);
+	glDepthFunc(GL_LESS);
 
-	Mesh cubeMesh;
-	cubeMesh.Set(vertexData, sizeof(vertexData));
-
-	ObjContainer Sun("Sun");
-	Sun.light.enabled = true;
-	Sun.light.colour = vec4(1);
-	Sun.light.type = LightType.Ambient;
+	Model sphere = Model("Objects/Primitives/Sphere.obj");
 
 	ObjContainer lightCube("Gay porn");
 	lightCube.light.enabled = true;
-	lightCube.renderer.mesh = cubeMesh;
+	lightCube.SetModel(sphere);
 	lightCube.renderer.material.shader = &lightGizmo;
 	lightCube.transform.scale = vec3(0.2f);
 	lightCube.transform.position = vec3(0.0f, 6.0f, -1.0f);
 
 	lightCube.light.direction = vec3(0.0f, -1.0f, 0.0f);
-	lightCube.light.colour = vec4(1.0f);
 	lightCube.light.cutoff = 17.5;
 	lightCube.light.outerCutoff = 20.5;
-	lightCube.light.type = LightType.Spot;
-	lightCube.light.colour = vec4(1.0f, 0.0f, 0.0f, 1.0f);
-
+	lightCube.light.type = LightType.Point;
+	lightCube.light.colour = vec4(1.0f, 1.0f, 1.0f, 1.0f);
+	/*
 	ObjContainer lightCube2;
 	lightCube2.name("lightCube2");
 	lightCube2 = lightCube;
@@ -432,32 +373,41 @@ int main()
 
 	ObjContainer lightCube3;
 	lightCube3 = lightCube;
-	lightCube3.name("lightSource3");
+	lightCube3.light.type = LightType.Point;
+	lightCube3.name("lightCube3");
 	lightCube3.transform.position += vec3(-1.5f, 0.0f, -2.0f);
 	lightCube3.light.colour = vec4(0.0f, 0.0f, 1.0f, 1.0f);
+	*/
+	ObjContainer Sun;
+	Sun = lightCube;
+	Sun.name("Sun");
+	Sun.light.ambient = vec3(0.05f);
+	Sun.light.type = LightType.Directional;
+	Sun.light.colour = vec4(1);
+	Sun.transform.position += vec3(0, 4, 0);
+	Sun.transform.scale *= 2;
 
-
-	ObjContainer object;
-	object.renderer.material.diffuseTex = Texture("image/emerald_ore/emerald_ore.png");
-	object.renderer.material.specularTex = Texture("image/emerald_ore/emerald_ore_s.png");
-	object.renderer.material.emmissiveTex = Texture("image/emerald_ore/emerald_ore_e.png");
-	object.renderer.mesh = cubeMesh;
-	object.renderer.material.shininess = 100.0f;
-	object.transform.scale = vec3(5.0f);
+	Model hornet("Objects/hornet/Hornet.obj", false); // false == don't flip textures
+	ObjContainer object("hornet");
+	object.SetModel(hornet);
+	object.transform.scale = vec3(2);
 	object.transform.position = vec3(0.0f, 0.0f, -3.0f);
 	object.renderer.material.culling = FaceCulling.Back;
 
-	mainCamera.Position = vec3(0.0f, 4.0f, 0.0f);
 
+	mainCamera.Position = vec3(0.0f, 4.0f, 0.0f);
 	mainCamera.fov = 75;
+
 	float lightDistanceToCam;
 	int num{ 0 };
 	float distance{ 0 };
+	glfwSetWindowTitle(window, "Done!");
 	while (!glfwWindowShouldClose(window))
 	{
-
+		object.transform.position = vec3(0, 0, sin(glfwGetTime() * 5));
+		object.FindChild("Head")->transform.localScale = vec3(2);
 		//----------------------------------------------------------------------------------------------------//
-		//                                       BEGGINING OF FRAME
+		//                                       BEGINING OF FRAME
 		//----------------------------------------------------------------------------------------------------//
 		UpdateWindowSize(window);
 
@@ -466,36 +416,33 @@ int main()
 
 		mat4 view = mat4(1.0f);
 		view = lookAt(mainCamera.Position, mainCamera.Position + mainCamera.forward, mainCamera.up);
-
 		if (glfwGetTime() > endOfFrameTime + desiredFrametime)
 		{
 			//---------------//
 			// stuff
 			//---------------//
-
+			
 			processInput(window);
 			MousePos.x = clamp(MousePos.x, 0, windowSize.x, true);
 			MousePos.y = clamp(MousePos.y, 0, windowSize.y, true);
-			glClear(GL_COLOR_BUFFER_BIT);
-			glClear(GL_DEPTH_BUFFER_BIT);
-
-			for (int i = 0; i < generatedTexture + 1; i++)
+			glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
+			for (int i = 0; i < globalTextures.size(); i++)
 			{
-				glActiveTexture(GL_TEXTURE0 + i);
-				glBindTexture(GL_TEXTURE_2D, i + 1);
-				if (frame == 0)
-				{
-					if (textures[i]->manualFiltering() == false) {
-						textures[i]->filterMode(engineInfo.defaultFiltering);
+				try {
+					if (frame == 0)
+					{
+						if (globalTextures[i].manualFiltering() == false) {
+							globalTextures[i].filterMode(engineInfo.defaultFiltering);
+						}
+						globalTextures[i].Set();
 					}
-					textures[i]->Set();
 				}
+				catch (std::exception e) { Console.PushError(e.what()); }
 			}
 			
 			//-------------------------------------------------------------------------------//
 			// Drawing objects and sending their respective properties to their shader program.
 			//-------------------------------------------------------------------------------//
-
 			for (int i = 0; i < objects.size(); i++)
 			{
 				if (objects[i]->renderer.material.shader == NULL)
@@ -507,54 +454,39 @@ int main()
 					litShader.use();
 					litShader.setLight(objects[i]->light, objects[i]->transform.position);
 				}
-				objects[i]->renderer.material.shader->use();
-				objects[i]->renderer.material.shader->setMatrix("projection", projectionMat);
-				objects[i]->renderer.material.shader->setMatrix("view", view);
-				objects[i]->renderer.material.shader->setVector("cameraPos", mainCamera.Position.x, mainCamera.Position.y, mainCamera.Position.z);
-				objects[i]->renderer.material.shader->setFloat("time", glfwGetTime());
-				objects[i]->renderer.material.shader->setBool("wireframe", inWireframe);
-				objects[i]->renderer.material.shader->setVector("colour", objects[i]->renderer.material.colour.x, objects[i]->renderer.material.colour.y, objects[i]->renderer.material.colour.z);
-				objects[i]->renderer.material.shader->setMaterial("mat", objects[i]->renderer.material.diffuse,
-					objects[i]->renderer.material.specular,
-					objects[i]->renderer.material.ambient,
-					objects[i]->renderer.material.shininess,
-					objects[i]->renderer.material.colour,
-					objects[i]->renderer.material.texture.colour,
-					objects[i]->renderer.material.texture.id(),
-					objects[i]->renderer.material.texture.texAssigned(),
-					objects[i]->renderer.material.diffuseTex.id(),
-					objects[i]->renderer.material.diffuseTex.texAssigned(),
-					objects[i]->renderer.material.specularTex.id(),
-					objects[i]->renderer.material.specularTex.texAssigned(),
-					objects[i]->renderer.material.texture.error(),
-					objects[i]->renderer.material.diffuseTex.error(),
-					objects[i]->renderer.material.specularTex.error(),
-					objects[i]->renderer.material.emmissive,
-					objects[i]->renderer.material.emmissiveTex.id(),
-					objects[i]->renderer.material.emmissiveTex.texAssigned(),
-					objects[i]->renderer.material.emmissiveTex.error());
-				mat4 model = mat4(1.0f);
-				model = translate(model, objects[i]->transform.position + objects[i]->transform.localPosition);
-				model = rotate(   model, objects[i]->transform.rotation.x * (engineInfo.pi / 180), vec3(1.0f, 0.0f, 0.0f));
-				model = rotate(   model, objects[i]->transform.rotation.x * (engineInfo.pi / 180), vec3(0.0f, 1.0f, 0.0f));
-				model = rotate(   model, objects[i]->transform.rotation.x * (engineInfo.pi / 180), vec3(0.0f, 0.0f, 1.0f));
-				model = scale(	  model, objects[i]->transform.scale);
-				objects[i]->renderer.material.shader->setMatrix("model", model);
-				if (objects[i]->renderer.material.culling == FaceCulling.Back)
-					glCullFace(GL_BACK);
-				else if (objects[i]->renderer.material.culling == FaceCulling.Front)
-					glCullFace(GL_FRONT);
-				else if (objects[i]->renderer.material.culling == FaceCulling.BackAndFront)
-					glCullFace(GL_FRONT_AND_BACK);
-				else if (objects[i]->renderer.material.culling == FaceCulling.None)
-					glDisable(GL_CULL_FACE);
-
-				glBindVertexArray(objects[i]->renderer.mesh.VAO());
-				glDrawArrays(GL_TRIANGLES, 0, 36);
-				if (objects[i]->renderer.material.culling == FaceCulling.None)
-					glEnable(GL_CULL_FACE);
+				if (true) {
+					objects[i]->renderer.material.shader->use();
+					objects[i]->renderer.material.shader->setMatrix("projection", projectionMat);
+					objects[i]->renderer.material.shader->setMatrix("view", view);
+					objects[i]->renderer.material.shader->setVector("cameraPos", mainCamera.Position.x, mainCamera.Position.y, mainCamera.Position.z);
+					objects[i]->renderer.material.shader->setFloat("time", glfwGetTime());
+					objects[i]->renderer.material.shader->setBool("wireframe", inWireframe);
+					objects[i]->renderer.material.shader->setVector("colour", objects[i]->renderer.material.colour.x, objects[i]->renderer.material.colour.y, objects[i]->renderer.material.colour.z);
+					objects[i]->renderer.material.shader->setMaterial("mat", objects[i]->renderer.material.diffuse,
+						objects[i]->renderer.material.specular,
+						objects[i]->renderer.material.ambient,
+						objects[i]->renderer.material.shininess,
+						objects[i]->renderer.material.colour,
+						objects[i]->renderer.material.texture.colour,
+						objects[i]->renderer.material.texture.id(),
+						objects[i]->renderer.material.texture.texAssigned(),
+						objects[i]->renderer.material.diffuseTex.id(),
+						objects[i]->renderer.material.diffuseTex.texAssigned(),
+						objects[i]->renderer.material.specularTex.id(),
+						objects[i]->renderer.material.specularTex.texAssigned(),
+						objects[i]->renderer.material.texture.error(),
+						objects[i]->renderer.material.diffuseTex.error(),
+						objects[i]->renderer.material.specularTex.error(),
+						objects[i]->renderer.material.emissive,
+						objects[i]->renderer.material.emissiveTex.id(),
+						objects[i]->renderer.material.emissiveTex.texAssigned(),
+						objects[i]->renderer.material.emissiveTex.error());
+					if (objects[i]->active)
+					{
+						objects[i]->Draw(objects[i]->renderer.material.culling, objects[i]->renderer.material.shader, engineInfo.pi);
+					}
+				}
 			}
-
 			if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
 			{
 				mainCamera.Position += (mainCamera.SpeedMultiplier * (float)frameTime) * mainCamera.forward;
@@ -580,73 +512,67 @@ int main()
 			{
 				mainCamera.Position -= (mainCamera.SpeedMultiplier * (float)frameTime) * mainCamera.up;
 			}
-			if (glfwGetKey(window, GLFW_KEY_DOWN) == GLFW_PRESS)
-			{
-				Sun.light.colour.w -= 1.0f * frameTime;
-			}
-			if (glfwGetKey(window, GLFW_KEY_UP) == GLFW_PRESS)
-			{
-				Sun.light.colour.w += 1.0f * frameTime;
-			}
-			if (glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_RIGHT) == GLFW_PRESS && mouseClickedThisFrame == false)
-			{
-				distance = 0;
-				mouseClickedThisFrame = true;
-				for (int i = 0; i < objects.size(); i++)
+			if (objects.size() != 0) {
+
+				if (glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_RIGHT) == GLFW_PRESS && mouseClickedThisFrame == false)
 				{
-					if (objects[i]->light.enabled && objects[i]->light.type != LightType.Ambient)
+					distance = 0;
+					mouseClickedThisFrame = true;
+					for (int i = 0; i < objects.size(); i++)
 					{
-						objects[i]->renderer.material.colour = vec4(1);
-						float new_distance = Vector3.Distance(objects[i]->transform.position, mainCamera.Position);
-						if (new_distance <= distance || distance == 0)
+						if (objects[i]->light.enabled && objects[i]->light.type != LightType.Ambient)
 						{
-							distance = new_distance;
-							num = i;
-						}
-						else {
+							objects[i]->renderer.material.colour = vec4(1);
+							float new_distance = Vector3.Distance(objects[i]->transform.position, mainCamera.Position);
+							if (new_distance <= distance || distance == 0)
+							{
+								distance = new_distance;
+								num = i;
+							}
+							else {
+							}
 						}
 					}
+					lightDistanceToCam = Vector3.Distance(objects[num]->transform.position, mainCamera.Position);
 				}
-				lightDistanceToCam = Vector3.Distance(objects[num]->transform.position, mainCamera.Position);
-			}
-			else if (glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_RIGHT) == GLFW_RELEASE && mouseClickedThisFrame)
-			{
-				objects[num]->renderer.material.colour = vec4(1.0f);
-				mouseClickedThisFrame = false;
-			}
-			if (glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_RIGHT) == GLFW_PRESS)
-			{
-				objects[num]->renderer.material.colour = vec4(1.0f, 1.0f, ((sin(glfwGetTime() * 10) / 2) + 1), 1.0f);
-				lightDistanceToCam = clamp((lightDistanceToCam + scrollDir / 10), 1, 20);
-				vec3 camForward = mainCamera.Position + mainCamera.forward * lightDistanceToCam;
-				objects[num]->transform.position = camForward;
-				objects[num]->light.direction = mainCamera.forward;
-			}
-			else {
-				lightDistanceToCam = Vector3.Distance(objects[num]->transform.position, mainCamera.Position);
+				else if (glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_RIGHT) == GLFW_RELEASE && mouseClickedThisFrame)
+				{
+					objects[num]->renderer.material.colour = vec4(1.0f);
+					mouseClickedThisFrame = false;
+
+				}
+				if (glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_RIGHT) == GLFW_PRESS)
+				{
+					objects[num]->renderer.material.colour = vec4(1.0f, 1.0f, ((sin(glfwGetTime() * 10) / 2) + 1), 1.0f);
+					lightDistanceToCam = clamp((lightDistanceToCam + scrollDir / 10), 1, 20);
+					vec3 camForward = mainCamera.Position + mainCamera.forward * lightDistanceToCam;
+					objects[num]->transform.position = camForward;
+					objects[num]->light.direction = mainCamera.forward;
+				}
+				else {
+					lightDistanceToCam = Vector3.Distance(objects[num]->transform.position, mainCamera.Position);
+				}
 			}
 			scrollDir = 0;
 			glfwSwapBuffers(window);
 			glfwPollEvents();
-
+			if (frame == 0)
+			{
+				glfwSetWindowTitle(window, windowName.c_str());
+			}
+			
 			frame++;
 			endOfFrameTime = glfwGetTime();
 			frameTime = endOfFrameTime - endOfFrameTimeLastFrame;
 			frameRate = 1 / frameTime;
-			//Console.Log(to_string(frameRate));
+			//Console.Log(std::to_string(frameRate));
 			//----------------------------------------------------------------------------------------------------//
 			//                                            END OF FRAME
 			//----------------------------------------------------------------------------------------------------//	
 			endOfFrameTimeLastFrame = endOfFrameTime;
 		}
 	}
-	
-	for (int i = 0; i < VAOs.size(); i++)
-	{
-		glDeleteVertexArrays(1, &VAOs[i]);
-	}
 
-	glDeleteVertexArrays(1, &lightVAO);
 	glfwTerminate();
 
 	return 0;

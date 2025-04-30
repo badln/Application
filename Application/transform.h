@@ -1,25 +1,25 @@
 //Some specific OpenGL stuff
-#include "GLFW\Include\glad\glad.h"
+#include "Libraries\Include\glad\glad.h"
 
 //general stuff
 #include <iostream>
 #include <string>
 
 //OpenGL Mathematics
-#include "GLFW/Include/glm/glm.hpp"
-#include "GLFW/Include/glm/gtc/matrix_transform.hpp"
-#include "GLFW/Include/glm/gtc/type_ptr.hpp"
+#include "Libraries/Include/glm/glm.hpp"
+#include "Libraries/Include/glm/gtc/matrix_transform.hpp"
+#include "Libraries/Include/glm/gtc/type_ptr.hpp"
 
-using namespace std;
+
 using namespace glm;
 
 
 class Transforms
 {
 public:
-	string VecToString(vec3 vec)
+	std::string VecToString(vec3 vec)
 	{
-		return (to_string(vec.x) + ", " + to_string(vec.y) + ", " + to_string(vec.z));
+		return (std::to_string(vec.x) + ", " + std::to_string(vec.y) + ", " + std::to_string(vec.z));
 	}
 
 	vec4 TranslateVector(vec3 initial, vec3 dist)
