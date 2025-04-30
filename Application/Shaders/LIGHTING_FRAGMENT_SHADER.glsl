@@ -1,7 +1,7 @@
 #version 330 core
 
 out vec4 FragColor;
-#define MAX_TEXTURES 10
+#define MAX_TEXTURES 4
 in vec3 Position;
 in vec2 TexCoord;
 in vec3 FragPos;
@@ -15,7 +15,7 @@ uniform vec3 wireframeCol = vec3(1);
 uniform sampler2D test;
 
 float near = 0.1f;
-float far = 100f;
+float far = 100.0f;
 
 struct AmbientLight {
     

@@ -13,6 +13,8 @@
 #include <sstream>
 #include <string>
 #include <vector>
+#include <thread>
+#include <future>
 
 #include <assimp/Importer.hpp>
 #include <assimp/scene.h>
@@ -215,10 +217,6 @@ public:
 	Mesh processMesh(aiMesh* mesh, const aiScene* scene, bool flip, ObjContainer* obj);
 	std::vector<Texture> loadMaterialTextures(aiMaterial* mat, aiTextureType type, int typeNum, bool flip = false);
 	Model();
-	Model(std::string path, ObjContainer* obj, bool flipTextures = false)
-	{
-		loadModel(path, flipTextures, obj);
-	}
 	Model(const char* path, bool flipTextures = false)
 	{
 		directory = path;

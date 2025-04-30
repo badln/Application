@@ -143,19 +143,22 @@ Mesh::Mesh(std::vector<Vertex> vertices, std::vector<unsigned int> indices, std:
 }
 void Mesh::setupMesh()
 {
-
 	unsigned long long VertexSize = sizeof(Vertex);
 
 	glGenVertexArrays(1, &VAO_);
 	glGenBuffers(1, &VBO_);
 	glGenBuffers(1, &EBO_); 
 
+	std::cout << "\nIN MESH SETUP\nVertices amount: " << data.vertices.size() << "\nIndices amount: " << data.indices.size() << "\nVertex first value: '" <<
+		data.vertices[0].Position.x << ", " << data.vertices[0].Position.y << ", " << data.vertices[0].Position.z << "\nVertex size: " << VertexSize << 
+		"\nVBO: " << VBO_ << "\nVAO: " << VAO_ << "\nEBO: " << EBO_ << "\n";
+
 	glBindVertexArray(VAO_);
 	glBindBuffer(GL_ARRAY_BUFFER, VBO_);
-	glBufferData(GL_ARRAY_BUFFER, data.vertices.size() * VertexSize, &data.vertices[0], GL_STATIC_DRAW);
+	glBufferData(GL_ARRAY_BUFFER, data.vertices.size() * VertexSize, &data.vertices[0], GL_STREAM_DRAW);
 
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO_);
-	glBufferData(GL_ELEMENT_ARRAY_BUFFER, data.indices.size() * sizeof(unsigned int), &data.indices[0], GL_STATIC_DRAW);
+	glBufferData(GL_ELEMENT_ARRAY_BUFFER, data.indices.size() * sizeof(unsigned int), &data.indices[0], GL_STREAM_DRAW);
 
 	//positions
 	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, VertexSize, (void*)0);
@@ -174,6 +177,7 @@ void Mesh::Draw(int faceCulling, Shader &shader, float pi, Transform transform)
 	unsigned int diffuseNr = 0;
 	unsigned int specularNr = 0;
 	unsigned int emissiveNr = 0;
+	//std::cout << "Flag " << VAO_ << "\n";
 	for (unsigned int i = 0; i < data.textures.size(); i++)
 	{
 		glActiveTexture(GL_TEXTURE0 + data.textures[i].id());
@@ -238,10 +242,13 @@ void ObjContainer::Draw(int faceCulling, Shader *shader, float pi)
 Model::Model() {}
 void ObjContainer::SetModel(std::string path, bool flipTextures)
 {
-	Model model(path, this, flipTextures);
+	Model model(path.c_str(), flipTextures);
+	SetModel(model, flipTextures);
 }
 void ObjContainer::SetModel(Model model, bool flipTextures)
 {
+	//std::thread t(&Model::loadModel, model, model.directory, model.flipTex, this);
+	//t.detach();
 	model.loadModel(model.directory, model.flipTex, this);
 }
 void Model::loadModel(std::string path, bool flipTextures, ObjContainer* obj)

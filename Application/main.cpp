@@ -28,7 +28,7 @@ typedef Byte cs_byte;
 EngineInfo engineInfo;
 WindowConsole Console;
 
-vec2 windowSize(650, 650);
+vec2 windowSize(1200, 800);
 
 //Scene colours
 
@@ -63,6 +63,7 @@ float farClipPlane = 100.0f;
 float desiredFrametime = 1 / (engineInfo.desiredFramerate + 1);
 double frameTime, endOfFrameTime, endOfFrameTimeLastFrame;
 float frameRate;
+bool useScreenRefreshRate = true;
 
 vec2 MousePos;
 
@@ -313,6 +314,15 @@ int main()
 	}
 
 	GLFWwindow* window = glfwCreateWindow(windowSize.x, windowSize.y, "Loading objects...", NULL, NULL);
+	const GLFWvidmode* mode = glfwGetVideoMode(glfwGetPrimaryMonitor());
+	if (useScreenRefreshRate)
+	{
+		desiredFrametime = 1 / (mode->refreshRate + 1);
+	}
+	//glfwSetWIndow sets window position from top left corner of window. 
+	//Given the screen is 1080p and the windiw is 1280x800, x padding is 320.
+	//320 + 1280 + 320 = 1920, 320 is padding. 
+	glfwSetWindowPos(window, (mode->width - windowSize.x) / 2 /* x padding */, (mode->height - windowSize.y) / 2 /* y padding */);
 	if (window == NULL)
 	{
 		Console.PushError("Window creation failed for unknown reason.");
@@ -327,10 +337,6 @@ int main()
 		return -1;
 	}
 	glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
-
-	//-------------//
-	// Window icon
-	//-------------//
 	SetWindowIcon("Images/IMG_4766.png", window);
 	InfoDump();
 	glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
@@ -387,9 +393,8 @@ int main()
 	Sun.transform.position += vec3(0, 4, 0);
 	Sun.transform.scale *= 2;
 
-	Model hornet("Objects/hornet/Hornet.obj", false); // false == don't flip textures
 	ObjContainer object("hornet");
-	object.SetModel(hornet);
+	//object.SetModel((std::string)"Objects/hornet/Hornet.obj", false);
 	object.transform.scale = vec3(2);
 	object.transform.position = vec3(0.0f, 0.0f, -3.0f);
 	object.renderer.material.culling = FaceCulling.Back;
@@ -404,20 +409,15 @@ int main()
 	glfwSetWindowTitle(window, "Done!");
 	while (!glfwWindowShouldClose(window))
 	{
-		object.transform.position = vec3(0, 0, sin(glfwGetTime() * 5));
-		object.FindChild("Head")->transform.localScale = vec3(2);
-		//----------------------------------------------------------------------------------------------------//
-		//                                       BEGINING OF FRAME
-		//----------------------------------------------------------------------------------------------------//
 		UpdateWindowSize(window);
-
-		orthoscopicMat = glm::ortho(0.0f, windowSize.x, 0.0f, windowSize.y, 0.1f, 100.0f);
-		projectionMat = glm::perspective(glm::radians(mainCamera.fov), windowSize.x / windowSize.y, nearClipPlane, farClipPlane);
-
-		mat4 view = mat4(1.0f);
-		view = lookAt(mainCamera.Position, mainCamera.Position + mainCamera.forward, mainCamera.up);
 		if (glfwGetTime() > endOfFrameTime + desiredFrametime)
 		{
+			object.transform.position = vec3(0, 0, sin(glfwGetTime() * 5));
+			orthoscopicMat = glm::ortho(0.0f, windowSize.x, 0.0f, windowSize.y, 0.1f, 100.0f);
+			projectionMat = glm::perspective(glm::radians(mainCamera.fov), windowSize.x / windowSize.y, nearClipPlane, farClipPlane);
+
+			mat4 view = mat4(1.0f);
+			view = lookAt(mainCamera.Position, mainCamera.Position + mainCamera.forward, mainCamera.up);
 			//---------------//
 			// stuff
 			//---------------//
