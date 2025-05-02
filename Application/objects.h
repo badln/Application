@@ -233,6 +233,7 @@ public:
 
 class ObjContainer {
 	std::string name_ = "Object";
+	int placeInArray = 0;
 public:
 
 	bool active = true;
@@ -251,5 +252,6 @@ public:
 	Transform transform = Transform();
 	Renderer renderer = Renderer();
 	LightSource light; 
+	void Destroy();
 };
 extern std::vector <ObjContainer*> objects;

@@ -15,6 +15,7 @@
 #include "EngineResources/Console.h"
 #include <vector>
 
+
 //OpenGL Mathematics
 #include "Libraries/Include/glm/glm.hpp"
 #include "Libraries/Include/glm/gtc/matrix_transform.hpp"
@@ -30,10 +31,10 @@ WindowConsole Console;
 
 vec2 windowSize(1200, 800);
 
-//Scene colours
-
 float vertTruncAmount = 10;
 bool truncVerts = false;
+
+std::string currentScene = "Null";
 
 int frame = 0;
 int generatedTexture = 0;
@@ -294,10 +295,104 @@ void InfoDump()
 	std::string glVersion(reinterpret_cast<const char*>(glGetString(GL_SHADING_LANGUAGE_VERSION)));
 	Console.Log("Display Adaptor: " + displayAdaptor + ", OpenGL Version " + glVersion + ", " + std::to_string(sysInfo.dwNumberOfProcessors) + " CPU threads avaliable.");
 }
+std::string parameter(std::string str)
+{
+	return str.substr(1, str.find_first_of(" ") - 1);
+}
+vec4 ParseVector(std::string vecstr)
+{
+	float x, y, z, w;
+	int val;
+	std::string x_s, y_s, z_s, w_s = "1.0";
 
+	x_s = vecstr.substr(0, vecstr.find_first_of("f"));
+
+	vecstr = vecstr.substr(vecstr.find_first_of("f") + 3, vecstr.size());
+	y_s = vecstr.substr(0, vecstr.find_first_of("f"));
+
+	vecstr = vecstr.substr(vecstr.find_first_of("f") + 3, vecstr.size());
+	z_s = vecstr.substr(0, vecstr.find_first_of("f"));
+
+	try {
+		vecstr = vecstr.substr(vecstr.find_first_of("f") + 3, vecstr.size());
+		w_s = vecstr.substr(0, vecstr.find_first_of("f"));	
+	}
+	catch (std::exception e) {}
+
+	std::istringstream strx(x_s);
+	strx >> x;
+	std::istringstream stry(y_s);
+	stry >> y;
+	std::istringstream strz(z_s);
+	strz >> z;
+	std::istringstream strw(w_s);
+	strw >> w;
+
+	return vec4(x,y,z,w);
+}
+void ReadScene(std::string scenePath)
+{
+	std::ifstream file(scenePath);
+	std::string scene;
+	int objects = 1;
+	if (file)
+	{
+		std::string modelPath = "n";
+		ObjContainer* newObj = new ObjContainer;
+		while (std::getline(file, scene))
+		{
+			try {
+				if (scene.substr(1, 6) == "OBJECT") {
+					Console.Log("Creating object #" + std::to_string(objects));
+				}
+				else if (parameter(scene) == "object")
+				{
+					newObj->name(scene.substr(8, scene.size()).c_str());
+				}
+				else if (parameter(scene) == "model")
+				{
+					modelPath = scene.substr(scene.find_first_of('"') + 1, scene.size() - 9);
+				}
+				else if (parameter(scene) == "modeltextureflipping")
+				{
+					bool val;
+					if (scene.substr(scene.find_first_of(" ") + 1, scene.size()) == "true")
+						val = true;
+					else
+						val = false;
+					if (modelPath != "n")
+						newObj->SetModel(modelPath, val);
+				}
+				else if (parameter(scene) == "position")
+				{
+					newObj->transform.position = ParseVector(scene.substr(10, scene.size()));
+				}
+				//end
+				else if (scene == "#END") {
+					Console.Log("Scene loaded");
+					break;
+				}
+			}
+			catch (std::exception e) {}
+		}
+
+	}
+	file.close();
+
+}
+void SetActiveScene(std::string scenePath)
+{
+	currentScene = scenePath.substr(scenePath.find_last_of("/") + 1, scenePath.substr().length());
+	currentScene = currentScene.substr(0, currentScene.find_last_of("."));
+	for (int i = 0; i < objects.size(); i++)
+	{
+		objects[i]->Destroy();
+	}
+	objects.clear();
+	ReadScene(scenePath);
+}
 int main()
 {
-	
 	//--------------------------//
 	// Initialises Window and GLFW
 	//--------------------------//
@@ -356,6 +451,7 @@ int main()
 	glEnable(GL_MULTISAMPLE);
 	glDepthFunc(GL_LESS);
 
+	SetActiveScene("Scenes/Scene.sc");
 	Model sphere = Model("Objects/Primitives/Sphere.obj");
 
 	ObjContainer lightCube("Gay porn");
@@ -370,7 +466,7 @@ int main()
 	lightCube.light.outerCutoff = 20.5;
 	lightCube.light.type = LightType.Point;
 	lightCube.light.colour = vec4(1.0f, 1.0f, 1.0f, 1.0f);
-	/*
+/*
 	ObjContainer lightCube2;
 	lightCube2.name("lightCube2");
 	lightCube2 = lightCube;
@@ -383,7 +479,7 @@ int main()
 	lightCube3.name("lightCube3");
 	lightCube3.transform.position += vec3(-1.5f, 0.0f, -2.0f);
 	lightCube3.light.colour = vec4(0.0f, 0.0f, 1.0f, 1.0f);
-	*/
+	
 	ObjContainer Sun;
 	Sun = lightCube;
 	Sun.name("Sun");
@@ -391,14 +487,7 @@ int main()
 	Sun.light.type = LightType.Directional;
 	Sun.light.colour = vec4(1);
 	Sun.transform.position += vec3(0, 4, 0);
-	Sun.transform.scale *= 2;
-
-	ObjContainer object("hornet");
-	//object.SetModel((std::string)"Objects/hornet/Hornet.obj", false);
-	object.transform.scale = vec3(2);
-	object.transform.position = vec3(0.0f, 0.0f, -3.0f);
-	object.renderer.material.culling = FaceCulling.Back;
-
+	Sun.transform.scale *= 2;*/
 
 	mainCamera.Position = vec3(0.0f, 4.0f, 0.0f);
 	mainCamera.fov = 75;
@@ -412,7 +501,7 @@ int main()
 		UpdateWindowSize(window);
 		if (glfwGetTime() > endOfFrameTime + desiredFrametime)
 		{
-			object.transform.position = vec3(0, 0, sin(glfwGetTime() * 5));
+			//object.transform.position = vec3(0, 0, sin(glfwGetTime() * 5));
 			orthoscopicMat = glm::ortho(0.0f, windowSize.x, 0.0f, windowSize.y, 0.1f, 100.0f);
 			projectionMat = glm::perspective(glm::radians(mainCamera.fov), windowSize.x / windowSize.y, nearClipPlane, farClipPlane);
 
@@ -445,7 +534,7 @@ int main()
 			//-------------------------------------------------------------------------------//
 			for (int i = 0; i < objects.size(); i++)
 			{
-				if (objects[i]->renderer.material.shader == NULL)
+				if (objects[i]->renderer.material.shader == nullptr)
 				{
 					objects[i]->renderer.material.shader = &litShader;
 				}
@@ -572,8 +661,11 @@ int main()
 			endOfFrameTimeLastFrame = endOfFrameTime;
 		}
 	}
-
 	glfwTerminate();
-
+	for (int i = 0; i < objects.size(); i++)
+	{
+		objects[i]->Destroy();
+	}
+	objects.clear();
 	return 0;
 }

@@ -171,6 +171,7 @@
     <Image Include="IMG_2209.ico" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="Scenes\Scene.sc" />
     <None Include="Shaders\GEOMETRY_SHADER.glsl" />
     <None Include="Shaders\LIGHTING_FRAGMENT_SHADER.glsl" />
     <None Include="Shaders\LIGHT_GIZMO_FRAG.glsl" />

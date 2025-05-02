@@ -26,6 +26,9 @@
     <Filter Include="Shaders">
       <UniqueIdentifier>{c80c3031-2ad7-437c-9685-59bc905f6751}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Scenes">
+      <UniqueIdentifier>{23dd7d09-eb1f-4814-ba77-68abe86a0d46}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="Application.rc" />
@@ -45,6 +48,9 @@
     </None>
     <None Include="Shaders\GEOMETRY_SHADER.glsl">
       <Filter>Shaders</Filter>
+    </None>
+    <None Include="Scenes\Scene.sc">
+      <Filter>Scenes</Filter>
     </None>
   </ItemGroup>
 </Project>

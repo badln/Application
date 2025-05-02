@@ -149,10 +149,10 @@ void Mesh::setupMesh()
 	glGenBuffers(1, &VBO_);
 	glGenBuffers(1, &EBO_); 
 
-	std::cout << "\nIN MESH SETUP\nVertices amount: " << data.vertices.size() << "\nIndices amount: " << data.indices.size() << "\nVertex first value: '" <<
+/*	std::cout << "\nIN MESH SETUP\nVertices amount: " << data.vertices.size() << "\nIndices amount: " << data.indices.size() << "\nVertex first value: '" <<
 		data.vertices[0].Position.x << ", " << data.vertices[0].Position.y << ", " << data.vertices[0].Position.z << "\nVertex size: " << VertexSize << 
 		"\nVBO: " << VBO_ << "\nVAO: " << VAO_ << "\nEBO: " << EBO_ << "\n";
-
+*/
 	glBindVertexArray(VAO_);
 	glBindBuffer(GL_ARRAY_BUFFER, VBO_);
 	glBufferData(GL_ARRAY_BUFFER, data.vertices.size() * VertexSize, &data.vertices[0], GL_STREAM_DRAW);
@@ -419,7 +419,7 @@ Shader::Shader(const char* VERTEX_SHADER_PATH, const char* FRAGMENT_SHADER_PATH,
 	std::ifstream FRAGMENT_SHADER_FILE;
 	std::ifstream GEOMETRY_SHADER_FILE;
 
-	VERTEX_SHADER_FILE  .exceptions(std::ifstream::badbit || std::ifstream::failbit);
+	VERTEX_SHADER_FILE.exceptions(std::ifstream::badbit || std::ifstream::failbit);
 	FRAGMENT_SHADER_FILE.exceptions(std::ifstream::badbit || std::ifstream::failbit);
 	GEOMETRY_SHADER_FILE.exceptions(std::ifstream::badbit || std::ifstream::failbit);
 	try
@@ -673,11 +673,13 @@ ObjContainer::ObjContainer(const char* objectName)
 {
 	name(objectName);
 	objects.push_back(this);
+	placeInArray = objects.size() - 1;
 }
 ObjContainer::ObjContainer()
 {
 	name_ = "New Object";
 	objects.push_back(this);
+	placeInArray = objects.size() - 1;
 }
 void ObjContainer::name(const char* string)
 {
@@ -691,5 +693,10 @@ ObjContainer* ObjContainer::FindChild(std::string name)
 			return &children[i];
 	}
 	return this;
+}
+void ObjContainer::Destroy()
+{
+	objects.erase(objects.begin() + placeInArray);
+
 }
 #endif
