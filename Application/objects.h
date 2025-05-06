@@ -15,6 +15,7 @@
 #include <vector>
 #include <thread>
 #include <future>
+#include "engine.h"
 
 #include <assimp/Importer.hpp>
 #include <assimp/scene.h>
@@ -24,17 +25,34 @@ using namespace glm;
 
 extern int generatedTexture;
 extern int frame;
+extern unsigned int lightPointArray;
 
 void SetWindowIcon(const char* path, GLFWwindow* window);
 class Camera {
+private:
+	std::string name_;
 public:
+
+	bool firstCamFrame = false;
+
+	void SetCameraDir();
+	void SetCameraDir(GLFWwindow* window, double xposIn, double yposIn, bool looking);
+	void SetMainCamera();
+	std::string name();
+	void name(std::string str);
+
+	float yaw = -90;
+	float pitch = 0;
+
+	vec4 viewPort = vec4(0, 0, EngineInfo.windowSize.x, EngineInfo.windowSize.y);
+	float nearClipPlane = 0.1f;
+	float farClipPlane = 200.0f;
+	vec4 clearColour = vec4(0.1f, 0.1f, 0.1f, 0.1f);
+
 	vec3 Position = vec3(0.0f, 0.0f, 3.0f);
-
 	vec3 Target = vec3(0);
-
 	vec3 Direction = normalize(Position - Target);
 
-	float SpeedMultiplier = 3;
 	vec3 zero = vec3(0.0f);
 	vec3 one = vec3(1.0f);
 
@@ -45,12 +63,12 @@ public:
 	float fov = 90;
 
 };
-
-struct {
-	const int Point	      { 0 };  //LightType.Point	      (is equal to 0)
-	const int Directional { 1 };  //LightType.Directional (is equal to 1)
-	const int Spot	      { 2 };  //LightType.Spot        (is equal to 2)
-	const int Ambient	  { 3 };  //LightType.Ambient     (is equal to 3)
+extern Camera* mainCamera;
+typedef enum {
+	Point	     = 0,   //LightType.Point
+	Directional  = 1,   //LightType.Directional
+	Spot	     = 2,   //LightType.Spot
+	Ambient	     = 3    //LightType.Ambient
 } LightType ;
 
 class LightSource
@@ -77,17 +95,17 @@ public:
 };
 extern int pointLightNum;
 extern int spotLightNum;
-struct {
-	const GLenum Nearest =		 GL_NEAREST_MIPMAP_NEAREST;
-	const GLenum NearestLinear = GL_NEAREST_MIPMAP_LINEAR;
-	const GLenum Linear =	     GL_LINEAR_MIPMAP_LINEAR;
-	const GLenum LinearNearest = GL_LINEAR_MIPMAP_NEAREST;
+typedef enum {
+	Nearest        = GL_NEAREST_MIPMAP_NEAREST,
+	NearestLinear  = GL_NEAREST_MIPMAP_LINEAR,
+	Linear         = GL_LINEAR_MIPMAP_LINEAR,
+	LinearNearest  = GL_LINEAR_MIPMAP_NEAREST
 } TextureFilter ;
-struct {
-	const int Texture2D = 0;
-	const int Diffuse   = 1;
-	const int Specular  = 2;
-	const int Emissive = 3;
+typedef enum {
+	Texture2D = 0,
+	Diffuse   = 1,
+	Specular  = 2,
+	Emissive  = 3
 } TextureType ;
 class Texture
 { 
@@ -97,11 +115,11 @@ class Texture
 	unsigned int data_;
 	int id_;
 	bool error_ = false;
-	GLenum filterMode_ = TextureFilter.Linear;
+	GLenum filterMode_ = TextureFilter::Linear;
 	GLenum magFilterMode_ = GL_LINEAR;
 	GLenum wrapMode_ = GL_REPEAT;
 public:
-	int type = TextureType.Diffuse; 
+	int type = TextureType::Diffuse; 
 	const unsigned int& data() const { return data_; }
 	const bool& texAssigned() const { return texAssigned_; }
 	const int& id() const { return id_; }
@@ -142,11 +160,13 @@ public:
 	void setMatrix(const std::string& name, mat4 matrix);
 	void setMaterial(const std::string& name, vec3 diffuse, vec3 specular, vec3 ambient, float shininess, vec4 colour, vec4 texColour, int texId, bool texAssigned, int difTexId, bool difTexAssigned, int specTexId, bool specTexAssigned, bool texError, bool difTexError, bool specTexError, float emissive, int emissiveTexId, bool emissiveTexAssigned, bool emissiveError);
 	void setLight(LightSource& light, vec3 parentObjPos);
-	void setMatAndTransform(Transform trans, mat4 mat, float pi);
+	void setMatAndTransform(Transform trans, mat4 mat);
 private:
 
 	void checkCompileErrors(unsigned int shader, std::string type);
 };
+mat4 SetupMatrix(Transform trans, mat4 mat);
+extern std::vector <Shader*> shaders;
 
 struct {
 	int Back = 0;
@@ -242,7 +262,7 @@ public:
 	std::vector<ObjContainer> children;
 	void SetModel(std::string path, bool flipTextures = false);
 	void SetModel(Model model, bool flipTextures = false);
-	void Draw(int faceCulling, Shader *shader, float pi);
+	void Draw(Shader &lightGizmo, mat4 projection, mat4 view);
 
 	ObjContainer(const char* objectName);
 	ObjContainer();

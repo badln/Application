@@ -154,10 +154,13 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="glad.c" />
+    <ClCompile Include="Scene.cpp" />
     <ClInclude Include="engine.h" />
+    <ClInclude Include="main.h" />
     <ClInclude Include="objects.h" />
     <ClCompile Include="objects.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClInclude Include="Scene.h" />
     <ClInclude Include="transform.h" />
   </ItemGroup>
   <ItemGroup>
@@ -172,10 +175,12 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Scenes\Scene.sc" />
+    <None Include="Shaders\GEOMETRY_FRAG_SHADER.glsl" />
     <None Include="Shaders\GEOMETRY_SHADER.glsl" />
+    <None Include="Shaders\GEOMETRY_VERT_SHADER.glsl" />
     <None Include="Shaders\LIGHTING_FRAGMENT_SHADER.glsl" />
-    <None Include="Shaders\LIGHT_GIZMO_FRAG.glsl" />
-    <None Include="Shaders\LIGHT_GIZMO_VERT.glsl" />
+    <None Include="Shaders\DEFAULT_FRAGMENT_SHADER.glsl" />
+    <None Include="Shaders\DEFAULT_VERTEX_SHADER.glsl" />
     <None Include="Shaders\VERTEX_SHADER.glsl" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

@@ -1,45 +1,27 @@
 
-//Some specific OpenGL stuff
-#include "Libraries/Include/glad/glad.h"
-#include "Libraries/Include/glfw3.h"
-
-//general stuff
-#include <iostream>
-#include <fstream>
-#include <sstream>
-#include "objects.h"
-#include "engine.h";
-#include "transform.h"
-#include <windows.h>
-#include <list>
+#include "main.h"
+#include "Scene.h"
 #include "EngineResources/Console.h"
-#include <vector>
-
-
-//OpenGL Mathematics
-#include "Libraries/Include/glm/glm.hpp"
-#include "Libraries/Include/glm/gtc/matrix_transform.hpp"
-#include "Libraries/Include/glm/gtc/type_ptr.hpp"
-
 using namespace glm;
 
 typedef unsigned char Byte;
 typedef Byte cs_byte;
 
-EngineInfo engineInfo;
 WindowConsole Console;
-
-vec2 windowSize(1200, 800);
 
 float vertTruncAmount = 10;
 bool truncVerts = false;
-
-std::string currentScene = "Null";
 
 int frame = 0;
 int generatedTexture = 0;
 std::vector <Texture> globalTextures;
 std::vector <ObjContainer*> objects;
+std::vector <Shader*> shaders;
+std::vector <Camera*> worldCameras;
+Camera* mainCamera = NULL;
+
+unsigned int lightPointArray;
+
 int pointLightNum = 1;
 int spotLightNum = 1;
 bool downArrowPressed, upArrowPressed, leftArrowPressed, rightArrowPressed, spacePressed, ctrlPressed, escPressed, inWireframe = false;
@@ -47,31 +29,19 @@ bool ambientRotation = false;
 bool LookAtMouse = false;
 int ambientRotationMultiplier = 50;
 
-float mouseYaw = -90.0f;
-float mousePitch = 0.0f;
-const float MouseSensitivity = 0.1f;
 bool mouseClickedThisFrame = false;
 void mouse_callback(GLFWwindow* window, double xpos, double ypos);
 void scroll_callback(GLFWwindow* window, double xOffset, double yOffset);
 float scrollDir;
-float xpos_LF = windowSize.x / 2;
-float ypos_LF = windowSize.y / 2;
-bool firstMouse = true;
 bool looking = true;
 
-float nearClipPlane = 0.1f;
-float farClipPlane = 100.0f;
-float desiredFrametime = 1 / (engineInfo.desiredFramerate + 1);
+float desiredFrametime = 1 / (EngineInfo.desiredFramerate + 1);
 double frameTime, endOfFrameTime, endOfFrameTimeLastFrame;
 float frameRate;
 bool useScreenRefreshRate = true;
 
-vec2 MousePos;
-
 mat4 orthoscopicMat;
 mat4 projectionMat;
-
-Camera mainCamera;
 
 struct {
 	vec3 zero = vec3(0.0f);
@@ -88,7 +58,7 @@ struct {
 
 	float Distance(vec3 v, vec3 w)
 	{
-		float x = pow((v.x - w.x), 2); 
+		float x = pow((v.x - w.x), 2);
 		float y = pow((v.y - w.y), 2);
 		float z = pow((v.z - w.z), 2);
 
@@ -135,8 +105,8 @@ void UpdateWindowSize(GLFWwindow* window)
 	glfwGetWindowSize(window, &width, &height);
 	if (width == 0 || height == 0)
 		return;
-	windowSize.x = width;
-	windowSize.y = height;
+	EngineInfo.windowSize.x = width;
+	EngineInfo.windowSize.y = height;
 }
 void scroll_callback(GLFWwindow* window, double xOffset, double yOffset)
 {
@@ -144,37 +114,7 @@ void scroll_callback(GLFWwindow* window, double xOffset, double yOffset)
 }
 void mouse_callback(GLFWwindow* window, double xposIn, double yposIn)
 {
-	if (!looking)
-	{
-		return;
-	}
-	MousePos.x = static_cast<float>(xposIn);
-	MousePos.y = static_cast<float>(yposIn);
-
-	if (firstMouse)
-	{
-		xpos_LF = MousePos.x;
-		ypos_LF = MousePos.y;
-		firstMouse = false;
-	}
-	float xOffset = MousePos.x - xpos_LF;
-	float yOffset = -(MousePos.y - ypos_LF);
-
-	xpos_LF = MousePos.x;
-	ypos_LF = MousePos.y;
-
-	xOffset *= MouseSensitivity;
-	yOffset *= MouseSensitivity;
-
-	mouseYaw += xOffset;
-	mousePitch += yOffset;
-
-	mousePitch = clamp(mousePitch, -89.0f, 89.0f);
-
-	mainCamera.lookDirection.x = cos(radians(mouseYaw)) * cos(radians(mousePitch));
-	mainCamera.lookDirection.y = sin(radians(mousePitch));
-	mainCamera.lookDirection.z = sin(radians(mouseYaw)) * cos(radians(mousePitch));
-	mainCamera.forward = normalize(mainCamera.lookDirection);
+	mainCamera->SetCameraDir(window, xposIn, yposIn, looking);
 }
 
 void framebuffer_size_callback(GLFWwindow* window, int width, int height)
@@ -200,7 +140,7 @@ void processInput(GLFWwindow* window)
 			looking = false;
 		}
 		else {
-			firstMouse = true;
+			mainCamera->firstCamFrame = true;
 			looking = true;
 			glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 		}
@@ -221,7 +161,7 @@ void processInput(GLFWwindow* window)
 		// Toggles wireframe rendering on or off
 		//------------------------------------//
 		ctrlPressed = true;
-		
+
 		if (inWireframe)
 		{
 			glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
@@ -290,106 +230,10 @@ void InfoDump()
 
 	GetSystemInfo(&sysInfo);
 
-	engineInfo.LogEngineInfo();
+	EngineInfo.LogEngineInfo();
 	std::string displayAdaptor(reinterpret_cast<const char*>(glGetString(GL_RENDERER)));
 	std::string glVersion(reinterpret_cast<const char*>(glGetString(GL_SHADING_LANGUAGE_VERSION)));
 	Console.Log("Display Adaptor: " + displayAdaptor + ", OpenGL Version " + glVersion + ", " + std::to_string(sysInfo.dwNumberOfProcessors) + " CPU threads avaliable.");
-}
-std::string parameter(std::string str)
-{
-	return str.substr(1, str.find_first_of(" ") - 1);
-}
-vec4 ParseVector(std::string vecstr)
-{
-	float x, y, z, w;
-	int val;
-	std::string x_s, y_s, z_s, w_s = "1.0";
-
-	x_s = vecstr.substr(0, vecstr.find_first_of("f"));
-
-	vecstr = vecstr.substr(vecstr.find_first_of("f") + 3, vecstr.size());
-	y_s = vecstr.substr(0, vecstr.find_first_of("f"));
-
-	vecstr = vecstr.substr(vecstr.find_first_of("f") + 3, vecstr.size());
-	z_s = vecstr.substr(0, vecstr.find_first_of("f"));
-
-	try {
-		vecstr = vecstr.substr(vecstr.find_first_of("f") + 3, vecstr.size());
-		w_s = vecstr.substr(0, vecstr.find_first_of("f"));	
-	}
-	catch (std::exception e) {}
-
-	std::istringstream strx(x_s);
-	strx >> x;
-	std::istringstream stry(y_s);
-	stry >> y;
-	std::istringstream strz(z_s);
-	strz >> z;
-	std::istringstream strw(w_s);
-	strw >> w;
-
-	return vec4(x,y,z,w);
-}
-void ReadScene(std::string scenePath)
-{
-	std::ifstream file(scenePath);
-	std::string scene;
-	int objects = 1;
-	if (file)
-	{
-		std::string modelPath = "n";
-		ObjContainer* newObj = new ObjContainer;
-		while (std::getline(file, scene))
-		{
-			try {
-				if (scene.substr(1, 6) == "OBJECT") {
-					Console.Log("Creating object #" + std::to_string(objects));
-				}
-				else if (parameter(scene) == "object")
-				{
-					newObj->name(scene.substr(8, scene.size()).c_str());
-				}
-				else if (parameter(scene) == "model")
-				{
-					modelPath = scene.substr(scene.find_first_of('"') + 1, scene.size() - 9);
-				}
-				else if (parameter(scene) == "modeltextureflipping")
-				{
-					bool val;
-					if (scene.substr(scene.find_first_of(" ") + 1, scene.size()) == "true")
-						val = true;
-					else
-						val = false;
-					if (modelPath != "n")
-						newObj->SetModel(modelPath, val);
-				}
-				else if (parameter(scene) == "position")
-				{
-					newObj->transform.position = ParseVector(scene.substr(10, scene.size()));
-				}
-				//end
-				else if (scene == "#END") {
-					Console.Log("Scene loaded");
-					break;
-				}
-			}
-			catch (std::exception e) {}
-		}
-
-	}
-	file.close();
-
-}
-void SetActiveScene(std::string scenePath)
-{
-	currentScene = scenePath.substr(scenePath.find_last_of("/") + 1, scenePath.substr().length());
-	currentScene = currentScene.substr(0, currentScene.find_last_of("."));
-	for (int i = 0; i < objects.size(); i++)
-	{
-		objects[i]->Destroy();
-	}
-	objects.clear();
-	ReadScene(scenePath);
 }
 int main()
 {
@@ -408,7 +252,7 @@ int main()
 		Console.PushError("Failed to initialise GLFW.");
 	}
 
-	GLFWwindow* window = glfwCreateWindow(windowSize.x, windowSize.y, "Loading objects...", NULL, NULL);
+	GLFWwindow* window = glfwCreateWindow(EngineInfo.windowSize.x, EngineInfo.windowSize.y, "Loading objects...", NULL, NULL);
 	const GLFWvidmode* mode = glfwGetVideoMode(glfwGetPrimaryMonitor());
 	if (useScreenRefreshRate)
 	{
@@ -417,7 +261,7 @@ int main()
 	//glfwSetWIndow sets window position from top left corner of window. 
 	//Given the screen is 1080p and the windiw is 1280x800, x padding is 320.
 	//320 + 1280 + 320 = 1920, 320 is padding. 
-	glfwSetWindowPos(window, (mode->width - windowSize.x) / 2 /* x padding */, (mode->height - windowSize.y) / 2 /* y padding */);
+	glfwSetWindowPos(window, (mode->width - EngineInfo.windowSize.x) / 2 /* x padding */, (mode->height - EngineInfo.windowSize.y) / 2 /* y padding */);
 	if (window == NULL)
 	{
 		Console.PushError("Window creation failed for unknown reason.");
@@ -437,60 +281,33 @@ int main()
 	glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 	glfwSetCursorPosCallback(window, mouse_callback);
 	glfwSetScrollCallback(window, scroll_callback);
-	
+
 	//---------------------//
 	// Creates shader program
 	//---------------------//
 
+	Shader DrawLightGizmo("GEOMETRY_VERT_SHADER.glsl", "GEOMETRY_FRAG_SHADER.glsl", "DrawLightGizmo", "GEOMETRY_SHADER.glsl");
 	Shader litShader("VERTEX_SHADER.glsl", "LIGHTING_FRAGMENT_SHADER.glsl", "litShader");
-	Shader lightGizmo("LIGHT_GIZMO_VERT.glsl", "LIGHT_GIZMO_FRAG.glsl", "lightGizmo");
 
-	glClearColor(0.1f, 0.1f, 0.1f, 0.1f);
+	float lightPoint[] = {
+		0.0f, 0.0f, 0.0f
+	};
+	unsigned int VBO;
+	glGenBuffers(1, &VBO);
+	glGenVertexArrays(1, &lightPointArray);
+	glBindVertexArray(lightPointArray);
+	glBindBuffer(GL_ARRAY_BUFFER, VBO);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(lightPoint), &lightPoint, GL_STATIC_DRAW);
+	glEnableVertexAttribArray(0);
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), 0);
+	glBindVertexArray(0);
+
 	glEnable(GL_DEPTH_TEST);
 	glEnable(GL_CULL_FACE);
 	glEnable(GL_MULTISAMPLE);
 	glDepthFunc(GL_LESS);
 
 	SetActiveScene("Scenes/Scene.sc");
-	Model sphere = Model("Objects/Primitives/Sphere.obj");
-
-	ObjContainer lightCube("Gay porn");
-	lightCube.light.enabled = true;
-	lightCube.SetModel(sphere);
-	lightCube.renderer.material.shader = &lightGizmo;
-	lightCube.transform.scale = vec3(0.2f);
-	lightCube.transform.position = vec3(0.0f, 6.0f, -1.0f);
-
-	lightCube.light.direction = vec3(0.0f, -1.0f, 0.0f);
-	lightCube.light.cutoff = 17.5;
-	lightCube.light.outerCutoff = 20.5;
-	lightCube.light.type = LightType.Point;
-	lightCube.light.colour = vec4(1.0f, 1.0f, 1.0f, 1.0f);
-/*
-	ObjContainer lightCube2;
-	lightCube2.name("lightCube2");
-	lightCube2 = lightCube;
-	lightCube2.transform.position += vec3(1.5f, 0.0f, -2.0f);
-	lightCube2.light.colour = vec4(0.0f, 1.0f, 0.0f, 1.0f);
-
-	ObjContainer lightCube3;
-	lightCube3 = lightCube;
-	lightCube3.light.type = LightType.Point;
-	lightCube3.name("lightCube3");
-	lightCube3.transform.position += vec3(-1.5f, 0.0f, -2.0f);
-	lightCube3.light.colour = vec4(0.0f, 0.0f, 1.0f, 1.0f);
-	
-	ObjContainer Sun;
-	Sun = lightCube;
-	Sun.name("Sun");
-	Sun.light.ambient = vec3(0.05f);
-	Sun.light.type = LightType.Directional;
-	Sun.light.colour = vec4(1);
-	Sun.transform.position += vec3(0, 4, 0);
-	Sun.transform.scale *= 2;*/
-
-	mainCamera.Position = vec3(0.0f, 4.0f, 0.0f);
-	mainCamera.fov = 75;
 
 	float lightDistanceToCam;
 	int num{ 0 };
@@ -498,22 +315,24 @@ int main()
 	glfwSetWindowTitle(window, "Done!");
 	while (!glfwWindowShouldClose(window))
 	{
+		vec4 col = mainCamera->clearColour;
+		glClearColor(col.r, col.g, col.b, col.a);
 		UpdateWindowSize(window);
 		if (glfwGetTime() > endOfFrameTime + desiredFrametime)
 		{
-			//object.transform.position = vec3(0, 0, sin(glfwGetTime() * 5));
-			orthoscopicMat = glm::ortho(0.0f, windowSize.x, 0.0f, windowSize.y, 0.1f, 100.0f);
-			projectionMat = glm::perspective(glm::radians(mainCamera.fov), windowSize.x / windowSize.y, nearClipPlane, farClipPlane);
+
+			orthoscopicMat = glm::ortho(0.0f, EngineInfo.windowSize.x, 0.0f, EngineInfo.windowSize.y, 0.1f, 100.0f);
+			projectionMat = glm::perspective(glm::radians(mainCamera->fov), EngineInfo.windowSize.x / EngineInfo.windowSize.y, mainCamera->nearClipPlane, mainCamera->farClipPlane);
 
 			mat4 view = mat4(1.0f);
-			view = lookAt(mainCamera.Position, mainCamera.Position + mainCamera.forward, mainCamera.up);
+			view = lookAt(mainCamera->Position, mainCamera->Position + mainCamera->forward, mainCamera->up);
 			//---------------//
 			// stuff
 			//---------------//
-			
+
 			processInput(window);
-			MousePos.x = clamp(MousePos.x, 0, windowSize.x, true);
-			MousePos.y = clamp(MousePos.y, 0, windowSize.y, true);
+			EngineInfo.MousePos.x = clamp(EngineInfo.MousePos.x, 0, EngineInfo.windowSize.x, true);
+			EngineInfo.MousePos.y = clamp(EngineInfo.MousePos.y, 0, EngineInfo.windowSize.y, true);
 			glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
 			for (int i = 0; i < globalTextures.size(); i++)
 			{
@@ -521,14 +340,13 @@ int main()
 					if (frame == 0)
 					{
 						if (globalTextures[i].manualFiltering() == false) {
-							globalTextures[i].filterMode(engineInfo.defaultFiltering);
+							globalTextures[i].filterMode(EngineInfo.defaultFiltering);
 						}
 						globalTextures[i].Set();
 					}
 				}
 				catch (std::exception e) { Console.PushError(e.what()); }
 			}
-			
 			//-------------------------------------------------------------------------------//
 			// Drawing objects and sending their respective properties to their shader program.
 			//-------------------------------------------------------------------------------//
@@ -538,16 +356,11 @@ int main()
 				{
 					objects[i]->renderer.material.shader = &litShader;
 				}
-				if (objects[i]->light.enabled)
-				{
-					litShader.use();
-					litShader.setLight(objects[i]->light, objects[i]->transform.position);
-				}
 				if (true) {
 					objects[i]->renderer.material.shader->use();
 					objects[i]->renderer.material.shader->setMatrix("projection", projectionMat);
 					objects[i]->renderer.material.shader->setMatrix("view", view);
-					objects[i]->renderer.material.shader->setVector("cameraPos", mainCamera.Position.x, mainCamera.Position.y, mainCamera.Position.z);
+					objects[i]->renderer.material.shader->setVector("cameraPos", mainCamera->Position.x, mainCamera->Position.y, mainCamera->Position.z);
 					objects[i]->renderer.material.shader->setFloat("time", glfwGetTime());
 					objects[i]->renderer.material.shader->setBool("wireframe", inWireframe);
 					objects[i]->renderer.material.shader->setVector("colour", objects[i]->renderer.material.colour.x, objects[i]->renderer.material.colour.y, objects[i]->renderer.material.colour.z);
@@ -572,34 +385,38 @@ int main()
 						objects[i]->renderer.material.emissiveTex.error());
 					if (objects[i]->active)
 					{
-						objects[i]->Draw(objects[i]->renderer.material.culling, objects[i]->renderer.material.shader, engineInfo.pi);
+						if (objects[i]->light.enabled)
+						{
+							litShader.setLight(objects[i]->light, objects[i]->transform.position);
+						}
+						objects[i]->Draw(DrawLightGizmo, projectionMat, view);
 					}
 				}
 			}
 			if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
 			{
-				mainCamera.Position += (mainCamera.SpeedMultiplier * (float)frameTime) * mainCamera.forward;
+				mainCamera->Position += (3 * (float)frameTime) * mainCamera->forward;
 			}
 			if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS)
 			{
-				mainCamera.Position -= (mainCamera.SpeedMultiplier * (float)frameTime) * mainCamera.forward;
+				mainCamera->Position -= (3 * (float)frameTime) * mainCamera->forward;
 			}
 
 			if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS)
 			{
-				mainCamera.Position -= normalize(cross(mainCamera.forward, mainCamera.up)) * (mainCamera.SpeedMultiplier * (float)frameTime);
+				mainCamera->Position -= normalize(cross(mainCamera->forward, mainCamera->up)) * (3 * (float)frameTime);
 			}
 			if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS)
 			{
-				mainCamera.Position += normalize(cross(mainCamera.forward, mainCamera.up)) * (mainCamera.SpeedMultiplier * (float)frameTime);
+				mainCamera->Position += normalize(cross(mainCamera->forward, mainCamera->up)) * (3 * (float)frameTime);
 			}
 			if (glfwGetKey(window, GLFW_KEY_E) == GLFW_PRESS)
 			{
-				mainCamera.Position += (mainCamera.SpeedMultiplier * (float)frameTime) * mainCamera.up;
+				mainCamera->Position += (3 * (float)frameTime) * mainCamera->up;
 			}
 			if (glfwGetKey(window, GLFW_KEY_Q) == GLFW_PRESS)
 			{
-				mainCamera.Position -= (mainCamera.SpeedMultiplier * (float)frameTime) * mainCamera.up;
+				mainCamera->Position -= (3 * (float)frameTime) * mainCamera->up;
 			}
 			if (objects.size() != 0) {
 
@@ -609,10 +426,9 @@ int main()
 					mouseClickedThisFrame = true;
 					for (int i = 0; i < objects.size(); i++)
 					{
-						if (objects[i]->light.enabled && objects[i]->light.type != LightType.Ambient)
+						if (objects[i]->light.enabled && objects[i]->light.type != LightType::Ambient)
 						{
-							objects[i]->renderer.material.colour = vec4(1);
-							float new_distance = Vector3.Distance(objects[i]->transform.position, mainCamera.Position);
+							float new_distance = Vector3.Distance(objects[i]->transform.position, mainCamera->Position);
 							if (new_distance <= distance || distance == 0)
 							{
 								distance = new_distance;
@@ -622,11 +438,10 @@ int main()
 							}
 						}
 					}
-					lightDistanceToCam = Vector3.Distance(objects[num]->transform.position, mainCamera.Position);
+					lightDistanceToCam = Vector3.Distance(objects[num]->transform.position, mainCamera->Position);
 				}
 				else if (glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_RIGHT) == GLFW_RELEASE && mouseClickedThisFrame)
 				{
-					objects[num]->renderer.material.colour = vec4(1.0f);
 					mouseClickedThisFrame = false;
 
 				}
@@ -634,12 +449,12 @@ int main()
 				{
 					objects[num]->renderer.material.colour = vec4(1.0f, 1.0f, ((sin(glfwGetTime() * 10) / 2) + 1), 1.0f);
 					lightDistanceToCam = clamp((lightDistanceToCam + scrollDir / 10), 1, 20);
-					vec3 camForward = mainCamera.Position + mainCamera.forward * lightDistanceToCam;
+					vec3 camForward = mainCamera->Position + mainCamera->forward * lightDistanceToCam;
 					objects[num]->transform.position = camForward;
-					objects[num]->light.direction = mainCamera.forward;
+					objects[num]->light.direction = mainCamera->forward;
 				}
 				else {
-					lightDistanceToCam = Vector3.Distance(objects[num]->transform.position, mainCamera.Position);
+					lightDistanceToCam = Vector3.Distance(objects[num]->transform.position, mainCamera->Position);
 				}
 			}
 			scrollDir = 0;
@@ -649,7 +464,7 @@ int main()
 			{
 				glfwSetWindowTitle(window, windowName.c_str());
 			}
-			
+
 			frame++;
 			endOfFrameTime = glfwGetTime();
 			frameTime = endOfFrameTime - endOfFrameTimeLastFrame;
@@ -664,7 +479,10 @@ int main()
 	glfwTerminate();
 	for (int i = 0; i < objects.size(); i++)
 	{
-		objects[i]->Destroy();
+		try {
+			//objects[i]->Destroy();
+		}
+		catch (std::exception e) {}
 	}
 	objects.clear();
 	return 0;

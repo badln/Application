@@ -1,57 +1,15 @@
-﻿  main.cpp
-C:\Users\felix\source\repos\Application\Application\main.cpp(11,10): warning C4067: unexpected tokens following preprocessor directive - expected a newline
+﻿  objects.cpp
 C:\Users\felix\source\repos\Application\Application\engine.h(11,13): warning C4305: 'initializing': truncation from 'double' to 'float'
-  (compiling source file 'main.cpp')
+  (compiling source file 'objects.cpp')
   
-C:\Program Files (x86)\Windows Kits\10\Include\10.0.22621.0\shared\minwindef.h(130,9): warning C4005: 'APIENTRY': macro redefinition
-  (compiling source file 'main.cpp')
-      C:\Users\felix\source\repos\Application\Application\Libraries\Include\glad\glad.h(32,9):
-      see previous definition of 'APIENTRY'
-  
-C:\Users\felix\source\repos\Application\Application\main.cpp(91,11): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
-C:\Users\felix\source\repos\Application\Application\main.cpp(92,11): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
-C:\Users\felix\source\repos\Application\Application\main.cpp(93,11): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
-C:\Users\felix\source\repos\Application\Application\main.cpp(106,10): warning C4244: 'initializing': conversion from 'float' to 'int', possible loss of data
-C:\Users\felix\source\repos\Application\Application\main.cpp(116,10): warning C4244: 'initializing': conversion from 'float' to 'int', possible loss of data
-C:\Users\felix\source\repos\Application\Application\main.cpp(138,17): warning C4244: '=': conversion from 'int' to 'T', possible loss of data
-C:\Users\felix\source\repos\Application\Application\main.cpp(138,17): warning C4244:         with
-C:\Users\felix\source\repos\Application\Application\main.cpp(138,17): warning C4244:         [
-C:\Users\felix\source\repos\Application\Application\main.cpp(138,17): warning C4244:             T=float
-C:\Users\felix\source\repos\Application\Application\main.cpp(138,17): warning C4244:         ]
-C:\Users\felix\source\repos\Application\Application\main.cpp(139,17): warning C4244: '=': conversion from 'int' to 'T', possible loss of data
-C:\Users\felix\source\repos\Application\Application\main.cpp(139,17): warning C4244:         with
-C:\Users\felix\source\repos\Application\Application\main.cpp(139,17): warning C4244:         [
-C:\Users\felix\source\repos\Application\Application\main.cpp(139,17): warning C4244:             T=float
-C:\Users\felix\source\repos\Application\Application\main.cpp(139,17): warning C4244:         ]
-C:\Users\felix\source\repos\Application\Application\main.cpp(143,14): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
-C:\Users\felix\source\repos\Application\Application\main.cpp(305,6): warning C4101: 'val': unreferenced local variable
-C:\Users\felix\source\repos\Application\Application\main.cpp(411,64): warning C4244: 'argument': conversion from 'T' to 'int', possible loss of data
-C:\Users\felix\source\repos\Application\Application\main.cpp(411,64): warning C4244:         with
-C:\Users\felix\source\repos\Application\Application\main.cpp(411,64): warning C4244:         [
-C:\Users\felix\source\repos\Application\Application\main.cpp(411,64): warning C4244:             T=float
-C:\Users\felix\source\repos\Application\Application\main.cpp(411,64): warning C4244:         ]
-C:\Users\felix\source\repos\Application\Application\main.cpp(411,50): warning C4244: 'argument': conversion from 'T' to 'int', possible loss of data
-C:\Users\felix\source\repos\Application\Application\main.cpp(411,50): warning C4244:         with
-C:\Users\felix\source\repos\Application\Application\main.cpp(411,50): warning C4244:         [
-C:\Users\felix\source\repos\Application\Application\main.cpp(411,50): warning C4244:             T=float
-C:\Users\felix\source\repos\Application\Application\main.cpp(411,50): warning C4244:         ]
-C:\Users\felix\source\repos\Application\Application\main.cpp(415,24): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
-C:\Users\felix\source\repos\Application\Application\main.cpp(420,107): warning C4244: 'argument': conversion from 'T' to 'int', possible loss of data
-C:\Users\felix\source\repos\Application\Application\main.cpp(420,107): warning C4244:         with
-C:\Users\felix\source\repos\Application\Application\main.cpp(420,107): warning C4244:         [
-C:\Users\felix\source\repos\Application\Application\main.cpp(420,107): warning C4244:             T=float
-C:\Users\felix\source\repos\Application\Application\main.cpp(420,107): warning C4244:         ]
-C:\Users\felix\source\repos\Application\Application\main.cpp(420,56): warning C4244: 'argument': conversion from 'T' to 'int', possible loss of data
-C:\Users\felix\source\repos\Application\Application\main.cpp(420,56): warning C4244:         with
-C:\Users\felix\source\repos\Application\Application\main.cpp(420,56): warning C4244:         [
-C:\Users\felix\source\repos\Application\Application\main.cpp(420,56): warning C4244:             T=float
-C:\Users\felix\source\repos\Application\Application\main.cpp(420,56): warning C4244:         ]
-C:\Users\felix\source\repos\Application\Application\main.cpp(551,72): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
-C:\Users\felix\source\repos\Application\Application\main.cpp(656,18): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
-C:\Users\felix\source\repos\Application\Application\main.cpp(400,13): warning C4101: 'transform': unreferenced local variable
-glfw3.lib(input.obj) : warning LNK4099: PDB '' was not found with 'glfw3.lib(input.obj)' or at ''; linking object as if no debug info
-glfw3.lib(monitor.obj) : warning LNK4099: PDB '' was not found with 'glfw3.lib(monitor.obj)' or at ''; linking object as if no debug info
-glfw3.lib(window.obj) : warning LNK4099: PDB '' was not found with 'glfw3.lib(window.obj)' or at ''; linking object as if no debug info
-glfw3.lib(win32_joystick.obj) : warning LNK4099: PDB '' was not found with 'glfw3.lib(win32_joystick.obj)' or at ''; linking object as if no debug info
-glfw3.lib(win32_window.obj) : warning LNK4099: PDB '' was not found with 'glfw3.lib(win32_window.obj)' or at ''; linking object as if no debug info
+C:\Users\felix\source\repos\Application\Application\objects.cpp(210,50): warning C4244: 'argument': conversion from 'unsigned __int64' to 'GLsizei', possible loss of data
+C:\Users\felix\source\repos\Application\Application\objects.cpp(213,50): warning C4244: 'argument': conversion from 'unsigned __int64' to 'GLsizei', possible loss of data
+C:\Users\felix\source\repos\Application\Application\objects.cpp(216,50): warning C4244: 'argument': conversion from 'unsigned __int64' to 'GLsizei', possible loss of data
+C:\Users\felix\source\repos\Application\Application\objects.cpp(265,48): warning C4267: 'argument': conversion from 'size_t' to 'GLsizei', possible loss of data
+C:\Users\felix\source\repos\Application\Application\objects.cpp(358,20): warning C4018: '<': signed/unsigned mismatch
+C:\Users\felix\source\repos\Application\Application\objects.cpp(386,20): warning C4018: '<': signed/unsigned mismatch
+C:\Users\felix\source\repos\Application\Application\objects.cpp(389,21): warning C4018: '<': signed/unsigned mismatch
+C:\Users\felix\source\repos\Application\Application\objects.cpp(414,20): warning C4018: '<': signed/unsigned mismatch
+C:\Users\felix\source\repos\Application\Application\objects.cpp(743,32): warning C4267: '=': conversion from 'size_t' to 'int', possible loss of data
+C:\Users\felix\source\repos\Application\Application\objects.cpp(749,32): warning C4267: '=': conversion from 'size_t' to 'int', possible loss of data
   Application.vcxproj -> C:\Users\felix\source\repos\Application\x64\Debug\Application.exe

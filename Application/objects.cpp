@@ -3,6 +3,52 @@
 #include "stb_image.h"
 #include "objects.h"
 
+std::string Camera::name() { return name_; }
+void Camera::name(std::string str) { name_ = str; }
+void Camera::SetMainCamera() {
+	firstCamFrame = true;
+	mainCamera = this;
+	SetCameraDir();
+}
+void Camera::SetCameraDir(GLFWwindow* window, double xposIn, double yposIn, bool looking)
+{
+	if (!looking)
+	{
+		return;
+	}
+	EngineInfo.MousePos.x = static_cast<float>(xposIn);
+	EngineInfo.MousePos.y = static_cast<float>(yposIn);
+
+	if (mainCamera->firstCamFrame)
+	{
+		EngineInfo.MousePosLF.x = EngineInfo.MousePos.x;
+		EngineInfo.MousePosLF.y = EngineInfo.MousePos.y;
+		mainCamera->firstCamFrame = false;
+	}
+	SetCameraDir();
+}
+void Camera::SetCameraDir() {
+
+	float xOffset = EngineInfo.MousePos.x - EngineInfo.MousePosLF.x;
+	float yOffset = -(EngineInfo.MousePos.y - EngineInfo.MousePosLF.y);
+
+	//std::cout << xOffset << ", " << yOffset << ", MousePosX: " << EngineInfo.MousePos.x << ", MousePosLFX: " << EngineInfo.MousePosLF.x << "\n";
+
+	EngineInfo.MousePosLF = EngineInfo.MousePos;
+
+	xOffset *= EngineInfo.MouseSensitivity;
+	yOffset *= EngineInfo.MouseSensitivity;
+
+	yaw += xOffset;
+	pitch += yOffset;
+
+	pitch = clamp(pitch, -89.0f, 89.0f);
+
+	lookDirection.x = cos(radians(yaw)) * cos(radians(pitch));
+	lookDirection.y = sin(radians(pitch));
+	lookDirection.z = sin(radians(yaw)) * cos(radians(pitch));
+	forward = normalize(lookDirection);
+}
 void SetWindowIcon(const char* path, GLFWwindow* window)
 {
 	GLFWimage images[1];
@@ -184,21 +230,21 @@ void Mesh::Draw(int faceCulling, Shader &shader, float pi, Transform transform)
 		glBindTexture(GL_TEXTURE_2D, data.textures[i].id());
 		//std::cout << "Texture " << data.textures[i].id() << " has path " << data.textures[i].path << " and type " << data.textures[i].type << "\n";
 
-		if (data.textures[i].type == TextureType.Diffuse) {
+		if (data.textures[i].type == TextureType::Diffuse) {
 			std::string loc = "diffuseTextures[" + std::to_string(diffuseNr) + "]";
 			shader.setInt(loc, data.textures[i].id());
 			shader.setBool("diffuseTexturesAs[" + std::to_string(diffuseNr) + "]", true);
 			//std::cout << "Set diffuse texture " << data.textures[i].id() << " with path " << data.textures[i].path << " '" + loc + "'\n";
 			diffuseNr++;
 		}
-		else if (data.textures[i].type == TextureType.Specular) {
+		else if (data.textures[i].type == TextureType::Specular) {
 			std::string loc = "specularTextures[" + std::to_string(specularNr) + "]";
 			shader.setInt(loc, data.textures[i].id());
 			shader.setBool("specularTexturesAs[" + std::to_string(specularNr) + "]", true);
 			//std::cout << "Set specular texture " << data.textures[i].id() << " with path " << data.textures[i].path << " '" + loc + "'\n";
 			specularNr++;
 		}
-		else if (data.textures[i].type == TextureType.Emissive) {
+		else if (data.textures[i].type == TextureType::Emissive) {
 			std::string loc = "emissiveTextures[" + std::to_string(emissiveNr) + "]";
 			shader.setInt(loc, data.textures[i].id());
 			shader.setBool("emissiveTexturesAs[" + std::to_string(emissiveNr) + "]", true);
@@ -214,7 +260,7 @@ void Mesh::Draw(int faceCulling, Shader &shader, float pi, Transform transform)
 	else if (faceCulling == FaceCulling.None)
 		glDisable(GL_CULL_FACE);
 
-	shader.setMatAndTransform(transform, mat4(1), pi);
+	shader.setMatAndTransform(transform, mat4(1));
 	glBindVertexArray(VAO_);
 	glDrawElements(GL_TRIANGLES, data.indices.size(), GL_UNSIGNED_INT, 0);
 	glBindVertexArray(0);
@@ -225,8 +271,7 @@ void Mesh::Draw(int faceCulling, Shader &shader, float pi, Transform transform)
 }
 Mesh::Mesh() {}
 
-
-void ObjContainer::Draw(int faceCulling, Shader *shader, float pi)
+void ObjContainer::Draw(Shader &lightGizmo, mat4 projection, mat4 view)
 {
 	for (int i = 0; i < children.size(); i++)
 	{
@@ -235,8 +280,25 @@ void ObjContainer::Draw(int faceCulling, Shader *shader, float pi)
 			children[i].transform.position = this->transform.position + this->transform.localPosition;
 			children[i].transform.rotation = this->transform.rotation + this->transform.localRotation;
 			children[i].transform.scale =	 this->transform.scale    * this->transform.localScale;
-			children[i].renderer.mesh.Draw(faceCulling, *shader, pi, children[i].transform);
+			children[i].renderer.mesh.Draw(renderer.material.culling, *renderer.material.shader, EngineInfo.pi, children[i].transform);
 		}
+	}
+	if (light.enabled)
+	{
+		lightGizmo.use();
+		lightGizmo.setFloat("windowSizeX", EngineInfo.windowSize.x);
+		lightGizmo.setFloat("windowSizeY", EngineInfo.windowSize.y);
+		lightGizmo.setMatAndTransform(transform, mat4(1));
+		lightGizmo.setMatrix("projection", projection);
+		lightGizmo.setMatrix("view", view);
+		lightGizmo.setVector("colourMultiply", 0.3f, 0.3f, 0.3f);
+		glDepthFunc(GL_GEQUAL);
+		glBindVertexArray(lightPointArray);
+		glDrawArrays(GL_POINTS, 0, 1);
+		glDepthFunc(GL_LESS);
+		lightGizmo.setVector("colourMultiply", 1.0f, 1.0f, 1.0f);
+		glBindVertexArray(lightPointArray);
+		glDrawArrays(GL_POINTS, 0, 1);
 	}
 }
 Model::Model() {}
@@ -504,6 +566,7 @@ Shader::Shader(const char* VERTEX_SHADER_PATH, const char* FRAGMENT_SHADER_PATH,
 	glDeleteShader(VERTEX_SHADER);
 	glDeleteShader(FRAGMENT_SHADER);
 	glDeleteShader(GEOMETRY_SHADER);
+	shaders.push_back(this);
 }
 
 void Shader::use()
@@ -571,15 +634,19 @@ void Shader::setMaterial(const std::string& name, vec3 diffuse, vec3 specular, v
 	}
 	catch (std::exception e) {}
 }
-void Shader::setMatAndTransform(Transform trans, mat4 mat, float pi)
+void Shader::setMatAndTransform(Transform trans, mat4 mat)
 {
-	mat = translate (mat, trans.position + (trans.localPosition * trans.scale));
-	mat = rotate	(mat, trans.rotation.x + trans.localRotation.x * (pi / 180), vec3(1.0f, 0.0f, 0.0f));
-	mat = rotate	(mat, trans.rotation.y + trans.localRotation.y * (pi / 180), vec3(0.0f, 1.0f, 0.0f));
-	mat = rotate	(mat, trans.rotation.z + trans.localRotation.z * (pi / 180), vec3(0.0f, 0.0f, 1.0f));
-	mat = scale		(mat, trans.scale * trans.localScale);
-	//std::cout << name() << "\n";
+	mat = SetupMatrix(trans, mat);
 	setMatrix("model", mat);
+}
+mat4 SetupMatrix(Transform trans, mat4 mat) {
+
+	mat = translate(mat, trans.position + (trans.localPosition * trans.scale));
+	mat = rotate(mat, trans.rotation.x + trans.localRotation.x * (EngineInfo.pi / 180), vec3(1.0f, 0.0f, 0.0f));
+	mat = rotate(mat, trans.rotation.y + trans.localRotation.y * (EngineInfo.pi / 180), vec3(0.0f, 1.0f, 0.0f));
+	mat = rotate(mat, trans.rotation.z + trans.localRotation.z * (EngineInfo.pi / 180), vec3(0.0f, 0.0f, 1.0f));
+	mat = scale(mat, trans.scale * trans.localScale);
+	return mat;
 }
 void Shader::setLight(LightSource& light, vec3 parentObjPos)
 {

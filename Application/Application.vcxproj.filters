@@ -4,6 +4,7 @@
     <ClCompile Include="glad.c" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="objects.cpp" />
+    <ClCompile Include="Scene.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="EngineResources\Colour.h">
@@ -15,6 +16,8 @@
     <ClInclude Include="objects.h" />
     <ClInclude Include="transform.h" />
     <ClInclude Include="engine.h" />
+    <ClInclude Include="Scene.h" />
+    <ClInclude Include="main.h" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="IMG_2209.ico" />
@@ -34,10 +37,10 @@
     <ResourceCompile Include="Application.rc" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Shaders\LIGHT_GIZMO_FRAG.glsl">
+    <None Include="Shaders\DEFAULT_FRAGMENT_SHADER.glsl">
       <Filter>Shaders</Filter>
     </None>
-    <None Include="Shaders\LIGHT_GIZMO_VERT.glsl">
+    <None Include="Shaders\DEFAULT_VERTEX_SHADER.glsl">
       <Filter>Shaders</Filter>
     </None>
     <None Include="Shaders\LIGHTING_FRAGMENT_SHADER.glsl">
@@ -51,6 +54,12 @@
     </None>
     <None Include="Scenes\Scene.sc">
       <Filter>Scenes</Filter>
+    </None>
+    <None Include="Shaders\GEOMETRY_VERT_SHADER.glsl">
+      <Filter>Shaders</Filter>
+    </None>
+    <None Include="Shaders\GEOMETRY_FRAG_SHADER.glsl">
+      <Filter>Shaders</Filter>
     </None>
   </ItemGroup>
 </Project>
