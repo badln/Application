@@ -74,7 +74,7 @@ d 0.0f, -1.0f, 0.0f
 co 17.5f
 oco 20.5f
 t 0
-lc 1.0f, 0.0f, 0.0f, 1.0f
+lc 1.0f, 1.0f, 1.0f, 1.0f
 
 sh litShader
 

@@ -23,7 +23,6 @@
 
 using namespace glm;
 
-extern int generatedTexture;
 extern int frame;
 extern unsigned int lightPointArray;
 extern vec2 windowSize;
@@ -105,7 +104,8 @@ typedef enum {
 	Texture2D = 0,
 	Diffuse   = 1,
 	Specular  = 2,
-	Emissive  = 3
+	Emissive  = 3,
+	Render    = 4
 } TextureType ;
 class Texture
 { 
@@ -113,19 +113,18 @@ class Texture
 	bool idAssigned_ = false;
 	bool manualFiltering_ = false;
 	unsigned int data_;
-	int id_;
+	unsigned int id_;
 	bool error_ = false;
 	GLenum filterMode_ = TextureFilter::Linear;
 	GLenum magFilterMode_ = GL_LINEAR;
 	GLenum wrapMode_ = GL_REPEAT;
 	vec2 size_;
 public:
-	unsigned int tex;
 	int type = TextureType::Diffuse; 
 	const vec2& size() const { return size_; }
 	const unsigned int& data() const { return data_; }
 	const bool& texAssigned() const { return texAssigned_; }
-	const int& id() const { return id_; }
+	const unsigned int& id() const { return id_; }
 	const bool& error() const { return error_; }
 	const bool& manualFiltering() const{ return manualFiltering_; }
 	const GLenum filterMode() const { return filterMode_; }
@@ -232,6 +231,7 @@ public:
 class ObjContainer;
 
 class Model {
+private:
 public:
 	std::string directory;
 	bool flipTex;
@@ -275,6 +275,7 @@ public:
 	const ObjContainer& parent() const { return *parent_; }
 
 	void SetModel(std::string path, bool flipTextures = false);
+	void SetModel(const char* path, bool flipTextures = false);
 	void SetModel(Model model, bool flipTextures = false);
 	void Draw(Shader &lightGizmo, mat4 projection, mat4 view, vec2 windowSize);
 
@@ -304,9 +305,11 @@ public:
 	const int& RBO() const { return RBO_; }
 	void use(unsigned int framebuffer) {
 		glBindFramebuffer(GL_FRAMEBUFFER, framebuffer);
+		glActiveTexture(GL_TEXTURE0 + texture->id());
 	}
 	void use() {
 		glBindFramebuffer(GL_FRAMEBUFFER, FBO_);
+		glActiveTexture(GL_TEXTURE0 + texture->id());
 	}
 	void name(std::string name);
 	void Delete() {

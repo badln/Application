@@ -15,7 +15,6 @@ bool truncVerts = false;
 vec2 windowSize;
 
 int frame = 0;
-int generatedTexture = 0;
 std::vector <Texture> globalTextures;
 std::vector <ObjContainer*> objects;
 std::vector <Shader*> shaders;
@@ -346,11 +345,14 @@ int main()
 	glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 4 * sizeof(float), (void*)(2 * sizeof(float)));
 
 	SetActiveScene("Scenes/Scene.sc");
+	
+	ObjContainer obj("Cube");
+	obj.SetModel("Objects/Primitives/Cube.obj", true);
+	obj.renderer.mesh.data.textures.push_back(Texture("Images/IMG_4766.png", TextureType::Diffuse));
 
 	Framebuffer fb;
-	Texture fbTexture(TextureType::Texture2D);
+	Texture fbTexture(TextureType::Render);
 	fb.Create(&fbTexture, GL_FRAMEBUFFER, "Test");
-
 	EngineInfo.renderResolution = fb.texture->size();
 
 	float lightDistanceToCam;
@@ -423,17 +425,17 @@ int main()
 						objects[i]->renderer.material.shininess,
 						objects[i]->renderer.material.colour,
 						objects[i]->renderer.material.texture.colour,
-						objects[i]->renderer.material.texture.id(),
+						(int)objects[i]->renderer.material.texture.id(),
 						objects[i]->renderer.material.texture.texAssigned(),
-						objects[i]->renderer.material.diffuseTex.id(),
+						(int)objects[i]->renderer.material.diffuseTex.id(),
 						objects[i]->renderer.material.diffuseTex.texAssigned(),
-						objects[i]->renderer.material.specularTex.id(),
+						(int)objects[i]->renderer.material.specularTex.id(),
 						objects[i]->renderer.material.specularTex.texAssigned(),
 						objects[i]->renderer.material.texture.error(),
 						objects[i]->renderer.material.diffuseTex.error(),
 						objects[i]->renderer.material.specularTex.error(),
 						objects[i]->renderer.material.emissive,
-						objects[i]->renderer.material.emissiveTex.id(),
+						(int)objects[i]->renderer.material.emissiveTex.id(),
 						objects[i]->renderer.material.emissiveTex.texAssigned(),
 						objects[i]->renderer.material.emissiveTex.error());
 					if (objects[i]->active)
@@ -446,19 +448,19 @@ int main()
 					}
 				}
 			}
-		
+
 			fb.use(0);
 			glViewport(0, 0, EngineInfo.windowSize.x, EngineInfo.windowSize.y);
 			glDisable(GL_DEPTH_TEST);
 			glClear(GL_COLOR_BUFFER_BIT);
 			screenShader.use();
-			screenShader.setInt("tex", fb.texture->id());
+			screenShader.setInt("tex", (int)fb.texture->id());
 			screenShader.setVector("colour", 0, 0, 0, 0);
 			glBindVertexArray(quadVAO);
 			if (inWireframe)
 				glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 
-			glBindTexture(GL_TEXTURE_2D, fb.texture->tex);
+			glBindTexture(GL_TEXTURE_2D, fb.texture->id());
 			glDrawArrays(GL_TRIANGLES, 0, 6);
 
 			if (inWireframe)

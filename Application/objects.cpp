@@ -59,59 +59,59 @@ void SetWindowIcon(const char* path, GLFWwindow* window)
 }
 void Texture::Set(std::string location, int typeNum, vec2 dimensions, bool flip, int size)
 {
-	if (!texAssigned_)
+	if (type != TextureType::Render)
 	{
-		type = typeNum;
-		path = location;
-		stbi_set_flip_vertically_on_load(flip);
-		int width, height, nrChannels;
-		glGenTextures(size, &tex);
-		glBindTexture(GL_TEXTURE_2D, tex);
-		unsigned char* imageData = stbi_load(location.c_str(), &width, &height, &nrChannels, 0);
-		if (!imageData)
+		if (!texAssigned_)
 		{
-			std::cout << "Image incorrectly loaded. Location: " << location << "\n";
-			unsigned int errorTex{};
-			int ErrorW, ErrorH, ErrorNrChannels;
-			unsigned char* ErrorTex = stbi_load("EngineResources/ERROR.bmp", &ErrorW, &ErrorH, &ErrorNrChannels, 4);
-			GenErrorTex(ErrorTex, errorTex);
+			type = typeNum;
+			path = location;
+			stbi_set_flip_vertically_on_load(flip);
+			int width, height, nrChannels;
+			glGenTextures(size, &id_);
+			glBindTexture(GL_TEXTURE_2D, id_);
+			unsigned char* imageData = stbi_load(location.c_str(), &width, &height, &nrChannels, 0);
+			if (!imageData)
+			{
+				std::cout << "Image incorrectly loaded. Location: " << location << "\n";
+				unsigned int errorTex{};
+				int ErrorW, ErrorH, ErrorNrChannels;
+				unsigned char* ErrorTex = stbi_load("EngineResources/ERROR.bmp", &ErrorW, &ErrorH, &ErrorNrChannels, 4);
+				GenErrorTex(ErrorTex, errorTex);
+			}
+			else {
+
+				GLenum format;
+				if (nrChannels == 1)
+					format = GL_RED;
+				else if (nrChannels == 3)
+					format = GL_RGB;
+				else if (nrChannels == 4)
+					format = GL_RGBA;
+				if (dimensions == vec2(0))
+					dimensions = vec2(width, height);
+				size_ = dimensions;
+				glTexImage2D(GL_TEXTURE_2D, 0, format, dimensions.x, dimensions.y, 0, format, GL_UNSIGNED_BYTE, imageData);
+				glGenerateMipmap(GL_TEXTURE_2D);
+
+				glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, wrapMode_);
+				glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, wrapMode_);
+				glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, filterMode_);
+				glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, magFilterMode_);
+				if (!idAssigned_)
+				{
+					idAssigned_ = true;
+					globalTextures.push_back(*this);
+				}
+				texAssigned_ = true;
+			}
+			glBindTexture(GL_TEXTURE_2D, 0);
+			data_ = id_;
+			stbi_image_free(imageData);
 		}
 		else {
-
-			GLenum format;
-			if (nrChannels == 1)
-				format = GL_RED;
-			else if (nrChannels == 3)
-				format = GL_RGB;
-			else if (nrChannels == 4)
-				format = GL_RGBA;
-			if (dimensions == vec2(0))
-				dimensions = vec2(width, height);
-			size_ = dimensions;
-			glTexImage2D(GL_TEXTURE_2D, 0, format, dimensions.x, dimensions.y, 0, format, GL_UNSIGNED_BYTE, imageData);
-			glGenerateMipmap(GL_TEXTURE_2D);
-			
-			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, wrapMode_);
-			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, wrapMode_);
-			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, filterMode_);
-			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, magFilterMode_);
-			if (!idAssigned_)
-			{
-				generatedTexture++;
-				id_ = generatedTexture;
-				idAssigned_ = true;
-				globalTextures.push_back(*this);
-			}
-			texAssigned_ = true;
+			glDeleteTextures(1, &data_);
+			Set();
 		}
-		glBindTexture(GL_TEXTURE_2D, 0);
-		data_ = tex;
-		stbi_image_free(imageData);
-	}
-	else {
-		texAssigned_ = false;
-		glDeleteTextures(1, &data_);
-		Set();
 	}
 }
 Texture::Texture(std::string location, int type, vec2 dimensions, bool flip, int size)
@@ -127,8 +127,8 @@ Texture::Texture(int typeNum, vec2 dimensions, bool flip, int size)
 		path = "None set";
 
 		stbi_set_flip_vertically_on_load(flip);
-		glGenTextures(size, &tex);
-		glBindTexture(GL_TEXTURE_2D, tex);
+		glGenTextures(size, &id_);
+		glBindTexture(GL_TEXTURE_2D, id_);
 		if (dimensions == vec2(0))
 			dimensions = EngineInfo.renderResolution;
 		size_ = dimensions;
@@ -142,6 +142,12 @@ Texture::Texture(int typeNum, vec2 dimensions, bool flip, int size)
 
 		texAssigned_ = true;
 		glBindTexture(GL_TEXTURE_2D, 0);
+		if (!idAssigned_)
+		{
+			idAssigned_ = true;
+			globalTextures.push_back(*this);
+		}
+		texAssigned_ = true;
 		
 	}
 }
@@ -257,21 +263,21 @@ void Mesh::Draw(int faceCulling, Shader &shader, float pi, Transform transform)
 		glBindTexture(GL_TEXTURE_2D, data.textures[i].id());
 		//std::cout << "Texture " << data.textures[i].id() << " has path " << data.textures[i].path << " and type " << data.textures[i].type << "\n";
 
-		if (data.textures[i].type == TextureType::Diffuse) {
+		if ((data.textures[i].type == TextureType::Diffuse || data.textures[i].type == TextureType::Render) && data.textures[i].texAssigned()) {
 			std::string loc = "diffuseTextures[" + std::to_string(diffuseNr) + "]";
 			shader.setInt(loc, data.textures[i].id());
 			shader.setBool("diffuseTexturesAs[" + std::to_string(diffuseNr) + "]", true);
 			//std::cout << "Set diffuse texture " << data.textures[i].id() << " with path " << data.textures[i].path << " '" + loc + "'\n";
 			diffuseNr++;
 		}
-		else if (data.textures[i].type == TextureType::Specular) {
+		else if (data.textures[i].type == TextureType::Specular && data.textures[i].texAssigned()) {
 			std::string loc = "specularTextures[" + std::to_string(specularNr) + "]";
 			shader.setInt(loc, data.textures[i].id());
 			shader.setBool("specularTexturesAs[" + std::to_string(specularNr) + "]", true);
 			//std::cout << "Set specular texture " << data.textures[i].id() << " with path " << data.textures[i].path << " '" + loc + "'\n";
 			specularNr++;
 		}
-		else if (data.textures[i].type == TextureType::Emissive) {
+		else if (data.textures[i].type == TextureType::Emissive && data.textures[i].texAssigned()) {
 			std::string loc = "emissiveTextures[" + std::to_string(emissiveNr) + "]";
 			shader.setInt(loc, data.textures[i].id());
 			shader.setBool("emissiveTexturesAs[" + std::to_string(emissiveNr) + "]", true);
@@ -302,15 +308,12 @@ void ObjContainer::Draw(Shader &lightGizmo, mat4 projection, mat4 view, vec2 win
 {
 	if (this == &Scene)
 		return;
-	for (int i = 0; i < children.size(); i++)
+	if (active)
 	{
-		if (children[i]->active)
-		{
-			children[i]->transform.position = this->transform.position + this->transform.localPosition;
-			children[i]->transform.rotation = this->transform.rotation + this->transform.localRotation;
-			children[i]->transform.scale =	 this->transform.scale    * this->transform.localScale;
-			children[i]->renderer.mesh.Draw(renderer.material.culling, *renderer.material.shader, EngineInfo.pi, children[i]->transform);
-		}
+		transform.localPosition = parent_->transform.position + this->transform.position;
+		transform.localRotation = parent_->transform.rotation + this->transform.rotation;
+		transform.localScale =	  parent_->transform.scale    * this->transform.scale;
+		renderer.mesh.Draw(renderer.material.culling, *renderer.material.shader, EngineInfo.pi, transform);
 	}
 	if (light.enabled && EngineInfo.drawGizmos)
 	{
@@ -340,6 +343,11 @@ Model::Model() {}
 void ObjContainer::SetModel(std::string path, bool flipTextures)
 {
 	Model model(path.c_str(), flipTextures);
+	SetModel(model, flipTextures);
+}
+void ObjContainer::SetModel(const char* path, bool flipTextures)
+{
+	Model model(path, flipTextures);
 	SetModel(model, flipTextures);
 }
 void ObjContainer::SetModel(Model model, bool flipTextures)
@@ -678,10 +686,10 @@ void Shader::setMatAndTransform(Transform trans, mat4 mat)
 }
 mat4 SetupMatrix(Transform trans, mat4 mat) {
 
-	mat = translate(mat, trans.position + (trans.localPosition * trans.scale));
-	mat = rotate(mat, trans.rotation.x + trans.localRotation.x * (EngineInfo.pi / 180), vec3(1.0f, 0.0f, 0.0f));
-	mat = rotate(mat, trans.rotation.y + trans.localRotation.y * (EngineInfo.pi / 180), vec3(0.0f, 1.0f, 0.0f));
-	mat = rotate(mat, trans.rotation.z + trans.localRotation.z * (EngineInfo.pi / 180), vec3(0.0f, 0.0f, 1.0f));
+	mat = translate(mat, (trans.localPosition * trans.scale));
+	mat = rotate(mat, trans.localRotation.x * (EngineInfo.pi / 180), vec3(1.0f, 0.0f, 0.0f));
+	mat = rotate(mat, trans.localRotation.y * (EngineInfo.pi / 180), vec3(0.0f, 1.0f, 0.0f));
+	mat = rotate(mat, trans.localRotation.z * (EngineInfo.pi / 180), vec3(0.0f, 0.0f, 1.0f));
 	mat = scale(mat, trans.scale * trans.localScale);
 	return mat;
 }
@@ -897,7 +905,7 @@ void Framebuffer::Create(Texture* tex, GLenum FBtype, std::string name)
 	glBindRenderbuffer(GL_RENDERBUFFER, 0);
 
 	glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT, GL_RENDERBUFFER, RBO_);
-	glFramebufferTexture2D(FBtype, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, texture->tex, 0);
+	glFramebufferTexture2D(FBtype, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, texture->id(), 0);
 
 	if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE)
 		std::cout << "Framebuffer is not complete!" << std::endl;

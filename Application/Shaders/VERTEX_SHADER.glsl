@@ -12,6 +12,8 @@ uniform mat4 model = mat4(1.0f);
 uniform mat4 view = mat4(1.0f);
 uniform mat4 projection = mat4(1.0f);
 
+uniform vec4 newTexCoords;
+
 uniform float vertTruncAmount = 100;
 uniform bool truncVerts;
 

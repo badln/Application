@@ -25,7 +25,7 @@ struct {
 
 	float MouseSensitivity = 0.1f;
 	glm::vec2 windowSize = glm::vec2(1280, 800);
-	glm::vec2 renderResolution = glm::vec2(256, 256);
+	glm::vec2 renderResolution = glm::vec2(1280, 800);
 	glm::vec2 MousePosLF = glm::vec2(0);
 	glm::vec2 MousePos =   glm::vec2(0);
 

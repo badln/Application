@@ -220,16 +220,16 @@ void main()
             vec3 norm = normalize(Normal);
             vec3 viewDir = normalize(vec3(cameraPos) - FragPos);
            
-
+           
             for (int i = 0; i < MAX_TEXTURES; i++)
             {
-                vec4 thisDifTex  = texture(diffuseTextures[i], TexCoord);
+                vec4 thisDifTex  = texture(diffuseTextures[i],  TexCoord);
                 vec4 thisSpecTex = texture(specularTextures[i], TexCoord);
                 vec4 thisEmTex   = texture(emissiveTextures[i], TexCoord);
 
                 if (diffuseTexturesAs[i]){
-                    if (thisDifTex.a < 0.1f)
-                        discard;
+                    //if (thisDifTex.a < 0.1f)
+                        //discard;
                     difTex *= thisDifTex;}
 
                 if (specularTexturesAs[i]){;
