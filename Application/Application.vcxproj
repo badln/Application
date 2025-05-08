@@ -181,6 +181,7 @@
     <None Include="Shaders\LIGHTING_FRAGMENT_SHADER.glsl" />
     <None Include="Shaders\DEFAULT_FRAGMENT_SHADER.glsl" />
     <None Include="Shaders\DEFAULT_VERTEX_SHADER.glsl" />
+    <None Include="Shaders\POST_PROCESS.glsl" />
     <None Include="Shaders\VERTEX_SHADER.glsl" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

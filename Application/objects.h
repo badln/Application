@@ -26,7 +26,7 @@ using namespace glm;
 extern int generatedTexture;
 extern int frame;
 extern unsigned int lightPointArray;
-
+extern vec2 windowSize;
 void SetWindowIcon(const char* path, GLFWwindow* window);
 class Camera {
 private:
@@ -44,7 +44,7 @@ public:
 	float yaw = -90;
 	float pitch = 0;
 
-	vec4 viewPort = vec4(0, 0, EngineInfo.windowSize.x, EngineInfo.windowSize.y);
+	vec4 viewPort = vec4(0, 0, EngineInfo.renderResolution.x, EngineInfo.renderResolution.y);
 	float nearClipPlane = 0.1f;
 	float farClipPlane = 200.0f;
 	vec4 clearColour = vec4(0.1f, 0.1f, 0.1f, 0.1f);
@@ -118,8 +118,11 @@ class Texture
 	GLenum filterMode_ = TextureFilter::Linear;
 	GLenum magFilterMode_ = GL_LINEAR;
 	GLenum wrapMode_ = GL_REPEAT;
+	vec2 size_;
 public:
+	unsigned int tex;
 	int type = TextureType::Diffuse; 
+	const vec2& size() const { return size_; }
 	const unsigned int& data() const { return data_; }
 	const bool& texAssigned() const { return texAssigned_; }
 	const int& id() const { return id_; }
@@ -129,7 +132,8 @@ public:
 	const GLenum wrapMode() const { return filterMode_; }
 	std::string path; 
 
-	Texture(std::string location, int typeNum, bool flip = false, int size = 1);
+	Texture(std::string location, int typeNum, vec2 dimensions = vec2(0), bool flip = false, int size = 1);
+	Texture(int typeNum, vec2 dimensions = vec2(0), bool flip = false, int size = 1);
 	Texture();
 	void wrapMode(GLenum mode);
 	void filterMode(GLenum mode, bool update = false);
@@ -137,7 +141,7 @@ public:
 	vec4 colour = vec4(1.0f);
 
 
-	void Set(std::string location, int typeNum, bool flip = false, int size = 1);
+	void Set(std::string location, int typeNum, vec2 dimensions = vec2(0), bool flip = false, int size = 1);
 	void Set();
 private:
 	void GenErrorTex(unsigned char* ErrorTex, int texture);
@@ -174,8 +178,8 @@ struct {
 	int BackAndFront = 2;
 	int None = 3;
 } FaceCulling ;
-class Material
-{
+
+class Material {
 public:
 	int culling = FaceCulling.Back;
 	vec3 ambient = vec3(0.1f);
@@ -250,23 +254,33 @@ public:
 	Material material = Material();
 	Mesh mesh = Mesh();
 };
-
+extern ObjContainer Scene;
 class ObjContainer {
 	std::string name_ = "Object";
-	int placeInArray = 0;
+	int placeInArray = 0, placeInParentArray = 0;
+	bool placed = false;
+	ObjContainer* parent_ = this;
+	std::vector<ObjContainer*> children;
 public:
 
+	void Init();
 	bool active = true;
 
-	ObjContainer* parent;
-	std::vector<ObjContainer> children;
+	ObjContainer* GetChild(std::string path);
+	ObjContainer* GetChild(int place);
+	static ObjContainer* Find(std::string pathToObj);
+
+	void SetParent(ObjContainer* thisParent);
+	void SetParent(std::string pathToParent);
+	const ObjContainer& parent() const { return *parent_; }
+
 	void SetModel(std::string path, bool flipTextures = false);
 	void SetModel(Model model, bool flipTextures = false);
-	void Draw(Shader &lightGizmo, mat4 projection, mat4 view);
+	void Draw(Shader &lightGizmo, mat4 projection, mat4 view, vec2 windowSize);
 
+	const int& childCount() const { return children.size(); }
 	ObjContainer(const char* objectName);
 	ObjContainer();
-	ObjContainer* FindChild(std::string name);
 	void name(const char* string);
 	const std::string& name() const { return name_; }
 	Transform transform = Transform();
@@ -275,3 +289,27 @@ public:
 	void Destroy();
 };
 extern std::vector <ObjContainer*> objects;
+extern int drawCalls;
+
+class Framebuffer {
+private:
+	std::string name_;
+	unsigned int FBO_, RBO_;
+public:
+	Texture* texture;
+	void Create(GLenum FBtype = GL_FRAMEBUFFER, std::string name = "New Framebuffer");
+	void Create(Texture* tex, GLenum FBtype = GL_FRAMEBUFFER, std::string name = "New Framebuffer");
+	const std::string& name() const { return name_; }
+	const int& FBO() const { return FBO_; }
+	const int& RBO() const { return RBO_; }
+	void use(unsigned int framebuffer) {
+		glBindFramebuffer(GL_FRAMEBUFFER, framebuffer);
+	}
+	void use() {
+		glBindFramebuffer(GL_FRAMEBUFFER, FBO_);
+	}
+	void name(std::string name);
+	void Delete() {
+		glDeleteFramebuffers(1, &FBO_);
+	}
+};

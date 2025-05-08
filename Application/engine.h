@@ -2,6 +2,13 @@
 #include <iostream>
 #include "Libraries\Include\glfw3.h"
 
+
+typedef enum {
+	Fullscreen		   = 0, 
+	Windowed		   = 1,
+	BorderlessWindowed = 2,
+} WindowType ;
+
 struct {
 
 	std::string EngineName =	"8093 Engine";
@@ -9,6 +16,7 @@ struct {
 	std::string EngineAuthor =  "Faye Kendall";
 	float desiredFramerate = 200;
 	float pi = 3.1415926535;
+	bool drawGizmos = true;
 	GLenum defaultFiltering = GL_NEAREST_MIPMAP_NEAREST;
 
 	std::string defaultShaderLoc = "Shaders";
@@ -16,9 +24,12 @@ struct {
 	std::string defaultTexLoc =    "Images";
 
 	float MouseSensitivity = 0.1f;
-	glm::vec2 windowSize = glm::vec2(1200, 800);
+	glm::vec2 windowSize = glm::vec2(1280, 800);
+	glm::vec2 renderResolution = glm::vec2(256, 256);
 	glm::vec2 MousePosLF = glm::vec2(0);
 	glm::vec2 MousePos =   glm::vec2(0);
+
+	int currentWindowType = WindowType::BorderlessWindowed;
 
 	void LogEngineInfo()
 	{

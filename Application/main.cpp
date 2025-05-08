@@ -12,18 +12,22 @@ WindowConsole Console;
 float vertTruncAmount = 10;
 bool truncVerts = false;
 
+vec2 windowSize;
+
 int frame = 0;
 int generatedTexture = 0;
 std::vector <Texture> globalTextures;
 std::vector <ObjContainer*> objects;
 std::vector <Shader*> shaders;
 std::vector <Camera*> worldCameras;
+
 Camera* mainCamera = NULL;
+ObjContainer Scene;
 
 unsigned int lightPointArray;
 
-int pointLightNum = 1;
-int spotLightNum = 1;
+int drawCalls = 0;
+int spotLightNum, pointLightNum;
 bool downArrowPressed, upArrowPressed, leftArrowPressed, rightArrowPressed, spacePressed, ctrlPressed, escPressed, inWireframe = false;
 bool ambientRotation = false;
 bool LookAtMouse = false;
@@ -240,7 +244,7 @@ int main()
 	//--------------------------//
 	// Initialises Window and GLFW
 	//--------------------------//
-
+	Scene.Init();
 	Transforms transform;
 	glfwInit();
 	glfwWindowHint(GLFW_SAMPLES, 16);
@@ -252,8 +256,29 @@ int main()
 		Console.PushError("Failed to initialise GLFW.");
 	}
 
-	GLFWwindow* window = glfwCreateWindow(EngineInfo.windowSize.x, EngineInfo.windowSize.y, "Loading objects...", NULL, NULL);
 	const GLFWvidmode* mode = glfwGetVideoMode(glfwGetPrimaryMonitor());
+
+	glfwWindowHint(GLFW_RED_BITS, mode->redBits);
+	glfwWindowHint(GLFW_GREEN_BITS, mode->greenBits);
+	glfwWindowHint(GLFW_BLUE_BITS, mode->blueBits);
+	glfwWindowHint(GLFW_REFRESH_RATE, mode->refreshRate);
+
+
+	GLFWmonitor* monitor = NULL;
+	switch (EngineInfo.currentWindowType)
+	{
+	case 0:
+		monitor = glfwGetPrimaryMonitor();
+		break;
+	case 1:
+		glfwWindowHint(GLFW_DECORATED, 1);
+		break;
+	case 2:
+		glfwWindowHint(GLFW_DECORATED, 0);
+		break;
+	}
+
+	GLFWwindow* window = glfwCreateWindow(EngineInfo.windowSize.x, EngineInfo.windowSize.y, "Loading objects...", monitor, NULL);
 	if (useScreenRefreshRate)
 	{
 		desiredFrametime = 1 / (mode->refreshRate + 1);
@@ -281,18 +306,15 @@ int main()
 	glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 	glfwSetCursorPosCallback(window, mouse_callback);
 	glfwSetScrollCallback(window, scroll_callback);
-
-	//---------------------//
-	// Creates shader program
-	//---------------------//
-
+	
+	Shader screenShader("DEFAULT_VERTEX_SHADER.glsl", "POST_PROCESS.glsl", "screenShader");
 	Shader DrawLightGizmo("GEOMETRY_VERT_SHADER.glsl", "GEOMETRY_FRAG_SHADER.glsl", "DrawLightGizmo", "GEOMETRY_SHADER.glsl");
 	Shader litShader("VERTEX_SHADER.glsl", "LIGHTING_FRAGMENT_SHADER.glsl", "litShader");
 
 	float lightPoint[] = {
 		0.0f, 0.0f, 0.0f
 	};
-	unsigned int VBO;
+	unsigned int VBO, quadVAO, quadVBO;
 	glGenBuffers(1, &VBO);
 	glGenVertexArrays(1, &lightPointArray);
 	glBindVertexArray(lightPointArray);
@@ -302,27 +324,53 @@ int main()
 	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), 0);
 	glBindVertexArray(0);
 
-	glEnable(GL_DEPTH_TEST);
-	glEnable(GL_CULL_FACE);
-	glEnable(GL_MULTISAMPLE);
-	glDepthFunc(GL_LESS);
+	float screenQuad[] = {
+        // positions   // texCoords
+        -1.0f,  1.0f,  0.0f, 1.0f,
+        -1.0f, -1.0f,  0.0f, 0.0f,
+         1.0f, -1.0f,  1.0f, 0.0f,
+
+        -1.0f,  1.0f,  0.0f, 1.0f,
+         1.0f, -1.0f,  1.0f, 0.0f,
+         1.0f,  1.0f,  1.0f, 1.0f
+    };
+
+	glGenVertexArrays(1, &quadVAO);
+	glGenBuffers(1, &quadVBO);
+	glBindVertexArray(quadVAO);
+	glBindBuffer(GL_ARRAY_BUFFER, quadVBO);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(screenQuad), &screenQuad, GL_STATIC_DRAW);
+	glEnableVertexAttribArray(0);
+	glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 4 * sizeof(float), (void*)0);
+	glEnableVertexAttribArray(1);
+	glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 4 * sizeof(float), (void*)(2 * sizeof(float)));
 
 	SetActiveScene("Scenes/Scene.sc");
+
+	Framebuffer fb;
+	Texture fbTexture(TextureType::Texture2D);
+	fb.Create(&fbTexture, GL_FRAMEBUFFER, "Test");
+
+	EngineInfo.renderResolution = fb.texture->size();
 
 	float lightDistanceToCam;
 	int num{ 0 };
 	float distance{ 0 };
 	glfwSetWindowTitle(window, "Done!");
+	glEnable(GL_CULL_FACE);
+	glEnable(GL_MULTISAMPLE);
+	glDepthFunc(GL_LESS);
 	while (!glfwWindowShouldClose(window))
 	{
 		vec4 col = mainCamera->clearColour;
 		glClearColor(col.r, col.g, col.b, col.a);
 		UpdateWindowSize(window);
+		windowSize = EngineInfo.windowSize;
 		if (glfwGetTime() > endOfFrameTime + desiredFrametime)
 		{
 
-			orthoscopicMat = glm::ortho(0.0f, EngineInfo.windowSize.x, 0.0f, EngineInfo.windowSize.y, 0.1f, 100.0f);
-			projectionMat = glm::perspective(glm::radians(mainCamera->fov), EngineInfo.windowSize.x / EngineInfo.windowSize.y, mainCamera->nearClipPlane, mainCamera->farClipPlane);
+			orthoscopicMat = glm::ortho(0.0f, EngineInfo.renderResolution.x, 0.0f, EngineInfo.renderResolution.y, 0.1f, 100.0f);
+			projectionMat = glm::perspective(glm::radians(mainCamera->fov), EngineInfo.renderResolution.x / EngineInfo.renderResolution.y, mainCamera->nearClipPlane, mainCamera->farClipPlane);
 
 			mat4 view = mat4(1.0f);
 			view = lookAt(mainCamera->Position, mainCamera->Position + mainCamera->forward, mainCamera->up);
@@ -331,9 +379,9 @@ int main()
 			//---------------//
 
 			processInput(window);
-			EngineInfo.MousePos.x = clamp(EngineInfo.MousePos.x, 0, EngineInfo.windowSize.x, true);
-			EngineInfo.MousePos.y = clamp(EngineInfo.MousePos.y, 0, EngineInfo.windowSize.y, true);
-			glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
+			EngineInfo.MousePos.x = clamp(EngineInfo.MousePos.x, 0, EngineInfo.renderResolution.x, true);
+			EngineInfo.MousePos.y = clamp(EngineInfo.MousePos.y, 0, EngineInfo.renderResolution.y, true);
+			glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 			for (int i = 0; i < globalTextures.size(); i++)
 			{
 				try {
@@ -350,6 +398,10 @@ int main()
 			//-------------------------------------------------------------------------------//
 			// Drawing objects and sending their respective properties to their shader program.
 			//-------------------------------------------------------------------------------//
+			fb.use();
+			glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+			glEnable(GL_DEPTH_TEST);
+			glViewport(0, 0, EngineInfo.renderResolution.x, EngineInfo.renderResolution.y);
 			for (int i = 0; i < objects.size(); i++)
 			{
 				if (objects[i]->renderer.material.shader == nullptr)
@@ -357,6 +409,7 @@ int main()
 					objects[i]->renderer.material.shader = &litShader;
 				}
 				if (true) {
+					//TODO: fix this
 					objects[i]->renderer.material.shader->use();
 					objects[i]->renderer.material.shader->setMatrix("projection", projectionMat);
 					objects[i]->renderer.material.shader->setMatrix("view", view);
@@ -389,10 +442,28 @@ int main()
 						{
 							litShader.setLight(objects[i]->light, objects[i]->transform.position);
 						}
-						objects[i]->Draw(DrawLightGizmo, projectionMat, view);
+						objects[i]->Draw(DrawLightGizmo, projectionMat, view, EngineInfo.renderResolution);
 					}
 				}
 			}
+		
+			fb.use(0);
+			glViewport(0, 0, EngineInfo.windowSize.x, EngineInfo.windowSize.y);
+			glDisable(GL_DEPTH_TEST);
+			glClear(GL_COLOR_BUFFER_BIT);
+			screenShader.use();
+			screenShader.setInt("tex", fb.texture->id());
+			screenShader.setVector("colour", 0, 0, 0, 0);
+			glBindVertexArray(quadVAO);
+			if (inWireframe)
+				glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+
+			glBindTexture(GL_TEXTURE_2D, fb.texture->tex);
+			glDrawArrays(GL_TRIANGLES, 0, 6);
+
+			if (inWireframe)
+				glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+
 			if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
 			{
 				mainCamera->Position += (3 * (float)frameTime) * mainCamera->forward;
@@ -401,7 +472,6 @@ int main()
 			{
 				mainCamera->Position -= (3 * (float)frameTime) * mainCamera->forward;
 			}
-
 			if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS)
 			{
 				mainCamera->Position -= normalize(cross(mainCamera->forward, mainCamera->up)) * (3 * (float)frameTime);
@@ -464,7 +534,8 @@ int main()
 			{
 				glfwSetWindowTitle(window, windowName.c_str());
 			}
-
+			//Console.Log("Draw calls this frame: " + std::to_string(drawCalls));
+			drawCalls = 0;
 			frame++;
 			endOfFrameTime = glfwGetTime();
 			frameTime = endOfFrameTime - endOfFrameTimeLastFrame;

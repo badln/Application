@@ -1,15 +1,134 @@
-﻿  objects.cpp
-C:\Users\felix\source\repos\Application\Application\engine.h(11,13): warning C4305: 'initializing': truncation from 'double' to 'float'
+﻿  Scene.cpp
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.22621.0\shared\minwindef.h(130,9): warning C4005: 'APIENTRY': macro redefinition
+  (compiling source file 'Scene.cpp')
+      C:\Users\faye\Desktop\Projects\Application\Application\Libraries\Include\glad\glad.h(32,9):
+      see previous definition of 'APIENTRY'
+  
+C:\Users\faye\Desktop\Projects\Application\Application\engine.h(18,13): warning C4305: 'initializing': truncation from 'double' to 'float'
+  (compiling source file 'Scene.cpp')
+  
+C:\Users\faye\Desktop\Projects\Application\Application\objects.h(281,54): warning C4267: 'return': conversion from 'size_t' to 'const int', possible loss of data
+  (compiling source file 'Scene.cpp')
+  
+C:\Users\faye\Desktop\Projects\Application\Application\Scene.cpp(212,51): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
+  main.cpp
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.22621.0\shared\minwindef.h(130,9): warning C4005: 'APIENTRY': macro redefinition
+  (compiling source file 'main.cpp')
+      C:\Users\faye\Desktop\Projects\Application\Application\Libraries\Include\glad\glad.h(32,9):
+      see previous definition of 'APIENTRY'
+  
+C:\Users\faye\Desktop\Projects\Application\Application\engine.h(18,13): warning C4305: 'initializing': truncation from 'double' to 'float'
+  (compiling source file 'main.cpp')
+  
+C:\Users\faye\Desktop\Projects\Application\Application\objects.h(281,54): warning C4267: 'return': conversion from 'size_t' to 'const int', possible loss of data
+  (compiling source file 'main.cpp')
+  
+C:\Users\faye\Desktop\Projects\Application\Application\main.cpp(65,11): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
+C:\Users\faye\Desktop\Projects\Application\Application\main.cpp(66,11): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
+C:\Users\faye\Desktop\Projects\Application\Application\main.cpp(67,11): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
+C:\Users\faye\Desktop\Projects\Application\Application\main.cpp(80,10): warning C4244: 'initializing': conversion from 'float' to 'int', possible loss of data
+C:\Users\faye\Desktop\Projects\Application\Application\main.cpp(90,10): warning C4244: 'initializing': conversion from 'float' to 'int', possible loss of data
+C:\Users\faye\Desktop\Projects\Application\Application\main.cpp(112,28): warning C4244: '=': conversion from 'int' to 'T', possible loss of data
+C:\Users\faye\Desktop\Projects\Application\Application\main.cpp(112,28): warning C4244:         with
+C:\Users\faye\Desktop\Projects\Application\Application\main.cpp(112,28): warning C4244:         [
+C:\Users\faye\Desktop\Projects\Application\Application\main.cpp(112,28): warning C4244:             T=float
+C:\Users\faye\Desktop\Projects\Application\Application\main.cpp(112,28): warning C4244:         ]
+C:\Users\faye\Desktop\Projects\Application\Application\main.cpp(113,28): warning C4244: '=': conversion from 'int' to 'T', possible loss of data
+C:\Users\faye\Desktop\Projects\Application\Application\main.cpp(113,28): warning C4244:         with
+C:\Users\faye\Desktop\Projects\Application\Application\main.cpp(113,28): warning C4244:         [
+C:\Users\faye\Desktop\Projects\Application\Application\main.cpp(113,28): warning C4244:             T=float
+C:\Users\faye\Desktop\Projects\Application\Application\main.cpp(113,28): warning C4244:         ]
+C:\Users\faye\Desktop\Projects\Application\Application\main.cpp(117,14): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
+C:\Users\faye\Desktop\Projects\Application\Application\main.cpp(281,86): warning C4244: 'argument': conversion from 'T' to 'int', possible loss of data
+C:\Users\faye\Desktop\Projects\Application\Application\main.cpp(281,86): warning C4244:         with
+C:\Users\faye\Desktop\Projects\Application\Application\main.cpp(281,86): warning C4244:         [
+C:\Users\faye\Desktop\Projects\Application\Application\main.cpp(281,86): warning C4244:             T=float
+C:\Users\faye\Desktop\Projects\Application\Application\main.cpp(281,86): warning C4244:         ]
+C:\Users\faye\Desktop\Projects\Application\Application\main.cpp(281,61): warning C4244: 'argument': conversion from 'T' to 'int', possible loss of data
+C:\Users\faye\Desktop\Projects\Application\Application\main.cpp(281,61): warning C4244:         with
+C:\Users\faye\Desktop\Projects\Application\Application\main.cpp(281,61): warning C4244:         [
+C:\Users\faye\Desktop\Projects\Application\Application\main.cpp(281,61): warning C4244:             T=float
+C:\Users\faye\Desktop\Projects\Application\Application\main.cpp(281,61): warning C4244:         ]
+C:\Users\faye\Desktop\Projects\Application\Application\main.cpp(284,24): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
+C:\Users\faye\Desktop\Projects\Application\Application\main.cpp(289,129): warning C4244: 'argument': conversion from 'T' to 'int', possible loss of data
+C:\Users\faye\Desktop\Projects\Application\Application\main.cpp(289,129): warning C4244:         with
+C:\Users\faye\Desktop\Projects\Application\Application\main.cpp(289,129): warning C4244:         [
+C:\Users\faye\Desktop\Projects\Application\Application\main.cpp(289,129): warning C4244:             T=float
+C:\Users\faye\Desktop\Projects\Application\Application\main.cpp(289,129): warning C4244:         ]
+C:\Users\faye\Desktop\Projects\Application\Application\main.cpp(289,67): warning C4244: 'argument': conversion from 'T' to 'int', possible loss of data
+C:\Users\faye\Desktop\Projects\Application\Application\main.cpp(289,67): warning C4244:         with
+C:\Users\faye\Desktop\Projects\Application\Application\main.cpp(289,67): warning C4244:         [
+C:\Users\faye\Desktop\Projects\Application\Application\main.cpp(289,67): warning C4244:             T=float
+C:\Users\faye\Desktop\Projects\Application\Application\main.cpp(289,67): warning C4244:         ]
+C:\Users\faye\Desktop\Projects\Application\Application\main.cpp(404,79): warning C4244: 'argument': conversion from 'T' to 'GLsizei', possible loss of data
+C:\Users\faye\Desktop\Projects\Application\Application\main.cpp(404,79): warning C4244:         with
+C:\Users\faye\Desktop\Projects\Application\Application\main.cpp(404,79): warning C4244:         [
+C:\Users\faye\Desktop\Projects\Application\Application\main.cpp(404,79): warning C4244:             T=float
+C:\Users\faye\Desktop\Projects\Application\Application\main.cpp(404,79): warning C4244:         ]
+C:\Users\faye\Desktop\Projects\Application\Application\main.cpp(404,48): warning C4244: 'argument': conversion from 'T' to 'GLsizei', possible loss of data
+C:\Users\faye\Desktop\Projects\Application\Application\main.cpp(404,48): warning C4244:         with
+C:\Users\faye\Desktop\Projects\Application\Application\main.cpp(404,48): warning C4244:         [
+C:\Users\faye\Desktop\Projects\Application\Application\main.cpp(404,48): warning C4244:             T=float
+C:\Users\faye\Desktop\Projects\Application\Application\main.cpp(404,48): warning C4244:         ]
+C:\Users\faye\Desktop\Projects\Application\Application\main.cpp(417,72): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+C:\Users\faye\Desktop\Projects\Application\Application\main.cpp(451,67): warning C4244: 'argument': conversion from 'T' to 'GLsizei', possible loss of data
+C:\Users\faye\Desktop\Projects\Application\Application\main.cpp(451,67): warning C4244:         with
+C:\Users\faye\Desktop\Projects\Application\Application\main.cpp(451,67): warning C4244:         [
+C:\Users\faye\Desktop\Projects\Application\Application\main.cpp(451,67): warning C4244:             T=float
+C:\Users\faye\Desktop\Projects\Application\Application\main.cpp(451,67): warning C4244:         ]
+C:\Users\faye\Desktop\Projects\Application\Application\main.cpp(451,42): warning C4244: 'argument': conversion from 'T' to 'GLsizei', possible loss of data
+C:\Users\faye\Desktop\Projects\Application\Application\main.cpp(451,42): warning C4244:         with
+C:\Users\faye\Desktop\Projects\Application\Application\main.cpp(451,42): warning C4244:         [
+C:\Users\faye\Desktop\Projects\Application\Application\main.cpp(451,42): warning C4244:             T=float
+C:\Users\faye\Desktop\Projects\Application\Application\main.cpp(451,42): warning C4244:         ]
+C:\Users\faye\Desktop\Projects\Application\Application\main.cpp(542,18): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
+C:\Users\faye\Desktop\Projects\Application\Application\main.cpp(248,13): warning C4101: 'transform': unreferenced local variable
+  objects.cpp
+C:\Users\faye\Desktop\Projects\Application\Application\engine.h(18,13): warning C4305: 'initializing': truncation from 'double' to 'float'
   (compiling source file 'objects.cpp')
   
-C:\Users\felix\source\repos\Application\Application\objects.cpp(210,50): warning C4244: 'argument': conversion from 'unsigned __int64' to 'GLsizei', possible loss of data
-C:\Users\felix\source\repos\Application\Application\objects.cpp(213,50): warning C4244: 'argument': conversion from 'unsigned __int64' to 'GLsizei', possible loss of data
-C:\Users\felix\source\repos\Application\Application\objects.cpp(216,50): warning C4244: 'argument': conversion from 'unsigned __int64' to 'GLsizei', possible loss of data
-C:\Users\felix\source\repos\Application\Application\objects.cpp(265,48): warning C4267: 'argument': conversion from 'size_t' to 'GLsizei', possible loss of data
-C:\Users\felix\source\repos\Application\Application\objects.cpp(358,20): warning C4018: '<': signed/unsigned mismatch
-C:\Users\felix\source\repos\Application\Application\objects.cpp(386,20): warning C4018: '<': signed/unsigned mismatch
-C:\Users\felix\source\repos\Application\Application\objects.cpp(389,21): warning C4018: '<': signed/unsigned mismatch
-C:\Users\felix\source\repos\Application\Application\objects.cpp(414,20): warning C4018: '<': signed/unsigned mismatch
-C:\Users\felix\source\repos\Application\Application\objects.cpp(743,32): warning C4267: '=': conversion from 'size_t' to 'int', possible loss of data
-C:\Users\felix\source\repos\Application\Application\objects.cpp(749,32): warning C4267: '=': conversion from 'size_t' to 'int', possible loss of data
-  Application.vcxproj -> C:\Users\felix\source\repos\Application\x64\Debug\Application.exe
+C:\Users\faye\Desktop\Projects\Application\Application\objects.h(281,54): warning C4267: 'return': conversion from 'size_t' to 'const int', possible loss of data
+  (compiling source file 'objects.cpp')
+  
+C:\Users\faye\Desktop\Projects\Application\Application\objects.cpp(91,67): warning C4244: 'argument': conversion from 'T' to 'GLsizei', possible loss of data
+C:\Users\faye\Desktop\Projects\Application\Application\objects.cpp(91,67): warning C4244:         with
+C:\Users\faye\Desktop\Projects\Application\Application\objects.cpp(91,67): warning C4244:         [
+C:\Users\faye\Desktop\Projects\Application\Application\objects.cpp(91,67): warning C4244:             T=float
+C:\Users\faye\Desktop\Projects\Application\Application\objects.cpp(91,67): warning C4244:         ]
+C:\Users\faye\Desktop\Projects\Application\Application\objects.cpp(91,53): warning C4244: 'argument': conversion from 'T' to 'GLsizei', possible loss of data
+C:\Users\faye\Desktop\Projects\Application\Application\objects.cpp(91,53): warning C4244:         with
+C:\Users\faye\Desktop\Projects\Application\Application\objects.cpp(91,53): warning C4244:         [
+C:\Users\faye\Desktop\Projects\Application\Application\objects.cpp(91,53): warning C4244:             T=float
+C:\Users\faye\Desktop\Projects\Application\Application\objects.cpp(91,53): warning C4244:         ]
+C:\Users\faye\Desktop\Projects\Application\Application\objects.cpp(135,66): warning C4244: 'argument': conversion from 'T' to 'GLsizei', possible loss of data
+C:\Users\faye\Desktop\Projects\Application\Application\objects.cpp(135,66): warning C4244:         with
+C:\Users\faye\Desktop\Projects\Application\Application\objects.cpp(135,66): warning C4244:         [
+C:\Users\faye\Desktop\Projects\Application\Application\objects.cpp(135,66): warning C4244:             T=float
+C:\Users\faye\Desktop\Projects\Application\Application\objects.cpp(135,66): warning C4244:         ]
+C:\Users\faye\Desktop\Projects\Application\Application\objects.cpp(135,52): warning C4244: 'argument': conversion from 'T' to 'GLsizei', possible loss of data
+C:\Users\faye\Desktop\Projects\Application\Application\objects.cpp(135,52): warning C4244:         with
+C:\Users\faye\Desktop\Projects\Application\Application\objects.cpp(135,52): warning C4244:         [
+C:\Users\faye\Desktop\Projects\Application\Application\objects.cpp(135,52): warning C4244:             T=float
+C:\Users\faye\Desktop\Projects\Application\Application\objects.cpp(135,52): warning C4244:         ]
+C:\Users\faye\Desktop\Projects\Application\Application\objects.cpp(236,50): warning C4244: 'argument': conversion from 'unsigned __int64' to 'GLsizei', possible loss of data
+C:\Users\faye\Desktop\Projects\Application\Application\objects.cpp(239,50): warning C4244: 'argument': conversion from 'unsigned __int64' to 'GLsizei', possible loss of data
+C:\Users\faye\Desktop\Projects\Application\Application\objects.cpp(242,50): warning C4244: 'argument': conversion from 'unsigned __int64' to 'GLsizei', possible loss of data
+C:\Users\faye\Desktop\Projects\Application\Application\objects.cpp(292,48): warning C4267: 'argument': conversion from 'size_t' to 'GLsizei', possible loss of data
+C:\Users\faye\Desktop\Projects\Application\Application\objects.cpp(395,20): warning C4018: '<': signed/unsigned mismatch
+C:\Users\faye\Desktop\Projects\Application\Application\objects.cpp(423,20): warning C4018: '<': signed/unsigned mismatch
+C:\Users\faye\Desktop\Projects\Application\Application\objects.cpp(426,21): warning C4018: '<': signed/unsigned mismatch
+C:\Users\faye\Desktop\Projects\Application\Application\objects.cpp(451,20): warning C4018: '<': signed/unsigned mismatch
+C:\Users\faye\Desktop\Projects\Application\Application\objects.cpp(795,33): warning C4267: '=': conversion from 'size_t' to 'int', possible loss of data
+C:\Users\faye\Desktop\Projects\Application\Application\objects.cpp(896,120): warning C4244: 'argument': conversion from 'T' to 'GLsizei', possible loss of data
+C:\Users\faye\Desktop\Projects\Application\Application\objects.cpp(896,120): warning C4244:         with
+C:\Users\faye\Desktop\Projects\Application\Application\objects.cpp(896,120): warning C4244:         [
+C:\Users\faye\Desktop\Projects\Application\Application\objects.cpp(896,120): warning C4244:             T=float
+C:\Users\faye\Desktop\Projects\Application\Application\objects.cpp(896,120): warning C4244:         ]
+C:\Users\faye\Desktop\Projects\Application\Application\objects.cpp(896,89): warning C4244: 'argument': conversion from 'T' to 'GLsizei', possible loss of data
+C:\Users\faye\Desktop\Projects\Application\Application\objects.cpp(896,89): warning C4244:         with
+C:\Users\faye\Desktop\Projects\Application\Application\objects.cpp(896,89): warning C4244:         [
+C:\Users\faye\Desktop\Projects\Application\Application\objects.cpp(896,89): warning C4244:             T=float
+C:\Users\faye\Desktop\Projects\Application\Application\objects.cpp(896,89): warning C4244:         ]
+  Generating Code...
+C:\Users\faye\Desktop\Projects\Application\Application\objects.h(281,1): warning C4172: returning address of local variable or temporary 
+  Application.vcxproj -> C:\Users\faye\Desktop\Projects\Application\x64\Debug\Application.exe

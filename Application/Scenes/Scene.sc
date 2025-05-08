@@ -4,31 +4,19 @@ cm Main
 cmm true
 cmp 1.0f, 10.0f, 1.0f
 cmcc 0.1f, 0.1f, 0.1f, 0.1f
-cmfov 90.0f
+cmfov 75.0f
 cmy 20.0f
 cmpt -45.0f
-cmfcp 500.0f
-cmncp 0.1f
-
-#CAMERA
-
-cm test
-cmm false
-cmp 1.0f, 3.0f, 10.0f
-cmcc 0.5f, 0.5f, 0.5f, 0.5f
-cmfov 100
-cmy -90.0f
-cmpt 0.0f
 cmfcp 500.0f
 cmncp 0.1f
 
 #OBJECT hornet
 
 o hornet
-m Objects/Primitives/Cube.obj
+m Objects/Hornet/hornet.obj
 mtf false
 p 1.0f, 3.0f, 3.0f
-s 2.0f, 2.0f, 2.0f
+s 1.0f, 1.0f, 1.0f
 r 0.0f, 0.0f, 0.0f
 
 l false
@@ -66,11 +54,27 @@ o light
 p 0.0f, 6.0f, 1.0f
 
 l true
-d 0.0f, 1.0f, 0.0f
+d 0.0f, -1.0f, 0.0f
+co 17.5f
+oco 20.5f
+t 1
+la 1.0f, 1.0f, 1.0f
+ld 1.0f, 1.0f, 1.0f
+lc 1.0f, 1.0f, 1.0f, 1.0f
+
+sh litShader
+
+#OBJECT light
+
+o light2
+p 1.0f, 1.0f, 1.0f
+
+l true
+d 0.0f, -1.0f, 0.0f
 co 17.5f
 oco 20.5f
 t 0
-lc 1.0f, 1.0f, 1.0f, 1.0f
+lc 1.0f, 0.0f, 0.0f, 1.0f
 
 sh litShader
 

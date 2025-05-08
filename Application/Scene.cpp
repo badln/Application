@@ -253,11 +253,11 @@ void SetActiveScene(std::string scenePath)
 {
 	currentScene = scenePath.substr(scenePath.find_last_of("/") + 1, scenePath.substr().length());
 	currentScene = currentScene.substr(0, currentScene.find_last_of("."));
-	for (int i = 0; i < objects.size(); i++)
+	Scene.name(currentScene.c_str());
+	for (int i = 1; i < objects.size(); i++)
 	{
 		objects[i]->Destroy();
 	}
-	objects.clear();
 	ReadScene(scenePath);
 	for (int i = 0; i < worldCameras.size(); i++)
 		worldCameras[i]->SetCameraDir();

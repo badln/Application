@@ -2,6 +2,7 @@
 #define STB_IMAGE_IMPLEMENTATION
 #include "stb_image.h"
 #include "objects.h"
+#include "engine.h"
 
 std::string Camera::name() { return name_; }
 void Camera::name(std::string str) { name_ = str; }
@@ -56,21 +57,20 @@ void SetWindowIcon(const char* path, GLFWwindow* window)
 	glfwSetWindowIcon(window, 1, images);
 	stbi_image_free(images[0].pixels);
 }
-void Texture::Set(std::string location, int typeNum, bool flip, int size)
+void Texture::Set(std::string location, int typeNum, vec2 dimensions, bool flip, int size)
 {
-
 	if (!texAssigned_)
 	{
 		type = typeNum;
 		path = location;
 		stbi_set_flip_vertically_on_load(flip);
-		unsigned int tex;
 		int width, height, nrChannels;
 		glGenTextures(size, &tex);
 		glBindTexture(GL_TEXTURE_2D, tex);
 		unsigned char* imageData = stbi_load(location.c_str(), &width, &height, &nrChannels, 0);
 		if (!imageData)
 		{
+			std::cout << "Image incorrectly loaded. Location: " << location << "\n";
 			unsigned int errorTex{};
 			int ErrorW, ErrorH, ErrorNrChannels;
 			unsigned char* ErrorTex = stbi_load("EngineResources/ERROR.bmp", &ErrorW, &ErrorH, &ErrorNrChannels, 4);
@@ -85,7 +85,10 @@ void Texture::Set(std::string location, int typeNum, bool flip, int size)
 				format = GL_RGB;
 			else if (nrChannels == 4)
 				format = GL_RGBA;
-			glTexImage2D(GL_TEXTURE_2D, 0, format, width, height, 0, format, GL_UNSIGNED_BYTE, imageData);
+			if (dimensions == vec2(0))
+				dimensions = vec2(width, height);
+			size_ = dimensions;
+			glTexImage2D(GL_TEXTURE_2D, 0, format, dimensions.x, dimensions.y, 0, format, GL_UNSIGNED_BYTE, imageData);
 			glGenerateMipmap(GL_TEXTURE_2D);
 			
 			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, wrapMode_);
@@ -101,6 +104,7 @@ void Texture::Set(std::string location, int typeNum, bool flip, int size)
 			}
 			texAssigned_ = true;
 		}
+		glBindTexture(GL_TEXTURE_2D, 0);
 		data_ = tex;
 		stbi_image_free(imageData);
 	}
@@ -110,13 +114,36 @@ void Texture::Set(std::string location, int typeNum, bool flip, int size)
 		Set();
 	}
 }
-Texture::Texture(std::string location, int type, bool flip, int size)
+Texture::Texture(std::string location, int type, vec2 dimensions, bool flip, int size)
 {
-	Set(location, type, flip, size);
+	Set(location, type, dimensions, flip, size);
 }
-Texture::Texture()
+Texture::Texture() {}
+Texture::Texture(int typeNum, vec2 dimensions, bool flip, int size)
 {
-	
+	if (!texAssigned())
+	{
+		type = typeNum;
+		path = "None set";
+
+		stbi_set_flip_vertically_on_load(flip);
+		glGenTextures(size, &tex);
+		glBindTexture(GL_TEXTURE_2D, tex);
+		if (dimensions == vec2(0))
+			dimensions = EngineInfo.renderResolution;
+		size_ = dimensions;
+		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, dimensions.x, dimensions.y, 0, GL_RGB, GL_UNSIGNED_BYTE, NULL);
+		//glGenerateMipmap(GL_TEXTURE_2D);
+		
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_BORDER);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_BORDER);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+
+		texAssigned_ = true;
+		glBindTexture(GL_TEXTURE_2D, 0);
+		
+	}
 }
 void Texture::Set()
 {
@@ -158,7 +185,6 @@ void Texture::GenErrorTex(unsigned char* ErrorTex, int texture)
 {
 	if (ErrorTex)
 	{
-		std::cout << "Image incorrectly loaded.\n";
 		glBindTexture(GL_TEXTURE_2D, texture);
 		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, 256, 256, 0, GL_RGBA, GL_UNSIGNED_BYTE, ErrorTex);
 		glGenerateMipmap(GL_TEXTURE_2D);
@@ -220,6 +246,7 @@ void Mesh::setupMesh()
 }
 void Mesh::Draw(int faceCulling, Shader &shader, float pi, Transform transform)
 {
+	drawCalls++;
 	unsigned int diffuseNr = 0;
 	unsigned int specularNr = 0;
 	unsigned int emissiveNr = 0;
@@ -271,34 +298,42 @@ void Mesh::Draw(int faceCulling, Shader &shader, float pi, Transform transform)
 }
 Mesh::Mesh() {}
 
-void ObjContainer::Draw(Shader &lightGizmo, mat4 projection, mat4 view)
+void ObjContainer::Draw(Shader &lightGizmo, mat4 projection, mat4 view, vec2 windowSize)
 {
+	if (this == &Scene)
+		return;
 	for (int i = 0; i < children.size(); i++)
 	{
-		if (children[i].active)
+		if (children[i]->active)
 		{
-			children[i].transform.position = this->transform.position + this->transform.localPosition;
-			children[i].transform.rotation = this->transform.rotation + this->transform.localRotation;
-			children[i].transform.scale =	 this->transform.scale    * this->transform.localScale;
-			children[i].renderer.mesh.Draw(renderer.material.culling, *renderer.material.shader, EngineInfo.pi, children[i].transform);
+			children[i]->transform.position = this->transform.position + this->transform.localPosition;
+			children[i]->transform.rotation = this->transform.rotation + this->transform.localRotation;
+			children[i]->transform.scale =	 this->transform.scale    * this->transform.localScale;
+			children[i]->renderer.mesh.Draw(renderer.material.culling, *renderer.material.shader, EngineInfo.pi, children[i]->transform);
 		}
 	}
-	if (light.enabled)
+	if (light.enabled && EngineInfo.drawGizmos)
 	{
 		lightGizmo.use();
-		lightGizmo.setFloat("windowSizeX", EngineInfo.windowSize.x);
-		lightGizmo.setFloat("windowSizeY", EngineInfo.windowSize.y);
+		lightGizmo.setFloat("windowSizeX", windowSize.x);
+		lightGizmo.setFloat("windowSizeY", windowSize.y);
 		lightGizmo.setMatAndTransform(transform, mat4(1));
 		lightGizmo.setMatrix("projection", projection);
 		lightGizmo.setMatrix("view", view);
 		lightGizmo.setVector("colourMultiply", 0.3f, 0.3f, 0.3f);
+		lightGizmo.setFloat("cutoff", light.cutoff);
+		lightGizmo.setFloat("outerCutoff", light.outerCutoff);
+		lightGizmo.setVector("direction", light.direction.x, light.direction.y, light.direction.z);
+		lightGizmo.setInt("type", light.type);
 		glDepthFunc(GL_GEQUAL);
 		glBindVertexArray(lightPointArray);
 		glDrawArrays(GL_POINTS, 0, 1);
+		drawCalls++;
 		glDepthFunc(GL_LESS);
 		lightGizmo.setVector("colourMultiply", 1.0f, 1.0f, 1.0f);
 		glBindVertexArray(lightPointArray);
 		glDrawArrays(GL_POINTS, 0, 1);
+		drawCalls++;
 	}
 }
 Model::Model() {}
@@ -328,21 +363,23 @@ void Model::loadModel(std::string path, bool flipTextures, ObjContainer* obj)
 		return;
 	}
 	directory = path.substr(0, path.find_last_of("/"));
+	//std::thread t (Model::processNode, scene->mRootNode, scene, flipTextures, obj);
+	//t.detach()
 	processNode(scene->mRootNode, scene, flipTextures, obj);
 }
 void Model::processNode(aiNode* node, const aiScene* scene, bool flip, ObjContainer* obj)
 {
-	static ObjContainer objs[10];
+	ObjContainer* newObj = NULL;
 	for (unsigned int i = 0; i < node->mNumMeshes; i++)
 	{
+		newObj = new ObjContainer;
 		aiMesh* mesh = scene->mMeshes[node->mMeshes[i]];
 		const char* mName = mesh->mName.C_Str();
-		objs[i].name(mName);
-		std::cout << "Creating child object, nameof '" << objs[i].name() << "'\n";
-		objs[i].renderer.mesh = processMesh(mesh, scene, flip, obj);
-		objs[i].parent = obj;
-		objs[i].renderer.material = obj->renderer.material;
-		obj->children.push_back(objs[i]);
+		newObj->name(mName);
+		std::cout << "Creating child object, nameof '" << newObj->name() << "'\n";
+		newObj->renderer.mesh = processMesh(mesh, scene, flip, obj);
+		newObj->renderer.material = obj->renderer.material;
+		newObj->SetParent(obj);
 	}
 	for (unsigned int i = 0; i < node->mNumChildren; i++)
 	{
@@ -436,7 +473,7 @@ std::vector <Texture> Model::loadMaterialTextures(aiMaterial* mat, aiTextureType
 		}
 		if (!flag)
 		{
-			Texture tex(loc, typeNum, flip);
+			Texture tex(loc, typeNum, vec2(0), flip);
 			std::ifstream test(tex.path);
 			if (test)
 			{
@@ -739,31 +776,132 @@ void Shader::checkCompileErrors(unsigned int shader, std::string type)
 ObjContainer::ObjContainer(const char* objectName)
 {
 	name(objectName);
-	objects.push_back(this);
-	placeInArray = objects.size() - 1;
+	Init();
 }
 ObjContainer::ObjContainer()
 {
 	name_ = "New Object";
-	objects.push_back(this);
-	placeInArray = objects.size() - 1;
+	Init();
+}
+void ObjContainer::Init()
+{
+	if (!placed)
+	{
+		if (this != &Scene)
+			SetParent(&Scene);
+		if (name_ == "")
+			name_ = "New Object";
+		objects.push_back(this);
+		placeInArray = objects.size() - 1;
+		placed = true;
+	}
 }
 void ObjContainer::name(const char* string)
 {
 	name_ = string;
-
-}
-ObjContainer* ObjContainer::FindChild(std::string name)
-{
-	for (int i = 0; i < children.size(); i++) {
-		if (children[i].name() == name)
-			return &children[i];
-	}
-	return this;
 }
 void ObjContainer::Destroy()
 {
 	objects.erase(objects.begin() + placeInArray);
+	delete this;
+}
+void ObjContainer::SetParent(ObjContainer* thisParent)
+{
+	//std::cout << "Setting parent to " << thisParent->name() << ", current parent is " << parent_->name() << ", Place in child array: " << placeInParentArray << "\nParent child array size: " << thisParent->childCount() << "\n";
 
+	if (parent_->children.size() > 0 && parent_ != this)
+		parent_->children.erase(parent_->children.begin() + placeInParentArray);
+	thisParent->children.push_back(this);
+	placeInParentArray = thisParent->childCount() - 1;
+	parent_ = thisParent;
+}
+ObjContainer* ObjContainer::GetChild(int place)
+{
+	return children[place];
+}
+ObjContainer* ObjContainer::GetChild(std::string path)
+{
+	//path will be laid out same as unity, /path/to/item
+	//                                      parent/path/to/item
+	bool beginAtTop = false;
+
+	std::istringstream stream(path);
+	std::string thisItem;
+
+	ObjContainer* thisChild = nullptr;
+	ObjContainer* thisParent = this;
+	char identifier = '/';
+	while (std::getline(stream, thisItem, identifier)) {
+		if (path.substr(0, 1) == "/") {
+			beginAtTop = true;
+			path.clear();
+		}
+		else {
+			if (beginAtTop) {
+				thisParent = &Scene;
+				beginAtTop = false;
+			}
+			thisChild = nullptr;
+			for (int i = 0; i < thisParent->childCount(); i++) {
+				if (thisParent->children[i]->name() == thisItem) {
+					thisChild = thisParent->children[i];
+					break;
+				}
+			}
+			if (thisChild)
+				thisParent = thisChild;
+		}
+	}
+	return thisChild;
+}
+ObjContainer* ObjContainer::Find(std::string pathToObj)
+{
+	return Scene.GetChild("/" + pathToObj);
+}
+void Framebuffer::name(std::string name)
+{
+	name_ = name;
+}
+void Framebuffer::Create(GLenum FBtype, std::string name)
+{
+	Create(texture, FBtype, name);
+}
+void Framebuffer::Create(Texture* tex, GLenum FBtype, std::string name)
+{
+	//FBtypes
+	//GL_FRAMEBUFFER, GL_READ_FRAMEBUFFER, GL_DRAW_FRAMEBUFFER
+	texture = tex;
+	name_ = name;
+	
+	int currentFBO;
+	GLenum binding;
+	switch (FBtype) {
+	case GL_FRAMEBUFFER:
+		binding = GL_FRAMEBUFFER_BINDING;
+		break;
+	case GL_READ_FRAMEBUFFER:
+		binding = GL_READ_FRAMEBUFFER_BINDING;
+		break;
+	case GL_DRAW_FRAMEBUFFER:
+		binding = GL_DRAW_FRAMEBUFFER_BINDING;
+		break;
+	}
+	glGetIntegerv(binding, &currentFBO);
+
+	glGenFramebuffers(1, &FBO_);
+	glBindFramebuffer(FBtype, FBO_);
+
+	glGenRenderbuffers(1, &RBO_);
+	glBindRenderbuffer(GL_RENDERBUFFER, RBO_ );
+	glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH24_STENCIL8, EngineInfo.renderResolution.x, EngineInfo.renderResolution.y);
+	glBindRenderbuffer(GL_RENDERBUFFER, 0);
+
+	glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT, GL_RENDERBUFFER, RBO_);
+	glFramebufferTexture2D(FBtype, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, texture->tex, 0);
+
+	if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE)
+		std::cout << "Framebuffer is not complete!" << std::endl;
+
+	glBindFramebuffer(FBtype, currentFBO);
 }
 #endif

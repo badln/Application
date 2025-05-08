@@ -109,7 +109,7 @@ vec3 CalcDirLight(DirLight light, vec3 normal, vec3 viewDir, vec4 difTex, vec4 s
     vec3 ambient = vec3(light.ambient) * vec3(difTex);
     vec3 diffuse = vec3(light.diffuse) * diff * vec3(difTex);   
     vec3 specular = vec3(light.specular) * spec * vec3(specTex);
-    return clamp((ambient + diffuse + specular), 0, 1) * vec3(light.colour);
+    return clamp((ambient + diffuse + specular), 0, 1) * vec3(light.colour) * max(dot(normal, lightDir), 0);
 }  
 vec3 CalcPointLight(PointLight light, vec3 normal, vec3 fragPos, vec3 viewDir, vec4 difTex, vec4 specTex)
 {
@@ -125,7 +125,7 @@ vec3 CalcPointLight(PointLight light, vec3 normal, vec3 fragPos, vec3 viewDir, v
     ambient *= attenuation;
     diffuse *= attenuation;
     specular *= attenuation;
-    return clamp((ambient + diffuse + specular), 0, 1) * vec3(light.colour) * dot(normal, lightDir);
+    return clamp((ambient + diffuse + specular), 0, 1) * vec3(light.colour) * max(dot(normal, lightDir), 0);
 }
 vec3 CalcSpotLight(SpotLight light, vec3 normal, vec3 fragPos, vec3 viewDir, vec4 difTex, vec4 specTex)
 {
@@ -145,7 +145,7 @@ vec3 CalcSpotLight(SpotLight light, vec3 normal, vec3 fragPos, vec3 viewDir, vec
     ambient *= attenuation * intensity;
     diffuse *= attenuation * intensity;
     specular *= attenuation * intensity;
-    return clamp((ambient + diffuse + specular), 0, 1) * vec3(light.colour) * clamp(dot(normal, lightDir), 0, 1);
+    return clamp((ambient + diffuse + specular), 0, 1) * vec3(light.colour) * max(dot(normal, lightDir), 0);
 }
 
 vec4 Checkerboard()
@@ -251,7 +251,7 @@ void main()
             {
                 pixelColours += CalcSpotLight(sLight[i], norm, FragPos, viewDir, difTex, specTex);
             }
-            FragColor = vec4(pixelColours, 1.0f) * ((mat.colour + emTex + aLight.colour / 10) );
+            FragColor = vec4(pixelColours, 1);// vec4(pixelColours, 1.0f) * ((mat.colour + emTex + aLight.colour / 10) );
         }
         
     }
@@ -262,6 +262,6 @@ void main()
      //float depth = LinearizeDepth(gl_FragCoord.z) / far;                            //depth test
      //FragColor = vec4(vec3(depth), 1);
 
-     //FragColor = vec4(norm, 1);                                                     //Test normals
-     //FragColor = vec4(dot(norm, normalize(vec3(sLight[0].position) - FragPos)));  
+     //FragColor = vec4(normalize(Normal) / 2, 1);                                                     //Test normals
+     //FragColor = vec4(dot(normalize(Normal), normalize(vec3(sLight[0].position) - FragPos)));  
 };
