@@ -2,15 +2,13 @@
 #include "main.h"
 #include "Scene.h"
 #include "EngineResources/Console.h"
+#include "Gamepad.h";
 using namespace glm;
 
 typedef unsigned char Byte;
 typedef Byte cs_byte;
 
 WindowConsole Console;
-
-float vertTruncAmount = 10;
-bool truncVerts = false;
 
 vec2 windowSize;
 
@@ -22,14 +20,13 @@ std::vector <Camera*> worldCameras;
 
 Camera* mainCamera = NULL;
 ObjContainer Scene;
+Gamepad pad;
 
 unsigned int lightPointArray;
 
 int drawCalls = 0;
 int spotLightNum, pointLightNum;
 bool downArrowPressed, upArrowPressed, leftArrowPressed, rightArrowPressed, spacePressed, ctrlPressed, escPressed, inWireframe = false;
-bool ambientRotation = false;
-bool LookAtMouse = false;
 int ambientRotationMultiplier = 50;
 
 bool mouseClickedThisFrame = false;
@@ -131,6 +128,26 @@ std::string windowName = "3D Renderer (Prototype)";
 // Inputs go here
 //-------------//
 
+bool processPadInput(GLFWwindow* window, Gamepad* pad)
+{
+	if (glfwJoystickIsGamepad(pad->thisPad) && pad->padConnected == false)
+	{
+		//Controller connected
+		pad->padName = glfwGetGamepadName(GLFW_JOYSTICK_1);
+
+		Console.PushWarning("Pad '" + pad->padName + "' connected.");
+		pad->padConnected = true;
+	}
+	else if (!glfwJoystickIsGamepad(pad->thisPad) && pad->padConnected)
+	{
+		//Controller disconnected
+		Console.PushWarning("Pad '" + pad->padName + "' disconnected.");
+		pad->padConnected = false;
+	}
+	return glfwGetGamepadState(pad->thisPad, &pad->padState);
+
+}
+
 void processInput(GLFWwindow* window)
 {
 	if ((glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS) && escPressed == false)
@@ -180,14 +197,6 @@ void processInput(GLFWwindow* window)
 		if (spacePressed)
 		{
 			spacePressed = false;
-		}
-	}
-	if (glfwGetKey(window, GLFW_KEY_SPACE) == GLFW_PRESS)
-	{
-		if (!spacePressed)
-		{
-			spacePressed = true;
-			ambientRotation = !ambientRotation;
 		}
 	}
 	if (glfwGetKey(window, GLFW_KEY_UP) == GLFW_PRESS)
@@ -349,7 +358,6 @@ int main()
 	ObjContainer obj("Cube");
 	obj.SetModel("Objects/Primitives/Cube.obj", true);
 	obj.renderer.mesh.data.textures.push_back(Texture("Images/IMG_4766.png", TextureType::Diffuse));
-
 	Framebuffer fb;
 	Texture fbTexture(TextureType::Render);
 	fb.Create(&fbTexture, GL_FRAMEBUFFER, "Test");
@@ -418,7 +426,6 @@ int main()
 					objects[i]->renderer.material.shader->setVector("cameraPos", mainCamera->Position.x, mainCamera->Position.y, mainCamera->Position.z);
 					objects[i]->renderer.material.shader->setFloat("time", glfwGetTime());
 					objects[i]->renderer.material.shader->setBool("wireframe", inWireframe);
-					objects[i]->renderer.material.shader->setVector("colour", objects[i]->renderer.material.colour.x, objects[i]->renderer.material.colour.y, objects[i]->renderer.material.colour.z);
 					objects[i]->renderer.material.shader->setMaterial("mat", objects[i]->renderer.material.diffuse,
 						objects[i]->renderer.material.specular,
 						objects[i]->renderer.material.ambient,
@@ -456,6 +463,7 @@ int main()
 			screenShader.use();
 			screenShader.setInt("tex", (int)fb.texture->id());
 			screenShader.setVector("colour", 0, 0, 0, 0);
+			screenShader.setFloat("time", glfwGetTime());
 			glBindVertexArray(quadVAO);
 			if (inWireframe)
 				glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
@@ -465,6 +473,10 @@ int main()
 
 			if (inWireframe)
 				glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+			processPadInput(window, &pad);
+			mainCamera->SetCameraDir(window, pad.RS_X_ADDITIVE, pad.RS_Y_ADDITIVE, (pad.RIGHT_STICK().x != 0 || pad.RIGHT_STICK().y != 0), true, pad.Sensitivity);
+			mainCamera->Position += (3 * (float)frameTime) * mainCamera->forward * -pad.LEFT_STICK().y;
+			mainCamera->Position -= normalize(cross(mainCamera->forward, mainCamera->up)) * (3 * (float)frameTime) * -pad.LEFT_STICK().x;
 
 			if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
 			{
@@ -482,13 +494,13 @@ int main()
 			{
 				mainCamera->Position += normalize(cross(mainCamera->forward, mainCamera->up)) * (3 * (float)frameTime);
 			}
-			if (glfwGetKey(window, GLFW_KEY_E) == GLFW_PRESS)
+			if (glfwGetKey(window, GLFW_KEY_E) == GLFW_PRESS || pad.padState.buttons[GLFW_GAMEPAD_BUTTON_A])
 			{
-				mainCamera->Position += (3 * (float)frameTime) * mainCamera->up;
+				mainCamera->Position += (3 * (float)frameTime) * normalize(cross(normalize(cross(mainCamera->forward, mainCamera->up)), mainCamera->forward));
 			}
-			if (glfwGetKey(window, GLFW_KEY_Q) == GLFW_PRESS)
+			if (glfwGetKey(window, GLFW_KEY_Q) == GLFW_PRESS || pad.padState.buttons[GLFW_GAMEPAD_BUTTON_B])
 			{
-				mainCamera->Position -= (3 * (float)frameTime) * mainCamera->up;
+				mainCamera->Position -= (3 * (float)frameTime) * normalize(cross(normalize(cross(mainCamera->forward, mainCamera->up)), mainCamera->forward));
 			}
 			if (objects.size() != 0) {
 
@@ -519,7 +531,6 @@ int main()
 				}
 				if (glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_RIGHT) == GLFW_PRESS)
 				{
-					objects[num]->renderer.material.colour = vec4(1.0f, 1.0f, ((sin(glfwGetTime() * 10) / 2) + 1), 1.0f);
 					lightDistanceToCam = clamp((lightDistanceToCam + scrollDir / 10), 1, 20);
 					vec3 camForward = mainCamera->Position + mainCamera->forward * lightDistanceToCam;
 					objects[num]->transform.position = camForward;

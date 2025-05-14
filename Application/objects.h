@@ -30,12 +30,13 @@ void SetWindowIcon(const char* path, GLFWwindow* window);
 class Camera {
 private:
 	std::string name_;
+	bool gamepadUsedLast = false;
 public:
 
 	bool firstCamFrame = false;
 
-	void SetCameraDir();
-	void SetCameraDir(GLFWwindow* window, double xposIn, double yposIn, bool looking);
+	void SetCameraDir(bool isGamepad = false, float GamepadSens = 10.0f);
+	void SetCameraDir(GLFWwindow* window, double xposIn, double yposIn, bool looking, bool isGamepad = false, float GamepadSens = 10.0f);
 	void SetMainCamera();
 	std::string name();
 	void name(std::string str);

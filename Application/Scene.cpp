@@ -123,13 +123,55 @@ void ReadScene(std::string scenePath)
 					SceneConsole.Log("Creating object #" + std::to_string(objects) + ", '" + tlv + "'");
 					objects++;
 				}
-
 				else if (par == "o")
 					newObj->name(tlv.c_str());
 
 				else if (par == "m")
 					modelPath = tlv;
+				else if (par == "c")
+					newObj->renderer.material.culling = ParseInt(tlv);
 
+				else if (par == "ma")
+					newObj->renderer.material.ambient = ParseVector(tlv);
+
+				else if (par == "md")
+					newObj->renderer.material.diffuse = ParseVector(tlv);
+
+				else if (par == "mdt") {
+					std::string str = tlv;
+					if (str != "none")
+						newObj->renderer.material.diffuseTex = Texture(str, TextureType::Diffuse);
+				}
+
+				else if (par == "ms")
+					newObj->renderer.material.specular = ParseVector(tlv);
+
+				else if (par == "mst") {
+					std::string str = tlv;
+					if (str != "none")
+						newObj->renderer.material.specularTex = Texture(str, TextureType::Specular);
+				}
+
+				else if (par == "me")
+					newObj->renderer.material.emissive = ParseInt(tlv);
+
+				else if (par == "met") {
+					std::string str = tlv;
+					if (str != "none")
+						newObj->renderer.material.emissiveTex = Texture(str, TextureType::Emissive);
+				}
+
+				else if (par == "msh")
+					newObj->renderer.material.shininess = ParseFloat(tlv);
+
+				else if (par == "mc") 
+					newObj->renderer.material.colour = ParseVector(tlv);
+
+				else if (par == "mt") {
+					std::string str = tlv;
+					if (str != "none")
+						newObj->renderer.material.texture = Texture(str, TextureType::Texture2D);
+				}
 				else if (par == "mtf" && modelPath != "n")
 					newObj->SetModel(modelPath, str_bool(scene.substr(scene.find_first_of(" ") + 1, scene.size())));
 
@@ -183,51 +225,6 @@ void ReadScene(std::string scenePath)
 
 				else if (par == "ls")
 					newObj->light.specular = ParseVector(tlv);
-
-				else if (par == "c")
-					newObj->renderer.material.culling = ParseInt(tlv);
-
-				else if (par == "ma")
-					newObj->renderer.material.ambient = ParseVector(tlv);
-
-				else if (par == "md")
-					newObj->renderer.material.diffuse = ParseVector(tlv);
-
-				else if (par == "mdt") {
-					std::string str = tlv;
-					if (str != "none")
-						newObj->renderer.material.diffuseTex = Texture(str, TextureType::Diffuse);
-				}
-
-				else if (par == "ms")
-					newObj->renderer.material.specular = ParseVector(tlv);
-
-				else if (par == "mst") {
-					std::string str = tlv;
-					if (str != "none")
-						newObj->renderer.material.specularTex = Texture(str, TextureType::Specular);
-				}
-
-				else if (par == "me")
-					newObj->renderer.material.emissive = ParseInt(tlv);
-
-				else if (par == "met") {
-					std::string str = tlv;
-					if (str != "none")
-						newObj->renderer.material.emissiveTex = Texture(str, TextureType::Emissive);
-				}
-
-				else if (par == "msh")
-					newObj->renderer.material.shininess = ParseFloat(tlv);
-
-				else if (par == "mc")
-					newObj->renderer.material.colour = ParseVector(tlv);
-
-				else if (par == "mt") {
-					std::string str = tlv;
-					if (str != "none")
-						newObj->renderer.material.texture = Texture(str, TextureType::Texture2D);
-				}
 
 				else if (par == "sh") {
 					for (int i = 0; i < shaders.size(); i++)

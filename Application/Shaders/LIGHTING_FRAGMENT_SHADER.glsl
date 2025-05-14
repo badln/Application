@@ -187,35 +187,10 @@ void main()
         else
         {
             vec3 pixelColours;
-            vec4 emTex;
-            vec4 specTex;
-            vec4 difTex;
-            vec4 tex;
-
-            if (mat.em_tex)
-            {   emTex = texture(mat.emissiveTex, TexCoord);
-                if (emTex.a < 0.1f)
-                    discard;}
-            else { emTex = vec4(0.0f); }
-
-            if (mat.as_tex)
-            {   tex = texture(mat.texture, TexCoord);
-                if (tex.a < 0.1f)
-                    discard;}
-            else { tex = vec4(1.0f); }
-
-            if (mat.dif_tex)
-            {   difTex = texture(mat.diffuseTex, TexCoord); 
-                if (difTex.a < 0.1f)
-                    discard;
-                    }
-            else { difTex = vec4(1.0f);}
-
-            if (mat.spec_tex)
-            {   specTex = texture(mat.specularTex, TexCoord);
-                if (specTex.a < 0.1f)
-                    discard;}
-            else { specTex = vec4(1.0f); } 
+            vec4 emTex = vec4(0);
+            vec4 specTex = mat.colour;
+            vec4 difTex = mat.colour;
+            vec4 tex = mat.colour;
 
             vec3 norm = normalize(Normal);
             vec3 viewDir = normalize(vec3(cameraPos) - FragPos);
@@ -228,18 +203,12 @@ void main()
                 vec4 thisEmTex   = texture(emissiveTextures[i], TexCoord);
 
                 if (diffuseTexturesAs[i]){
-                    //if (thisDifTex.a < 0.1f)
-                        //discard;
                     difTex *= thisDifTex;}
 
-                if (specularTexturesAs[i]){;
-                    if (thisSpecTex.a < 0.1f)
-                        discard;
-                    specTex = thisSpecTex;}
+                if (specularTexturesAs[i]){
+                    specTex *= thisSpecTex;}
 
                 if (emissiveTexturesAs[i]){
-                    if (thisEmTex.a < 0.1f)
-                        discard;
                     emTex *= thisEmTex;}
             }
             pixelColours = CalcDirLight(dirLight, norm, viewDir, difTex, specTex);

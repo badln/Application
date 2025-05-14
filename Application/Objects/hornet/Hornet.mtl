@@ -1,7 +1,7 @@
 # Blender 4.3.1 MTL File: 'None'
 # www.blender.org
 
-newmtl Black
+newmtl Black.001
 Ns 360.000000
 Ka 1.000000 1.000000 1.000000
 Ks 0.500000 0.500000 0.500000
@@ -11,7 +11,7 @@ d 1.000000
 illum 2
 map_Kd eyes.png
 
-newmtl Body
+newmtl Body.001
 Ns 360.000000
 Ka 1.000000 1.000000 1.000000
 Ks 0.500000 0.500000 0.500000
@@ -21,7 +21,7 @@ d 1.000000
 illum 2
 map_Kd Body.png
 
-newmtl Dress.001
+newmtl Dress.002
 Ns 360.000000
 Ka 1.000000 1.000000 1.000000
 Ks 0.500000 0.500000 0.500000
@@ -31,7 +31,7 @@ d 1.000000
 illum 2
 map_Kd Untitled.007.png
 
-newmtl Head
+newmtl Head.001
 Ns 250.000000
 Ka 1.000000 1.000000 1.000000
 Ks 0.500000 0.500000 0.500000
@@ -41,7 +41,7 @@ d 1.000000
 illum 2
 map_Kd Head.png
 
-newmtl Nail
+newmtl Nail.001
 Ns 360.000000
 Ka 1.000000 1.000000 1.000000
 Ks 0.500000 0.500000 0.500000
@@ -51,22 +51,12 @@ d 1.000000
 illum 2
 map_Kd Nail.png
 
-newmtl Outline
+newmtl Outline.001
 Ns 360.000000
 Ka 1.000000 1.000000 1.000000
-Kd 0.000000 0.000000 0.000000
 Ks 0.500000 0.500000 0.500000
 Ke 0.000000 0.000000 0.000000
 Ni 1.500000
 d 1.000000
 illum 2
-
-newmtl Outline.002
-Ns 360.000000
-Ka 1.000000 1.000000 1.000000
-Kd 0.000000 0.000000 0.000000
-Ks 0.500000 0.500000 0.500000
-Ke 0.000000 0.000000 0.000000
-Ni 1.500000
-d 1.000000
-illum 2
+map_Kd Outline.png

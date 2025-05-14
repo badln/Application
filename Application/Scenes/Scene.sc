@@ -13,6 +13,19 @@ cmncp 0.1f
 #OBJECT hornet
 
 o hornet
+
+c 0
+ma 0.1f, 0.1f, 0.1f
+md 1.0f, 1.0f, 1.0f
+mdt none
+ms 0.5f, 0.5f, 0.5f
+mst none
+me 0
+met none
+msh 100.0f
+mc 1.0f, 1.0f, 1.0f, 1.0f
+mt none
+
 m Objects/Hornet/hornet.obj
 mtf false
 p 1.0f, 3.0f, 3.0f
@@ -33,18 +46,6 @@ lp 0.0f, 0.0f, 0.0f
 la 1.0f, 1.0f, 1.0f
 ld 1.0f, 1.0f, 1.0f
 ls 1.0f, 1.0f, 1.0f
-
-c 0
-ma 0.1f, 0.1f, 0.1f
-md 1.0f, 1.0f, 1.0f
-mdt none
-ms 0.5f, 0.5f, 0.5f
-mst none
-me 0
-met none
-msh 100.0f
-mc 1.0f, 1.0f, 1.0f, 1.0f
-mt none
 
 sh litShader
 

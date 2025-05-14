@@ -11,28 +11,35 @@ void Camera::SetMainCamera() {
 	mainCamera = this;
 	SetCameraDir();
 }
-void Camera::SetCameraDir(GLFWwindow* window, double xposIn, double yposIn, bool looking)
+void Camera::SetCameraDir(GLFWwindow* window, double xposIn, double yposIn, bool looking, bool isGamepad, float GamepadSens)
 {
 	if (!looking)
 	{
 		return;
 	}
+	if (isGamepad)
+		gamepadUsedLast = true;
 	EngineInfo.MousePos.x = static_cast<float>(xposIn);
 	EngineInfo.MousePos.y = static_cast<float>(yposIn);
 
-	if (mainCamera->firstCamFrame)
+	if (firstCamFrame || (gamepadUsedLast && !isGamepad) || (!gamepadUsedLast && isGamepad))
 	{
 		EngineInfo.MousePosLF.x = EngineInfo.MousePos.x;
 		EngineInfo.MousePosLF.y = EngineInfo.MousePos.y;
-		mainCamera->firstCamFrame = false;
+		firstCamFrame = false;
+		gamepadUsedLast = false;
 	}
-	SetCameraDir();
+	SetCameraDir(isGamepad, GamepadSens);
 }
-void Camera::SetCameraDir() {
+void Camera::SetCameraDir(bool isGamepad, float GamepadSens) {
 
 	float xOffset = EngineInfo.MousePos.x - EngineInfo.MousePosLF.x;
 	float yOffset = -(EngineInfo.MousePos.y - EngineInfo.MousePosLF.y);
-
+	if (isGamepad)
+	{
+		xOffset = clamp(xOffset, -GamepadSens, GamepadSens);
+		yOffset = clamp(yOffset, -GamepadSens, GamepadSens);
+	}
 	//std::cout << xOffset << ", " << yOffset << ", MousePosX: " << EngineInfo.MousePos.x << ", MousePosLFX: " << EngineInfo.MousePosLF.x << "\n";
 
 	EngineInfo.MousePosLF = EngineInfo.MousePos;
@@ -257,7 +264,9 @@ void Mesh::Draw(int faceCulling, Shader &shader, float pi, Transform transform)
 	unsigned int specularNr = 0;
 	unsigned int emissiveNr = 0;
 	//std::cout << "Flag " << VAO_ << "\n";
-	for (unsigned int i = 0; i < data.textures.size(); i++)
+	
+
+	for (int i = 0; i < data.textures.size(); i++)
 	{
 		glActiveTexture(GL_TEXTURE0 + data.textures[i].id());
 		glBindTexture(GL_TEXTURE_2D, data.textures[i].id());
@@ -267,7 +276,7 @@ void Mesh::Draw(int faceCulling, Shader &shader, float pi, Transform transform)
 			std::string loc = "diffuseTextures[" + std::to_string(diffuseNr) + "]";
 			shader.setInt(loc, data.textures[i].id());
 			shader.setBool("diffuseTexturesAs[" + std::to_string(diffuseNr) + "]", true);
-			//std::cout << "Set diffuse texture " << data.textures[i].id() << " with path " << data.textures[i].path << " '" + loc + "'\n";
+			//std::cout << "Set diffuse texture " << data.textures[i].id() << " with path " << data.textures[i].path << " '" + loc + "'" << ", DiffuseNr: " << diffuseNr <<  "\n";
 			diffuseNr++;
 		}
 		else if (data.textures[i].type == TextureType::Specular && data.textures[i].texAssigned()) {
@@ -284,6 +293,7 @@ void Mesh::Draw(int faceCulling, Shader &shader, float pi, Transform transform)
 			emissiveNr++;
 		}
 	}
+
 	if (faceCulling == FaceCulling.Back)
 		glCullFace(GL_BACK);
 	else if (faceCulling == FaceCulling.Front)
@@ -658,10 +668,7 @@ void Shader::setMaterial(const std::string& name, vec3 diffuse, vec3 specular, v
 		setVector(name + ".specular", specular.x, specular.y, specular.z);
 		setVector(name + ".ambient", ambient.x, ambient.y, ambient.z);
 		setFloat(name + ".shininess", shininess);
-		setVector(name + ".colour", colour.x * texColour.x,
-			colour.y * texColour.y,
-			colour.z * texColour.z,
-			colour.w * texColour.w);
+		setVector(name + ".colour", colour.x, colour.y, colour.z, colour.w);
 		setInt(name + ".texture", texId);
 		setBool(name + ".as_tex", texAssigned);
 		setInt(name + ".diffuseTex", difTexId);

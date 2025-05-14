@@ -29,6 +29,8 @@ struct {
 	glm::vec2 MousePosLF = glm::vec2(0);
 	glm::vec2 MousePos =   glm::vec2(0);
 
+	const int max_textures = 6; 
+
 	int currentWindowType = WindowType::BorderlessWindowed;
 
 	void LogEngineInfo()

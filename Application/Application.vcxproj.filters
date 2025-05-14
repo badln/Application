@@ -5,6 +5,7 @@
     <ClCompile Include="main.cpp" />
     <ClCompile Include="objects.cpp" />
     <ClCompile Include="Scene.cpp" />
+    <ClCompile Include="Gamepad.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="EngineResources\Colour.h">
@@ -18,6 +19,7 @@
     <ClInclude Include="engine.h" />
     <ClInclude Include="Scene.h" />
     <ClInclude Include="main.h" />
+    <ClInclude Include="Gamepad.h" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="IMG_2209.ico" />

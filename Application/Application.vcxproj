@@ -153,9 +153,11 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Gamepad.cpp" />
     <ClCompile Include="glad.c" />
     <ClCompile Include="Scene.cpp" />
     <ClInclude Include="engine.h" />
+    <ClInclude Include="Gamepad.h" />
     <ClInclude Include="main.h" />
     <ClInclude Include="objects.h" />
     <ClCompile Include="objects.cpp" />
