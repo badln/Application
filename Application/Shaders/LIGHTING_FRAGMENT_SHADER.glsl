@@ -119,6 +119,7 @@ vec3 CalcPointLight(PointLight light, vec3 normal, vec3 fragPos, vec3 viewDir, v
     float spec = pow(max(dot(viewDir, reflectDir), 0.0), mat.shininess);
     float distance = length(vec3(light.position) - fragPos);
     float attenuation = 1.0 / (light.constant + light.linear * distance + light.quadratic * (distance * distance));    
+
     vec3 ambient = vec3(light.ambient) * vec3(difTex);
     vec3 diffuse = vec3(light.ambient) * diff * vec3(difTex);
     vec3 specular = vec3(light.specular) * spec * vec3(specTex);
@@ -221,10 +222,10 @@ void main()
                 pixelColours += CalcSpotLight(sLight[i], norm, FragPos, viewDir, difTex, specTex);
             }
             FragColor = vec4(pixelColours, 1);// vec4(pixelColours, 1.0f) * ((mat.colour + emTex + aLight.colour / 10) );
+            //FragColor = difTex;
         }
         
     }
-     
      //FragColor = vec4(TexCoord, 0, 0);                                              //self explanitory
      //FragColor = vec4(FragPos, 1);                         
 

@@ -11,6 +11,7 @@ typedef Byte cs_byte;
 WindowConsole Console;
 
 vec2 windowSize;
+vec2 renderResolution = EngineInfo.renderResolution;
 
 int frame = 0;
 std::vector <Texture> globalTextures;
@@ -358,6 +359,7 @@ int main()
 	ObjContainer obj("Cube");
 	obj.SetModel("Objects/Primitives/Cube.obj", true);
 	obj.renderer.mesh.data.textures.push_back(Texture("Images/IMG_4766.png", TextureType::Diffuse));
+
 	Framebuffer fb;
 	Texture fbTexture(TextureType::Render);
 	fb.Create(&fbTexture, GL_FRAMEBUFFER, "Test");
@@ -378,16 +380,16 @@ int main()
 		windowSize = EngineInfo.windowSize;
 		if (glfwGetTime() > endOfFrameTime + desiredFrametime)
 		{
-
 			orthoscopicMat = glm::ortho(0.0f, EngineInfo.renderResolution.x, 0.0f, EngineInfo.renderResolution.y, 0.1f, 100.0f);
 			projectionMat = glm::perspective(glm::radians(mainCamera->fov), EngineInfo.renderResolution.x / EngineInfo.renderResolution.y, mainCamera->nearClipPlane, mainCamera->farClipPlane);
 
 			mat4 view = mat4(1.0f);
 			view = lookAt(mainCamera->Position, mainCamera->Position + mainCamera->forward, mainCamera->up);
+
 			//---------------//
 			// stuff
 			//---------------//
-
+			renderResolution = EngineInfo.renderResolution;
 			processInput(window);
 			EngineInfo.MousePos.x = clamp(EngineInfo.MousePos.x, 0, EngineInfo.renderResolution.x, true);
 			EngineInfo.MousePos.y = clamp(EngineInfo.MousePos.y, 0, EngineInfo.renderResolution.y, true);
@@ -455,7 +457,7 @@ int main()
 					}
 				}
 			}
-
+			
 			fb.use(0);
 			glViewport(0, 0, EngineInfo.windowSize.x, EngineInfo.windowSize.y);
 			glDisable(GL_DEPTH_TEST);

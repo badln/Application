@@ -1,8 +1,16 @@
 #ifndef STB_IMAGE_IMPLEMENTATION 
 #define STB_IMAGE_IMPLEMENTATION
+#define STB_IMAGE_RESIZE_IMPLEMENTATION
 #include "stb_image.h"
+#include "stb_image_resize2.h"
 #include "objects.h"
 #include "engine.h"
+
+void stripUnicode(std::string& str)
+{
+	str.erase(remove_if(str.begin(), str.end(), [](char c) {return !(c >= 0 && c < 128); }), str.end());
+}
+
 
 std::string Camera::name() { return name_; }
 void Camera::name(std::string str) { name_ = str; }
@@ -11,6 +19,7 @@ void Camera::SetMainCamera() {
 	mainCamera = this;
 	SetCameraDir();
 }
+
 void Camera::SetCameraDir(GLFWwindow* window, double xposIn, double yposIn, bool looking, bool isGamepad, float GamepadSens)
 {
 	if (!looking)
@@ -70,13 +79,17 @@ void Texture::Set(std::string location, int typeNum, vec2 dimensions, bool flip,
 	{
 		if (!texAssigned_)
 		{
-			type = typeNum;
-			path = location;
 			stbi_set_flip_vertically_on_load(flip);
 			int width, height, nrChannels;
 			glGenTextures(size, &id_);
 			glBindTexture(GL_TEXTURE_2D, id_);
 			unsigned char* imageData = stbi_load(location.c_str(), &width, &height, &nrChannels, 0);
+			if (dimensions != vec2(0.0f)) {
+				imageData = stbir_resize_uint8_srgb(imageData, (float)dimensions.x, (float)dimensions.y, 4, NULL, NULL, NULL, 4, STBIR_4CHANNEL);
+			}
+			else
+				dimensions = vec2(width, height);
+			size_ = dimensions;
 			if (!imageData)
 			{
 				std::cout << "Image incorrectly loaded. Location: " << location << "\n";
@@ -84,9 +97,9 @@ void Texture::Set(std::string location, int typeNum, vec2 dimensions, bool flip,
 				int ErrorW, ErrorH, ErrorNrChannels;
 				unsigned char* ErrorTex = stbi_load("EngineResources/ERROR.bmp", &ErrorW, &ErrorH, &ErrorNrChannels, 4);
 				GenErrorTex(ErrorTex, errorTex);
+				imageData = ErrorTex;
 			}
-			else {
-
+			{
 				GLenum format;
 				if (nrChannels == 1)
 					format = GL_RED;
@@ -94,10 +107,7 @@ void Texture::Set(std::string location, int typeNum, vec2 dimensions, bool flip,
 					format = GL_RGB;
 				else if (nrChannels == 4)
 					format = GL_RGBA;
-				if (dimensions == vec2(0))
-					dimensions = vec2(width, height);
-				size_ = dimensions;
-				glTexImage2D(GL_TEXTURE_2D, 0, format, dimensions.x, dimensions.y, 0, format, GL_UNSIGNED_BYTE, imageData);
+				glTexImage2D(GL_TEXTURE_2D, 0, format, width, height, 0, format, GL_UNSIGNED_BYTE, imageData);
 				glGenerateMipmap(GL_TEXTURE_2D);
 
 				glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, wrapMode_);
@@ -106,20 +116,37 @@ void Texture::Set(std::string location, int typeNum, vec2 dimensions, bool flip,
 				glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, magFilterMode_);
 				if (!idAssigned_)
 				{
+					type = typeNum;
+					path = location;
 					idAssigned_ = true;
 					globalTextures.push_back(*this);
+					format_ = format;
 				}
 				texAssigned_ = true;
 			}
 			glBindTexture(GL_TEXTURE_2D, 0);
-			data_ = id_;
 			stbi_image_free(imageData);
 		}
 		else {
-			glDeleteTextures(1, &data_);
-			Set();
+			glDeleteTextures(1, &id_);
+			texAssigned_ = false;
+			Set(location, typeNum, dimensions, flip, size);
 		}
 	}
+}
+void Texture::SetSize(vec2 size)
+{
+	glDeleteTextures(1, &id_);
+	if (path != "null") {
+		Set(path, type, size);
+	}
+	else {
+		Set(type, size);
+	}
+}
+void Texture::SetSize(float x, float y)
+{
+	SetSize(vec2(x, y));
 }
 Texture::Texture(std::string location, int type, vec2 dimensions, bool flip, int size)
 {
@@ -128,34 +155,34 @@ Texture::Texture(std::string location, int type, vec2 dimensions, bool flip, int
 Texture::Texture() {}
 Texture::Texture(int typeNum, vec2 dimensions, bool flip, int size)
 {
-	if (!texAssigned())
+	Set(typeNum, dimensions, flip, size);
+}
+void Texture::Set(int typeNum, vec2 dimensions, bool flip, int size)
+{
+	stbi_set_flip_vertically_on_load(flip);
+	glGenTextures(size, &id_);
+	glBindTexture(GL_TEXTURE_2D, id_);
+	if (dimensions == vec2(0))
+		dimensions = EngineInfo.renderResolution;
+	size_ = dimensions;
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, dimensions.x, dimensions.y, 0, GL_RGB, GL_UNSIGNED_BYTE, NULL);
+	//glGenerateMipmap(GL_TEXTURE_2D);
+		
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_BORDER);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_BORDER);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+
+	texAssigned_ = true;
+	glBindTexture(GL_TEXTURE_2D, 0);
+	if (!idAssigned_)
 	{
+		std::cout << "Id not assigned\n";
 		type = typeNum;
-		path = "None set";
-
-		stbi_set_flip_vertically_on_load(flip);
-		glGenTextures(size, &id_);
-		glBindTexture(GL_TEXTURE_2D, id_);
-		if (dimensions == vec2(0))
-			dimensions = EngineInfo.renderResolution;
-		size_ = dimensions;
-		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, dimensions.x, dimensions.y, 0, GL_RGB, GL_UNSIGNED_BYTE, NULL);
-		//glGenerateMipmap(GL_TEXTURE_2D);
-		
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_BORDER);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_BORDER);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-
-		texAssigned_ = true;
-		glBindTexture(GL_TEXTURE_2D, 0);
-		if (!idAssigned_)
-		{
-			idAssigned_ = true;
-			globalTextures.push_back(*this);
-		}
-		texAssigned_ = true;
-		
+		idAssigned_ = true;
+		globalTextures.push_back(*this);
+		format_ = GL_RGB;
+		imageData_ = NULL;
 	}
 }
 void Texture::Set()
@@ -507,6 +534,7 @@ std::vector <Texture> Model::loadMaterialTextures(aiMaterial* mat, aiTextureType
 	
 	return textures;
 }
+
 Shader::Shader(const char* VERTEX_SHADER_PATH, const char* FRAGMENT_SHADER_PATH, std::string shaderName, const char* GEOMETRY_SHADER_PATH)
 {
 	bool geometryNull = false;
@@ -571,9 +599,10 @@ Shader::Shader(const char* VERTEX_SHADER_PATH, const char* FRAGMENT_SHADER_PATH,
 	{
 		std::cout << "Shader file(s) not read correctly!" << "\n";
 	}
-	const char* VSHADER_SOURCE = VERTEX_SHADER_CODE.c_str();
-	const char* FSHADER_SOURCE = FRAGMENT_SHADER_CODE.c_str();
-	const char* GSHADER_SOURCE = GEOMETRY_SHADER_CODE.c_str();
+
+	std::string VSHADER_SOURCE_STR = VERTEX_SHADER_CODE;
+	std::string FSHADER_SOURCE_STR = FRAGMENT_SHADER_CODE;
+	std::string GSHADER_SOURCE_STR = GEOMETRY_SHADER_CODE;
 
 	unsigned int VERTEX_SHADER, FRAGMENT_SHADER, GEOMETRY_SHADER;
 
@@ -583,6 +612,9 @@ Shader::Shader(const char* VERTEX_SHADER_PATH, const char* FRAGMENT_SHADER_PATH,
 
 	if (!vertexNull)
 	{
+		const char* VSHADER_SOURCE;
+		stripUnicode(VSHADER_SOURCE_STR);
+		VSHADER_SOURCE = VSHADER_SOURCE_STR.c_str();
 		glShaderSource(VERTEX_SHADER, 1, &VSHADER_SOURCE, NULL);
 		glCompileShader(VERTEX_SHADER);
 
@@ -590,6 +622,9 @@ Shader::Shader(const char* VERTEX_SHADER_PATH, const char* FRAGMENT_SHADER_PATH,
 	}
 	if (!fragmentNull)
 	{
+		const char* FSHADER_SOURCE;
+		stripUnicode(FSHADER_SOURCE_STR);
+		FSHADER_SOURCE = FSHADER_SOURCE_STR.c_str();
 		glShaderSource(FRAGMENT_SHADER, 1, &FSHADER_SOURCE, NULL);
 		glCompileShader(FRAGMENT_SHADER);
 
@@ -597,6 +632,9 @@ Shader::Shader(const char* VERTEX_SHADER_PATH, const char* FRAGMENT_SHADER_PATH,
 	}
 	if (!geometryNull)
 	{
+		const char* GSHADER_SOURCE;
+		stripUnicode(GSHADER_SOURCE_STR);
+		GSHADER_SOURCE = GSHADER_SOURCE_STR.c_str();
 		glShaderSource(GEOMETRY_SHADER, 1, &GSHADER_SOURCE, NULL);
 		glCompileShader(GEOMETRY_SHADER);
 
@@ -881,12 +919,23 @@ void Framebuffer::Create(GLenum FBtype, std::string name)
 {
 	Create(texture, FBtype, name);
 }
+void Framebuffer::SetTexture(Texture* tex)
+{
+	glGenRenderbuffers(1, &RBO_);
+	glBindRenderbuffer(GL_RENDERBUFFER, RBO_);
+	glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH24_STENCIL8, texture->size().x, texture->size().y);
+	glBindRenderbuffer(GL_RENDERBUFFER, 0);
+
+	glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT, GL_RENDERBUFFER, RBO_);
+	glFramebufferTexture2D(type, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, texture->id(), 0);
+}
 void Framebuffer::Create(Texture* tex, GLenum FBtype, std::string name)
 {
 	//FBtypes
 	//GL_FRAMEBUFFER, GL_READ_FRAMEBUFFER, GL_DRAW_FRAMEBUFFER
 	texture = tex;
 	name_ = name;
+	type = FBtype;
 	
 	int currentFBO;
 	GLenum binding;
@@ -906,13 +955,7 @@ void Framebuffer::Create(Texture* tex, GLenum FBtype, std::string name)
 	glGenFramebuffers(1, &FBO_);
 	glBindFramebuffer(FBtype, FBO_);
 
-	glGenRenderbuffers(1, &RBO_);
-	glBindRenderbuffer(GL_RENDERBUFFER, RBO_ );
-	glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH24_STENCIL8, EngineInfo.renderResolution.x, EngineInfo.renderResolution.y);
-	glBindRenderbuffer(GL_RENDERBUFFER, 0);
-
-	glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT, GL_RENDERBUFFER, RBO_);
-	glFramebufferTexture2D(FBtype, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, texture->id(), 0);
+	SetTexture(texture);
 
 	if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE)
 		std::cout << "Framebuffer is not complete!" << std::endl;

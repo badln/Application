@@ -1,0 +1,62 @@
+# Blender 4.4.3 MTL File: 'None'
+# www.blender.org
+
+newmtl models_characters_doommarine_doom.001
+Ns 94.117653
+Ka 1.000000 1.000000 1.000000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.000000
+d 1.000000
+illum 2
+map_Kd PC Computer - DOOM 2016 - Doom Slayer (1)/models_characters_doommarine_doommarine_legs_c.png
+
+newmtl models_characters_doommarine_doommarine_arms.001
+Ns 94.117653
+Ka 1.000000 1.000000 1.000000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.000000
+d 1.000000
+illum 2
+map_Kd PC Computer - DOOM 2016 - Doom Slayer (1)/models_characters_doommarine_doommarine_arms_c.png
+
+newmtl models_characters_doommarine_doommarine_cowl.001
+Ns 94.117653
+Ka 1.000000 1.000000 1.000000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.000000
+d 1.000000
+illum 2
+map_Kd PC Computer - DOOM 2016 - Doom Slayer (1)/models_characters_doommarine_doommarine_cowl_c.png
+
+newmtl models_characters_doommarine_doommarine_helmet.002
+Ns 94.117653
+Ka 1.000000 1.000000 1.000000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.000000
+d 1.000000
+illum 2
+map_Kd PC Computer - DOOM 2016 - Doom Slayer (1)/models_characters_doommarine_doommarine_helmet_c.png
+
+newmtl models_characters_doommarine_doommarine_torso.001
+Ns 94.117653
+Ka 1.000000 1.000000 1.000000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.000000
+d 1.000000
+illum 2
+map_Kd PC Computer - DOOM 2016 - Doom Slayer (1)/models_characters_doommarine_doommarine_torso_c.png
+
+newmtl models_characters_doommarine_doommarine_visor.002
+Ns 94.117653
+Ka 1.000000 1.000000 1.000000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.000000
+d 1.000000
+illum 2
+map_Kd PC Computer - DOOM 2016 - Doom Slayer (1)/models_characters_doommarine_doommarine_visor_c.png

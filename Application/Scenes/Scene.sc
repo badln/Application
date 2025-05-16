@@ -26,7 +26,7 @@ msh 100.0f
 mc 1.0f, 1.0f, 1.0f, 1.0f
 mt none
 
-m Objects/Hornet/hornet.obj
+/m Objects/Hornet/hornet.obj
 mtf false
 p 1.0f, 3.0f, 3.0f
 s 1.0f, 1.0f, 1.0f

@@ -23,9 +23,11 @@
 
 using namespace glm;
 
+
 extern int frame;
 extern unsigned int lightPointArray;
 extern vec2 windowSize;
+extern vec2 renderResolution;
 void SetWindowIcon(const char* path, GLFWwindow* window);
 class Camera {
 private:
@@ -114,13 +116,17 @@ class Texture
 	bool idAssigned_ = false;
 	bool manualFiltering_ = false;
 	unsigned int data_;
+	unsigned char* imageData_;
 	unsigned int id_;
 	bool error_ = false;
 	GLenum filterMode_ = TextureFilter::Linear;
 	GLenum magFilterMode_ = GL_LINEAR;
 	GLenum wrapMode_ = GL_REPEAT;
-	vec2 size_;
+	vec2 size_= vec2(0.0f);
+	GLenum format_;
 public:
+	void SetSize(float x, float y);
+	void SetSize(vec2 size);
 	int type = TextureType::Diffuse; 
 	const vec2& size() const { return size_; }
 	const unsigned int& data() const { return data_; }
@@ -130,7 +136,8 @@ public:
 	const bool& manualFiltering() const{ return manualFiltering_; }
 	const GLenum filterMode() const { return filterMode_; }
 	const GLenum wrapMode() const { return filterMode_; }
-	std::string path; 
+	const GLenum format() const { return format_; }
+	std::string path = "null";
 
 	Texture(std::string location, int typeNum, vec2 dimensions = vec2(0), bool flip = false, int size = 1);
 	Texture(int typeNum, vec2 dimensions = vec2(0), bool flip = false, int size = 1);
@@ -143,6 +150,7 @@ public:
 
 	void Set(std::string location, int typeNum, vec2 dimensions = vec2(0), bool flip = false, int size = 1);
 	void Set();
+	void Set(int typeNum, vec2 dimensions = vec2(0), bool flip = false, int size = 1);
 private:
 	void GenErrorTex(unsigned char* ErrorTex, int texture);
 };
@@ -297,8 +305,10 @@ class Framebuffer {
 private:
 	std::string name_;
 	unsigned int FBO_, RBO_;
+	GLenum type;
 public:
 	Texture* texture;
+	void SetTexture(Texture* tex);
 	void Create(GLenum FBtype = GL_FRAMEBUFFER, std::string name = "New Framebuffer");
 	void Create(Texture* tex, GLenum FBtype = GL_FRAMEBUFFER, std::string name = "New Framebuffer");
 	const std::string& name() const { return name_; }
