@@ -1,28 +1,73 @@
-﻿LINK : warning LNK4098: defaultlib 'MSVCRTD' conflicts with use of other libs; use /NODEFAULTLIB:library
+﻿  main.cpp
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.22621.0\shared\minwindef.h(130,9): warning C4005: 'APIENTRY': macro redefinition
+C:\Users\felix\source\repos\Application\Application\Libraries\Include\glad\glad.h(32,9): message : see previous definition of 'APIENTRY'
+C:\Users\felix\source\repos\Application\Application\engine.h(18,13): warning C4305: 'initializing': truncation from 'double' to 'float'
+C:\Users\felix\source\repos\Application\Application\objects.h(304,54): warning C4267: 'return': conversion from 'size_t' to 'const int', possible loss of data
+C:\Users\felix\source\repos\Application\Application\main.cpp(5,10): warning C4067: unexpected tokens following preprocessor directive - expected a newline
+C:\Users\felix\source\repos\Application\Application\main.cpp(64,11): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
+C:\Users\felix\source\repos\Application\Application\main.cpp(65,11): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
+C:\Users\felix\source\repos\Application\Application\main.cpp(66,11): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
+C:\Users\felix\source\repos\Application\Application\main.cpp(79,10): warning C4244: 'initializing': conversion from 'float' to 'int', possible loss of data
+C:\Users\felix\source\repos\Application\Application\main.cpp(89,10): warning C4244: 'initializing': conversion from 'float' to 'int', possible loss of data
+C:\Users\felix\source\repos\Application\Application\main.cpp(111,28): warning C4244: '=': conversion from 'int' to 'T', possible loss of data
+          with
+          [
+              T=float
+          ]
+C:\Users\felix\source\repos\Application\Application\main.cpp(112,28): warning C4244: '=': conversion from 'int' to 'T', possible loss of data
+          with
+          [
+              T=float
+          ]
+C:\Users\felix\source\repos\Application\Application\main.cpp(116,14): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
+C:\Users\felix\source\repos\Application\Application\main.cpp(292,86): warning C4244: 'argument': conversion from 'T' to 'int', possible loss of data
+          with
+          [
+              T=float
+          ]
+C:\Users\felix\source\repos\Application\Application\main.cpp(292,61): warning C4244: 'argument': conversion from 'T' to 'int', possible loss of data
+          with
+          [
+              T=float
+          ]
+C:\Users\felix\source\repos\Application\Application\main.cpp(295,24): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
+C:\Users\felix\source\repos\Application\Application\main.cpp(300,129): warning C4244: 'argument': conversion from 'T' to 'int', possible loss of data
+          with
+          [
+              T=float
+          ]
+C:\Users\felix\source\repos\Application\Application\main.cpp(300,67): warning C4244: 'argument': conversion from 'T' to 'int', possible loss of data
+          with
+          [
+              T=float
+          ]
+C:\Users\felix\source\repos\Application\Application\main.cpp(421,79): warning C4244: 'argument': conversion from 'T' to 'GLsizei', possible loss of data
+          with
+          [
+              T=float
+          ]
+C:\Users\felix\source\repos\Application\Application\main.cpp(421,48): warning C4244: 'argument': conversion from 'T' to 'GLsizei', possible loss of data
+          with
+          [
+              T=float
+          ]
+C:\Users\felix\source\repos\Application\Application\main.cpp(434,72): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+C:\Users\felix\source\repos\Application\Application\main.cpp(466,67): warning C4244: 'argument': conversion from 'T' to 'GLsizei', possible loss of data
+          with
+          [
+              T=float
+          ]
+C:\Users\felix\source\repos\Application\Application\main.cpp(466,42): warning C4244: 'argument': conversion from 'T' to 'GLsizei', possible loss of data
+          with
+          [
+              T=float
+          ]
+C:\Users\felix\source\repos\Application\Application\main.cpp(472,45): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+C:\Users\felix\source\repos\Application\Application\main.cpp(566,18): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
+C:\Users\felix\source\repos\Application\Application\main.cpp(259,13): warning C4101: 'transform': unreferenced local variable
   Generating code
-  0 of 1068 functions ( 0.0%) were compiled, the rest were copied from previous compilation.
-    0 functions were new in current compilation
-    0 functions had inline decision re-evaluated but remain unchanged
+  Previous IPDB and IOBJ mismatch, fall back to full compilation.
+C:\Users\felix\source\repos\Application\Application\objects.h(304): warning C4172: returning address of local variable or temporary
+  All 1413 functions were compiled because no usable IPDB/IOBJ from previous compilation was found.
   Finished generating code
-glfw3.lib(window.obj) : warning LNK4099: PDB '' was not found with 'glfw3.lib(window.obj)' or at ''; linking object as if no debug info
-glfw3.lib(context.obj) : warning LNK4099: PDB '' was not found with 'glfw3.lib(context.obj)' or at ''; linking object as if no debug info
-glfw3.lib(input.obj) : warning LNK4099: PDB '' was not found with 'glfw3.lib(input.obj)' or at ''; linking object as if no debug info
-glfw3.lib(monitor.obj) : warning LNK4099: PDB '' was not found with 'glfw3.lib(monitor.obj)' or at ''; linking object as if no debug info
-glfw3.lib(init.obj) : warning LNK4099: PDB '' was not found with 'glfw3.lib(init.obj)' or at ''; linking object as if no debug info
-glfw3.lib(win32_thread.obj) : warning LNK4099: PDB '' was not found with 'glfw3.lib(win32_thread.obj)' or at ''; linking object as if no debug info
-glfw3.lib(win32_time.obj) : warning LNK4099: PDB '' was not found with 'glfw3.lib(win32_time.obj)' or at ''; linking object as if no debug info
-glfw3.lib(platform.obj) : warning LNK4099: PDB '' was not found with 'glfw3.lib(platform.obj)' or at ''; linking object as if no debug info
-glfw3.lib(vulkan.obj) : warning LNK4099: PDB '' was not found with 'glfw3.lib(vulkan.obj)' or at ''; linking object as if no debug info
-glfw3.lib(win32_init.obj) : warning LNK4099: PDB '' was not found with 'glfw3.lib(win32_init.obj)' or at ''; linking object as if no debug info
-glfw3.lib(null_init.obj) : warning LNK4099: PDB '' was not found with 'glfw3.lib(null_init.obj)' or at ''; linking object as if no debug info
-glfw3.lib(win32_module.obj) : warning LNK4099: PDB '' was not found with 'glfw3.lib(win32_module.obj)' or at ''; linking object as if no debug info
-glfw3.lib(win32_monitor.obj) : warning LNK4099: PDB '' was not found with 'glfw3.lib(win32_monitor.obj)' or at ''; linking object as if no debug info
-glfw3.lib(win32_window.obj) : warning LNK4099: PDB '' was not found with 'glfw3.lib(win32_window.obj)' or at ''; linking object as if no debug info
-glfw3.lib(win32_joystick.obj) : warning LNK4099: PDB '' was not found with 'glfw3.lib(win32_joystick.obj)' or at ''; linking object as if no debug info
-glfw3.lib(wgl_context.obj) : warning LNK4099: PDB '' was not found with 'glfw3.lib(wgl_context.obj)' or at ''; linking object as if no debug info
-glfw3.lib(egl_context.obj) : warning LNK4099: PDB '' was not found with 'glfw3.lib(egl_context.obj)' or at ''; linking object as if no debug info
-glfw3.lib(osmesa_context.obj) : warning LNK4099: PDB '' was not found with 'glfw3.lib(osmesa_context.obj)' or at ''; linking object as if no debug info
-glfw3.lib(null_monitor.obj) : warning LNK4099: PDB '' was not found with 'glfw3.lib(null_monitor.obj)' or at ''; linking object as if no debug info
-glfw3.lib(null_window.obj) : warning LNK4099: PDB '' was not found with 'glfw3.lib(null_window.obj)' or at ''; linking object as if no debug info
-glfw3.lib(null_joystick.obj) : warning LNK4099: PDB '' was not found with 'glfw3.lib(null_joystick.obj)' or at ''; linking object as if no debug info
-  Application.vcxproj -> C:\Users\faye\Desktop\Projects\Application\x64\Release\Application.exe
+  Application.vcxproj -> C:\Users\felix\source\repos\Application\x64\Release\Application.exe
