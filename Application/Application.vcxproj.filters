@@ -54,9 +54,6 @@
     <None Include="Shaders\GEOMETRY_SHADER.glsl">
       <Filter>Shaders</Filter>
     </None>
-    <None Include="Scenes\Scene.sc">
-      <Filter>Scenes</Filter>
-    </None>
     <None Include="Shaders\GEOMETRY_VERT_SHADER.glsl">
       <Filter>Shaders</Filter>
     </None>
@@ -65,6 +62,12 @@
     </None>
     <None Include="Shaders\POST_PROCESS.glsl">
       <Filter>Shaders</Filter>
+    </None>
+    <None Include="Scenes\Hornet.sc">
+      <Filter>Scenes</Filter>
+    </None>
+    <None Include="Scenes\FMP.sc">
+      <Filter>Scenes</Filter>
     </None>
   </ItemGroup>
 </Project>

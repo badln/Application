@@ -37,14 +37,15 @@ public:
 
 	bool firstCamFrame = false;
 
-	void SetCameraDir(bool isGamepad = false, float GamepadSens = 10.0f);
-	void SetCameraDir(GLFWwindow* window, double xposIn, double yposIn, bool looking, bool isGamepad = false, float GamepadSens = 10.0f);
+	void SetCameraDir(bool isGamepad = false, double GamepadSens = 10.0f);
+	void SetCameraDir(GLFWwindow* window, double xposIn, double yposIn, bool looking, bool isGamepad = false, double GamepadSens = 10.0f);
 	void SetMainCamera();
 	std::string name();
 	void name(std::string str);
 
 	float yaw = -90;
 	float pitch = 0;
+	float roll = 0;
 
 	vec4 viewPort = vec4(0, 0, EngineInfo.renderResolution.x, EngineInfo.renderResolution.y);
 	float nearClipPlane = 0.1f;
@@ -60,7 +61,7 @@ public:
 
 	vec3 forward = vec3(0.0f, 0.0f, -1.0f);
 	vec3 up = vec3(0.0f, 1.0f, 0.0f);
-	vec3 right = vec3(1.0f, 0.0f, 0.0f);
+	vec3 left = vec3(1.0f, 0.0f, 0.0f);
 	vec3 lookDirection;
 	float fov = 90;
 
@@ -124,6 +125,9 @@ class Texture
 	GLenum wrapMode_ = GL_REPEAT;
 	vec2 size_= vec2(0.0f);
 	GLenum format_;
+
+	bool mem = false;
+
 public:
 	void SetSize(float x, float y);
 	void SetSize(vec2 size);
@@ -142,6 +146,7 @@ public:
 	Texture(std::string location, int typeNum, vec2 dimensions = vec2(0), bool flip = false, int size = 1);
 	Texture(int typeNum, vec2 dimensions = vec2(0), bool flip = false, int size = 1);
 	Texture();
+	Texture(aiTexture* texture, int typeNum, vec2 dimensions = vec2(0), bool flip = false, int size = 1);
 	void wrapMode(GLenum mode);
 	void filterMode(GLenum mode, bool update = false);
 
@@ -150,6 +155,7 @@ public:
 
 	void Set(std::string location, int typeNum, vec2 dimensions = vec2(0), bool flip = false, int size = 1);
 	void Set();
+	void SetFromMemory(aiTexture* texture, int typeNum, vec2 dimensions = vec2(0), bool flip = false, int size = 1);
 	void Set(int typeNum, vec2 dimensions = vec2(0), bool flip = false, int size = 1);
 private:
 	void GenErrorTex(unsigned char* ErrorTex, int texture);
@@ -190,14 +196,14 @@ struct {
 class Material {
 public:
 	int culling = FaceCulling.Back;
-	vec3 ambient = vec3(0.1f);
+	vec3 ambient = vec3(1.0f);
 	vec3 diffuse = vec3(1.0f);
 	Texture diffuseTex;
-	vec3 specular = vec3(0.5f);
+	vec3 specular = vec3(0.1f);
 	Texture specularTex;
 	float emissive;
 	Texture emissiveTex;
-	float shininess = 100.0f;
+	float shininess = 0.0f;
 	vec4 colour = vec4(1.0f);
 	Texture texture;
 	Shader *shader;
@@ -227,11 +233,13 @@ public:
 	const unsigned int& VAO() const { return VAO_; }
 	const unsigned int& VBO() const { return VBO_; }
 	const unsigned int& EBO() const { return EBO_; }
+
 	struct {
 		std::vector<Vertex>	      vertices;
 		std::vector<unsigned int> indices;
 		std::vector<Texture>	  textures;
 	} data;
+
 	Mesh();
 	Mesh(std::vector<Vertex> vertices, std::vector<unsigned int> indices, std::vector<Texture> textures);
 	void Draw(int faceCulling, Shader &shader, float pi, Transform transform);
@@ -241,6 +249,8 @@ class ObjContainer;
 
 class Model {
 private:
+	int textureIndex = 0;
+
 public:
 	std::string directory;
 	bool flipTex;
@@ -248,7 +258,7 @@ public:
 	void loadModel(std::string path, bool flipTextures, ObjContainer* obj);
 	void processNode(aiNode* node, const aiScene* scene, bool flip, ObjContainer* obj);
 	Mesh processMesh(aiMesh* mesh, const aiScene* scene, bool flip, ObjContainer* obj);
-	std::vector<Texture> loadMaterialTextures(aiMaterial* mat, aiTextureType type, int typeNum, bool flip = false);
+	std::vector<Texture> loadMaterialTextures(const aiScene* scene, aiMaterial* mat, aiTextureType type, int typeNum, bool flip = false);
 	Model();
 	Model(const char* path, bool flipTextures = false)
 	{
@@ -264,12 +274,15 @@ public:
 	Mesh mesh = Mesh();
 };
 extern ObjContainer Scene;
+
 class ObjContainer {
+
 	std::string name_ = "Object";
 	int placeInArray = 0, placeInParentArray = 0;
 	bool placed = false;
 	ObjContainer* parent_ = this;
 	std::vector<ObjContainer*> children;
+
 public:
 
 	void Init();

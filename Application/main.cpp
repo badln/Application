@@ -5,6 +5,8 @@
 #include "Gamepad.h";
 using namespace glm;
 
+//TODO :: Completely rewrite textures yuck
+
 typedef unsigned char Byte;
 typedef Byte cs_byte;
 
@@ -25,10 +27,10 @@ Gamepad pad;
 
 unsigned int lightPointArray;
 
+float speedMultiplier = 30.0f;
 int drawCalls = 0;
 int spotLightNum, pointLightNum;
 bool downArrowPressed, upArrowPressed, leftArrowPressed, rightArrowPressed, spacePressed, ctrlPressed, escPressed, inWireframe = false;
-int ambientRotationMultiplier = 50;
 
 bool mouseClickedThisFrame = false;
 void mouse_callback(GLFWwindow* window, double xpos, double ypos);
@@ -37,9 +39,9 @@ float scrollDir;
 bool looking = true;
 
 float desiredFrametime = 1 / (EngineInfo.desiredFramerate + 1);
-double frameTime, endOfFrameTime, endOfFrameTimeLastFrame;
+double endOfFrameTime, endOfFrameTimeLastFrame;
 float frameRate;
-bool useScreenRefreshRate = true;
+bool useScreenRefreshRate = false;
 
 mat4 orthoscopicMat;
 mat4 projectionMat;
@@ -354,11 +356,13 @@ int main()
 	glEnableVertexAttribArray(1);
 	glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 4 * sizeof(float), (void*)(2 * sizeof(float)));
 
-	SetActiveScene("Scenes/Scene.sc");
+	SetActiveScene("Scenes/FMP.sc");
 	
+	/*
 	ObjContainer obj("Cube");
 	obj.SetModel("Objects/Primitives/Cube.obj", true);
 	obj.renderer.mesh.data.textures.push_back(Texture("Images/IMG_4766.png", TextureType::Diffuse));
+*/
 
 	Framebuffer fb;
 	Texture fbTexture(TextureType::Render);
@@ -389,6 +393,7 @@ int main()
 			//---------------//
 			// stuff
 			//---------------//
+
 			renderResolution = EngineInfo.renderResolution;
 			processInput(window);
 			EngineInfo.MousePos.x = clamp(EngineInfo.MousePos.x, 0, EngineInfo.renderResolution.x, true);
@@ -457,7 +462,6 @@ int main()
 					}
 				}
 			}
-			
 			fb.use(0);
 			glViewport(0, 0, EngineInfo.windowSize.x, EngineInfo.windowSize.y);
 			glDisable(GL_DEPTH_TEST);
@@ -476,33 +480,34 @@ int main()
 			if (inWireframe)
 				glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 			processPadInput(window, &pad);
-			mainCamera->SetCameraDir(window, pad.RS_X_ADDITIVE, pad.RS_Y_ADDITIVE, (pad.RIGHT_STICK().x != 0 || pad.RIGHT_STICK().y != 0), true, pad.Sensitivity);
-			mainCamera->Position += (3 * (float)frameTime) * mainCamera->forward * -pad.LEFT_STICK().y;
-			mainCamera->Position -= normalize(cross(mainCamera->forward, mainCamera->up)) * (3 * (float)frameTime) * -pad.LEFT_STICK().x;
+			mainCamera->SetCameraDir(window, pad.RS_X_ADDITIVE, pad.RS_Y_ADDITIVE, (pad.RIGHT_STICK(EngineInfo.frameTime).x != 0 || pad.RIGHT_STICK(EngineInfo.frameTime).y != 0), true, pad.Sensitivity * EngineInfo.frameTime);
+			mainCamera->Position += (speedMultiplier * (float)EngineInfo.frameTime) * mainCamera->forward * ( - pad.LEFT_STICK(EngineInfo.frameTime).y);
+			mainCamera->Position -= normalize(cross(mainCamera->forward, mainCamera->up)) * (speedMultiplier * (float)EngineInfo.frameTime) * -pad.LEFT_STICK(EngineInfo.frameTime).x;
+
 
 			if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
 			{
-				mainCamera->Position += (3 * (float)frameTime) * mainCamera->forward;
+				mainCamera->Position += (speedMultiplier * (float)EngineInfo.frameTime) * mainCamera->forward;
 			}
 			if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS)
 			{
-				mainCamera->Position -= (3 * (float)frameTime) * mainCamera->forward;
+				mainCamera->Position -= (speedMultiplier * (float)EngineInfo.frameTime) * mainCamera->forward;
 			}
 			if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS)
 			{
-				mainCamera->Position -= normalize(cross(mainCamera->forward, mainCamera->up)) * (3 * (float)frameTime);
+				mainCamera->Position -= mainCamera->left * (speedMultiplier * (float)EngineInfo.frameTime);
 			}
 			if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS)
 			{
-				mainCamera->Position += normalize(cross(mainCamera->forward, mainCamera->up)) * (3 * (float)frameTime);
+				mainCamera->Position += mainCamera->left * (speedMultiplier * (float)EngineInfo.frameTime);
 			}
 			if (glfwGetKey(window, GLFW_KEY_E) == GLFW_PRESS || pad.padState.buttons[GLFW_GAMEPAD_BUTTON_A])
 			{
-				mainCamera->Position += (3 * (float)frameTime) * normalize(cross(normalize(cross(mainCamera->forward, mainCamera->up)), mainCamera->forward));
+				mainCamera->Position += (speedMultiplier * (float)EngineInfo.frameTime) * normalize(cross(normalize(cross(mainCamera->forward, mainCamera->up)), mainCamera->forward));
 			}
 			if (glfwGetKey(window, GLFW_KEY_Q) == GLFW_PRESS || pad.padState.buttons[GLFW_GAMEPAD_BUTTON_B])
 			{
-				mainCamera->Position -= (3 * (float)frameTime) * normalize(cross(normalize(cross(mainCamera->forward, mainCamera->up)), mainCamera->forward));
+				mainCamera->Position -= (speedMultiplier * (float)EngineInfo.frameTime) * normalize(cross(normalize(cross(mainCamera->forward, mainCamera->up)), mainCamera->forward));
 			}
 			if (objects.size() != 0) {
 
@@ -533,6 +538,10 @@ int main()
 				}
 				if (glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_RIGHT) == GLFW_PRESS)
 				{
+					Console.Log("Light pos: ", false);
+					Console.Log(objects[num]->transform.position);
+					Console.Log("light dir: ", false);
+					Console.Log(objects[num]->light.direction);
 					lightDistanceToCam = clamp((lightDistanceToCam + scrollDir / 10), 1, 20);
 					vec3 camForward = mainCamera->Position + mainCamera->forward * lightDistanceToCam;
 					objects[num]->transform.position = camForward;
@@ -553,8 +562,8 @@ int main()
 			drawCalls = 0;
 			frame++;
 			endOfFrameTime = glfwGetTime();
-			frameTime = endOfFrameTime - endOfFrameTimeLastFrame;
-			frameRate = 1 / frameTime;
+			EngineInfo.frameTime = endOfFrameTime - endOfFrameTimeLastFrame;
+			frameRate = 1 / EngineInfo.frameTime;
 			//Console.Log(std::to_string(frameRate));
 			//----------------------------------------------------------------------------------------------------//
 			//                                            END OF FRAME

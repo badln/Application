@@ -14,7 +14,7 @@ struct {
 	std::string EngineName =	"8093 Engine";
 	std::string EngineVer =		"0.0.2";
 	std::string EngineAuthor =  "Faye Kendall";
-	float desiredFramerate = 200;
+	float desiredFramerate = 24;
 	float pi = 3.1415926535;
 	bool drawGizmos = true;
 	GLenum defaultFiltering = GL_NEAREST_MIPMAP_NEAREST;
@@ -24,12 +24,13 @@ struct {
 	std::string defaultTexLoc =    "Images";
 
 	float MouseSensitivity = 0.1f;
-	glm::vec2 windowSize = glm::vec2(1280, 800);
-	glm::vec2 renderResolution = glm::vec2(1280, 800);
+	glm::vec2 windowSize = glm::vec2(1920, 1080);
+	glm::vec2 renderResolution = glm::vec2(240, 135);
 	glm::vec2 MousePosLF = glm::vec2(0);
 	glm::vec2 MousePos =   glm::vec2(0);
 
 	const int max_textures = 6; 
+	double frameTime;
 
 	int currentWindowType = WindowType::BorderlessWindowed;
 

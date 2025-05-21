@@ -176,7 +176,8 @@
     <Image Include="IMG_2209.ico" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Scenes\Scene.sc" />
+    <None Include="Scenes\FMP.sc" />
+    <None Include="Scenes\Hornet.sc" />
     <None Include="Shaders\GEOMETRY_FRAG_SHADER.glsl" />
     <None Include="Shaders\GEOMETRY_SHADER.glsl" />
     <None Include="Shaders\GEOMETRY_VERT_SHADER.glsl" />

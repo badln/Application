@@ -9,7 +9,7 @@ uniform sampler2D tex;
 
 uniform float time;
 
-float quantizeLevel = 10;
+float quantizeLevel = 24;
 
 void main()
 {

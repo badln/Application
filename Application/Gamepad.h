@@ -13,12 +13,12 @@ public:
 	bool padConnected = false;
 	std::string padName;
 	GLFWgamepadstate padState;
-	float deadZone = 0.1f;
+	float deadZone = 0.3f;
 	float LS_X_ADDITIVE, LS_Y_ADDITIVE;
 	float RS_X_ADDITIVE, RS_Y_ADDITIVE;
-	float Sensitivity = 15;
+	double Sensitivity = 1300;
 
-	vec2 LEFT_STICK();
-	vec2 RIGHT_STICK();
+	vec2 LEFT_STICK(double ft);
+	vec2 RIGHT_STICK(double ft);
 
 };

@@ -20,14 +20,25 @@ void Camera::SetMainCamera() {
 	SetCameraDir();
 }
 
-void Camera::SetCameraDir(GLFWwindow* window, double xposIn, double yposIn, bool looking, bool isGamepad, float GamepadSens)
+void Camera::SetCameraDir(GLFWwindow* window, double xposIn, double yposIn, bool looking, bool isGamepad, double GamepadSens)
 {
+
 	if (!looking)
 	{
+		lookDirection.x = cos(radians(yaw)) * cos(radians(pitch));
+		lookDirection.y = sin(radians(pitch));
+		lookDirection.z = sin(radians(yaw)) * cos(radians(pitch));
+
+		forward = normalize(lookDirection);
+		mat4 rm = rotate(mat4(1), radians(roll), forward);
+		up = mat3(rm) * up;
+		left = normalize(cross(forward, up));
+
 		return;
 	}
 	if (isGamepad)
 		gamepadUsedLast = true;
+
 	EngineInfo.MousePos.x = static_cast<float>(xposIn);
 	EngineInfo.MousePos.y = static_cast<float>(yposIn);
 
@@ -40,16 +51,16 @@ void Camera::SetCameraDir(GLFWwindow* window, double xposIn, double yposIn, bool
 	}
 	SetCameraDir(isGamepad, GamepadSens);
 }
-void Camera::SetCameraDir(bool isGamepad, float GamepadSens) {
+void Camera::SetCameraDir(bool isGamepad, double GamepadSens) {
 
 	float xOffset = EngineInfo.MousePos.x - EngineInfo.MousePosLF.x;
 	float yOffset = -(EngineInfo.MousePos.y - EngineInfo.MousePosLF.y);
+	//std::cout << xOffset << ", " << yOffset << ", MousePosX: " << EngineInfo.MousePos.x << ", MousePosLFX: " << EngineInfo.MousePosLF.x << "GamepadSens: " << GamepadSens << "\n";
 	if (isGamepad)
 	{
-		xOffset = clamp(xOffset, -GamepadSens, GamepadSens);
-		yOffset = clamp(yOffset, -GamepadSens, GamepadSens);
+		xOffset = clamp(xOffset, (float)-GamepadSens, (float)GamepadSens);
+		yOffset = clamp(yOffset, (float)-GamepadSens, (float)GamepadSens);
 	}
-	//std::cout << xOffset << ", " << yOffset << ", MousePosX: " << EngineInfo.MousePos.x << ", MousePosLFX: " << EngineInfo.MousePosLF.x << "\n";
 
 	EngineInfo.MousePosLF = EngineInfo.MousePos;
 
@@ -65,6 +76,7 @@ void Camera::SetCameraDir(bool isGamepad, float GamepadSens) {
 	lookDirection.y = sin(radians(pitch));
 	lookDirection.z = sin(radians(yaw)) * cos(radians(pitch));
 	forward = normalize(lookDirection);
+	left = normalize(cross(forward, up));
 }
 void SetWindowIcon(const char* path, GLFWwindow* window)
 {
@@ -73,8 +85,72 @@ void SetWindowIcon(const char* path, GLFWwindow* window)
 	glfwSetWindowIcon(window, 1, images);
 	stbi_image_free(images[0].pixels);
 }
+Texture::Texture(aiTexture* texture, int typeNum, vec2 dimensions, bool flip, int size) {
+	SetFromMemory(texture, typeNum, dimensions, flip, size);
+}
+void Texture::SetFromMemory(aiTexture* texture, int typeNum, vec2 dimensions, bool flip, int size)
+{
+	if (type != TextureType::Render)
+	{
+		if (!texAssigned_)
+		{
+			stbi_set_flip_vertically_on_load(flip);
+			int width, height, nrChannels;
+			glGenTextures(size, &id_);
+			glBindTexture(GL_TEXTURE_2D, id_);
+			unsigned char* imageData = stbi_load_from_memory(reinterpret_cast<unsigned char*>(texture->pcData), texture->mWidth, &width, &height, &nrChannels, 0);
+			if (dimensions != vec2(0.0f)) {
+				imageData = stbir_resize_uint8_srgb(imageData, (float)dimensions.x, (float)dimensions.y, 4, NULL, NULL, NULL, 4, STBIR_4CHANNEL);
+			}
+			else
+				dimensions = vec2(width, height);
+			size_ = dimensions;
+			if (!imageData)
+			{
+				std::cout << "Image incorrectly loaded." << "\n";
+				unsigned int errorTex{};
+				int ErrorW, ErrorH, ErrorNrChannels;
+				unsigned char* ErrorTex = stbi_load("EngineResources/ERROR.bmp", &ErrorW, &ErrorH, &ErrorNrChannels, 4);
+				GenErrorTex(ErrorTex, errorTex);
+				imageData = ErrorTex;
+			}
+			{
+				GLenum format = GL_RGBA;
+				if (nrChannels == 1)
+					format = GL_RED;
+				else if (nrChannels == 3)
+					format = GL_RGB;
+				glTexImage2D(GL_TEXTURE_2D, 0, format, width, height, 0, format, GL_UNSIGNED_BYTE, imageData);
+				glGenerateMipmap(GL_TEXTURE_2D);
+
+				glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, wrapMode_);
+				glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, wrapMode_);
+				glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, filterMode_);
+				glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, magFilterMode_);
+				if (!idAssigned_)
+				{
+					type = typeNum;
+					path = texture->mFilename.C_Str();
+					idAssigned_ = true;
+					globalTextures.push_back(*this);
+					format_ = format;
+					mem = true;
+				}
+				texAssigned_ = true;
+			}
+			glBindTexture(GL_TEXTURE_2D, 0);
+			stbi_image_free(imageData);
+		}
+		else {
+			glDeleteTextures(1, &id_);
+			texAssigned_ = false;
+			SetFromMemory(texture, typeNum, dimensions, flip, size);
+		}
+	}
+}
 void Texture::Set(std::string location, int typeNum, vec2 dimensions, bool flip, int size)
 {
+	std::cout << "Flag\n";
 	if (type != TextureType::Render)
 	{
 		if (!texAssigned_)
@@ -100,13 +176,11 @@ void Texture::Set(std::string location, int typeNum, vec2 dimensions, bool flip,
 				imageData = ErrorTex;
 			}
 			{
-				GLenum format;
+				GLenum format = GL_RGBA;
 				if (nrChannels == 1)
 					format = GL_RED;
 				else if (nrChannels == 3)
 					format = GL_RGB;
-				else if (nrChannels == 4)
-					format = GL_RGBA;
 				glTexImage2D(GL_TEXTURE_2D, 0, format, width, height, 0, format, GL_UNSIGNED_BYTE, imageData);
 				glGenerateMipmap(GL_TEXTURE_2D);
 
@@ -150,6 +224,7 @@ void Texture::SetSize(float x, float y)
 }
 Texture::Texture(std::string location, int type, vec2 dimensions, bool flip, int size)
 {
+
 	Set(location, type, dimensions, flip, size);
 }
 Texture::Texture() {}
@@ -167,7 +242,7 @@ void Texture::Set(int typeNum, vec2 dimensions, bool flip, int size)
 	size_ = dimensions;
 	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, dimensions.x, dimensions.y, 0, GL_RGB, GL_UNSIGNED_BYTE, NULL);
 	//glGenerateMipmap(GL_TEXTURE_2D);
-		
+
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_BORDER);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_BORDER);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
@@ -177,7 +252,6 @@ void Texture::Set(int typeNum, vec2 dimensions, bool flip, int size)
 	glBindTexture(GL_TEXTURE_2D, 0);
 	if (!idAssigned_)
 	{
-		std::cout << "Id not assigned\n";
 		type = typeNum;
 		idAssigned_ = true;
 		globalTextures.push_back(*this);
@@ -248,7 +322,7 @@ LightSource::LightSource(int lightType, vec3 lightDirection)
 Mesh::Mesh(std::vector<Vertex> vertices, std::vector<unsigned int> indices, std::vector<Texture> textures)
 {
 	this->data.vertices = vertices;
-	this->data.indices  = indices;
+	this->data.indices = indices;
 	this->data.textures = textures;
 
 	setupMesh();
@@ -259,12 +333,8 @@ void Mesh::setupMesh()
 
 	glGenVertexArrays(1, &VAO_);
 	glGenBuffers(1, &VBO_);
-	glGenBuffers(1, &EBO_); 
+	glGenBuffers(1, &EBO_);
 
-/*	std::cout << "\nIN MESH SETUP\nVertices amount: " << data.vertices.size() << "\nIndices amount: " << data.indices.size() << "\nVertex first value: '" <<
-		data.vertices[0].Position.x << ", " << data.vertices[0].Position.y << ", " << data.vertices[0].Position.z << "\nVertex size: " << VertexSize << 
-		"\nVBO: " << VBO_ << "\nVAO: " << VAO_ << "\nEBO: " << EBO_ << "\n";
-*/
 	glBindVertexArray(VAO_);
 	glBindBuffer(GL_ARRAY_BUFFER, VBO_);
 	glBufferData(GL_ARRAY_BUFFER, data.vertices.size() * VertexSize, &data.vertices[0], GL_STREAM_DRAW);
@@ -278,20 +348,23 @@ void Mesh::setupMesh()
 	//normals
 	glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, VertexSize, (void*)offsetof(Vertex, Normal));
 	glEnableVertexAttribArray(1);
-	//texcoords
-	glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, VertexSize, (void*)offsetof(Vertex, TexCoord));
+	//colours
+	glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, VertexSize, (void*)offsetof(Vertex, Colour));
 	glEnableVertexAttribArray(2);
+	//texcoords
+	glVertexAttribPointer(3, 2, GL_FLOAT, GL_FALSE, VertexSize, (void*)offsetof(Vertex, TexCoord));
+	glEnableVertexAttribArray(3);
 
 	glBindVertexArray(0);
 }
-void Mesh::Draw(int faceCulling, Shader &shader, float pi, Transform transform)
+void Mesh::Draw(int faceCulling, Shader& shader, float pi, Transform transform)
 {
 	drawCalls++;
 	unsigned int diffuseNr = 0;
 	unsigned int specularNr = 0;
 	unsigned int emissiveNr = 0;
 	//std::cout << "Flag " << VAO_ << "\n";
-	
+
 
 	for (int i = 0; i < data.textures.size(); i++)
 	{
@@ -320,7 +393,16 @@ void Mesh::Draw(int faceCulling, Shader &shader, float pi, Transform transform)
 			emissiveNr++;
 		}
 	}
-
+	if (data.textures.size() == 0)
+	{
+		//No texture data
+		for (int i = 0; i < 4; i++)
+		{
+			shader.setBool("diffuseTexturesAs[" + std::to_string(i) + "]", false);
+			shader.setBool("specularTexturesAs[" + std::to_string(i) + "]", false);
+			shader.setBool("emissiveTexturesAs[" + std::to_string(i) + "]", false);
+		}
+	}
 	if (faceCulling == FaceCulling.Back)
 		glCullFace(GL_BACK);
 	else if (faceCulling == FaceCulling.Front)
@@ -331,6 +413,7 @@ void Mesh::Draw(int faceCulling, Shader &shader, float pi, Transform transform)
 		glDisable(GL_CULL_FACE);
 
 	shader.setMatAndTransform(transform, mat4(1));
+
 	glBindVertexArray(VAO_);
 	glDrawElements(GL_TRIANGLES, data.indices.size(), GL_UNSIGNED_INT, 0);
 	glBindVertexArray(0);
@@ -338,10 +421,14 @@ void Mesh::Draw(int faceCulling, Shader &shader, float pi, Transform transform)
 	if (faceCulling == FaceCulling.None)
 		glEnable(GL_CULL_FACE);
 	glActiveTexture(GL_TEXTURE0);
+
+	glActiveTexture(GL_TEXTURE0);
+	glBindTexture(GL_TEXTURE_2D, 0);
+
 }
 Mesh::Mesh() {}
 
-void ObjContainer::Draw(Shader &lightGizmo, mat4 projection, mat4 view, vec2 windowSize)
+void ObjContainer::Draw(Shader& lightGizmo, mat4 projection, mat4 view, vec2 windowSize)
 {
 	if (this == &Scene)
 		return;
@@ -349,7 +436,7 @@ void ObjContainer::Draw(Shader &lightGizmo, mat4 projection, mat4 view, vec2 win
 	{
 		transform.localPosition = parent_->transform.position + this->transform.position;
 		transform.localRotation = parent_->transform.rotation + this->transform.rotation;
-		transform.localScale =	  parent_->transform.scale    * this->transform.scale;
+		transform.localScale = parent_->transform.scale * this->transform.scale;
 		renderer.mesh.Draw(renderer.material.culling, *renderer.material.shader, EngineInfo.pi, transform);
 	}
 	if (light.enabled && EngineInfo.drawGizmos)
@@ -389,8 +476,6 @@ void ObjContainer::SetModel(const char* path, bool flipTextures)
 }
 void ObjContainer::SetModel(Model model, bool flipTextures)
 {
-	//std::thread t(&Model::loadModel, model, model.directory, model.flipTex, this);
-	//t.detach();
 	model.loadModel(model.directory, model.flipTex, this);
 }
 void Model::loadModel(std::string path, bool flipTextures, ObjContainer* obj)
@@ -400,16 +485,20 @@ void Model::loadModel(std::string path, bool flipTextures, ObjContainer* obj)
 	{
 		std::cout << "Path '" << path << "' does not exist!\n";
 	}
+
 	Assimp::Importer importer;
-	const aiScene* scene = importer.ReadFile(path, aiProcess_Triangulate | aiProcess_GenSmoothNormals | aiProcess_FlipUVs | aiProcess_CalcTangentSpace);
+	const aiScene* scene = importer.ReadFile(path,
+		aiProcess_Triangulate |
+		aiProcess_GenSmoothNormals |
+		aiProcess_FlipUVs |
+		aiProcess_CalcTangentSpace);
+
 	if (!scene || scene->mFlags & AI_SCENE_FLAGS_INCOMPLETE || !scene->mRootNode)
 	{
 		std::cout << "ASSIMP ERROR : " << importer.GetErrorString() << std::endl;
 		return;
 	}
 	directory = path.substr(0, path.find_last_of("/"));
-	//std::thread t (Model::processNode, scene->mRootNode, scene, flipTextures, obj);
-	//t.detach()
 	processNode(scene->mRootNode, scene, flipTextures, obj);
 }
 void Model::processNode(aiNode* node, const aiScene* scene, bool flip, ObjContainer* obj)
@@ -463,6 +552,13 @@ Mesh Model::processMesh(aiMesh* mesh, const aiScene* scene, bool flip, ObjContai
 		else {
 			vert.TexCoord = vec2(0);
 		}
+		if (mesh->HasVertexColors(i))
+		{
+			vector.x = mesh->mColors[i]->r;
+			vector.y = mesh->mColors[i]->g;
+			vector.z = mesh->mColors[i]->b;
+			vert.Colour = vector;
+		}
 		vertices.push_back(vert);
 	}
 	for (int i = 0; i < mesh->mNumFaces; i++)
@@ -477,61 +573,92 @@ Mesh Model::processMesh(aiMesh* mesh, const aiScene* scene, bool flip, ObjContai
 	{
 		aiMaterial* material = scene->mMaterials[mesh->mMaterialIndex];
 
-		std::vector <Texture> diffuseMaps = loadMaterialTextures(material, aiTextureType_DIFFUSE, 1, flip);
+		std::vector <Texture> diffuseMaps = loadMaterialTextures(scene, material, aiTextureType_DIFFUSE, 1, flip);
 		textures.insert(textures.end(), diffuseMaps.begin(), diffuseMaps.end());
 
-		std::vector <Texture> specularMaps = loadMaterialTextures(material, aiTextureType_SPECULAR, 2, flip);
+		std::vector <Texture> specularMaps = loadMaterialTextures(scene, material, aiTextureType_SPECULAR, 2, flip);
 		textures.insert(textures.end(), specularMaps.begin(), specularMaps.end());
 
-		std::vector <Texture> emissiveMaps = loadMaterialTextures(material, aiTextureType_EMISSIVE, 3, flip);
+		std::vector <Texture> emissiveMaps = loadMaterialTextures(scene, material, aiTextureType_EMISSIVE, 3, flip);
 		textures.insert(textures.end(), emissiveMaps.begin(), emissiveMaps.end());
-
 
 	}
 	return Mesh(vertices, indices, textures);
 }
-std::vector <Texture> Model::loadMaterialTextures(aiMaterial* mat, aiTextureType type, int typeNum, bool flip)
+std::vector <Texture> Model::loadMaterialTextures(const aiScene* scene, aiMaterial* mat, aiTextureType type, int typeNum, bool flip)
 {
 	std::vector <Texture> textures;
-	for (int i = 0; i < mat->GetTextureCount(type); i++)
+
+	if (scene->HasTextures())
 	{
-		aiString str;
-		
-		mat->GetTexture(type, i, &str);
-		bool flag = false;
-		std::string loc = str.C_Str();
-		try {
-			loc = loc.substr(loc.find_last_of("/"), loc.substr().length());
-		} catch (std::exception e){ }
-		if (loc.substr(0, 1) != "/")
+		for (int j = 0; j < scene->mNumTextures; j++)
 		{
-			loc = "/" + loc;
-		}
-		loc = directory + loc;
-		for (int x = 0; x < globalTextures.size(); x++)
-		{
-			if (loc == globalTextures[x].path) {
-				flag = true;
-				textures.push_back(globalTextures[x]);
-				break;
+			aiTexture* texture = scene->mTextures[j];
+			for (int i = 0; i < mat->GetTextureCount(type); i++) {
+
+				aiString str;
+				mat->GetTexture(type, 0, &str);
+				std::string loc = str.C_Str();
+
+				if (loc == texture->mFilename.C_Str()) { //getting somewhere
+					bool flag = false;
+					for (int x = 0; x < globalTextures.size(); x++)
+					{
+						if (texture->mFilename.C_Str() == globalTextures[x].path) {
+							flag = true;
+							textures.push_back(globalTextures[x]);
+							break;
+						}
+					}
+					if (!flag)
+					{
+						Texture tex;
+						tex.SetFromMemory(texture, typeNum);
+						textures.push_back(tex);
+					}
+				}
+
 			}
+
 		}
-		if (!flag)
+	}
+	else
+	{
+		for (int i = 0; i < mat->GetTextureCount(type); i++)
 		{
-			Texture tex(loc, typeNum, vec2(0), flip);
-			std::ifstream test(tex.path);
-			if (test)
+			aiString str;
+			mat->GetTexture(type, i, &str);
+			bool flag = false;
+			std::string loc = str.C_Str();
+
+			try {
+				loc = loc.substr(loc.find_last_of("/"), loc.substr().length());
+			}
+			catch (std::exception e) {}
+			if (loc.substr(0, 1) != "/")
 			{
-				//std::cout << "Image path of '" << tex.path << "' is valid\n";
-				textures.push_back(tex);
-			} 
-			else
+				loc = "/" + loc;
+			}
+			loc = directory + loc;
+			for (int x = 0; x < globalTextures.size(); x++)
 			{
-				//std::cout << "Image path of '" << tex.path << "' is NOT valid\n";
+				if (loc == globalTextures[x].path) {
+					flag = true;
+					textures.push_back(globalTextures[x]);
+					break;
+				}
+			}
+			if (!flag)
+			{
+				std::ifstream test(loc);
+				if (test) {
+					Texture tex(loc, typeNum, vec2(0), flip);
+					textures.push_back(tex);
+				}
 			}
 		}
 	}
-	
+
 	return textures;
 }
 
@@ -606,7 +733,7 @@ Shader::Shader(const char* VERTEX_SHADER_PATH, const char* FRAGMENT_SHADER_PATH,
 
 	unsigned int VERTEX_SHADER, FRAGMENT_SHADER, GEOMETRY_SHADER;
 
-	VERTEX_SHADER   = glCreateShader(GL_VERTEX_SHADER);
+	VERTEX_SHADER = glCreateShader(GL_VERTEX_SHADER);
 	FRAGMENT_SHADER = glCreateShader(GL_FRAGMENT_SHADER);
 	GEOMETRY_SHADER = glCreateShader(GL_GEOMETRY_SHADER);
 
@@ -651,7 +778,7 @@ Shader::Shader(const char* VERTEX_SHADER_PATH, const char* FRAGMENT_SHADER_PATH,
 	if (!fragmentNull)
 		glAttachShader(ID, FRAGMENT_SHADER);
 
-		
+
 	glLinkProgram(ID);
 
 	checkCompileErrors(ID, "PROGRAM");
@@ -678,26 +805,30 @@ void Shader::setInt(const std::string& name, int value) const
 {
 	try {
 		glUniform1i(glGetUniformLocation(ID, name.c_str()), value);
-	} catch (std::exception e) {}
+	}
+	catch (std::exception e) {}
 }
 void Shader::setFloat(const std::string& name, float value) const
 {
 	try {
 		glUniform1f(glGetUniformLocation(ID, name.c_str()), value);
-	} catch (std::exception e) {}
+	}
+	catch (std::exception e) {}
 }
 void Shader::setVector(const std::string& name, float valueX, float valueY, float valueZ, float valueW) const
 {
 	try {
 		glUniform4f(glGetUniformLocation(ID, name.c_str()), valueX, valueY, valueZ, valueW);
-	} catch (std::exception e) {}
+	}
+	catch (std::exception e) {}
 }
 void Shader::setMatrix(const std::string& name, glm::mat4 matrix)
 {
 	try {
 		glUniformMatrix4fv(glGetUniformLocation(ID, name.c_str()), 1, GL_FALSE, glm::value_ptr(matrix));
-	}catch (std::exception e) {}
-	
+	}
+	catch (std::exception e) {}
+
 }
 void Shader::setMaterial(const std::string& name, vec3 diffuse, vec3 specular, vec3 ambient, float shininess, vec4 colour, vec4 texColour, int texId, bool texAssigned, int difTexId, bool difTexAssigned, int specTexId, bool specTexAssigned, bool texError, bool difTexError, bool specTexError, float emissive, int emissiveTexId, bool emissiveTexAssigned, bool emissiveError)
 {
@@ -760,9 +891,9 @@ void Shader::setLight(LightSource& light, vec3 parentObjPos)
 			setVector(name + "[" + std::to_string(light.renderQueue) + "].ambient", light.ambient.x, light.ambient.y, light.ambient.z);
 			setVector(name + "[" + std::to_string(light.renderQueue) + "].colour", light.colour.x, light.colour.y, light.colour.z, light.colour.w);
 			setVector(name + "[" + std::to_string(light.renderQueue) + "].position", light.position.x + parentObjPos.x, light.position.y + parentObjPos.y, light.position.z + parentObjPos.z);
-			setFloat(name +  "[" + std::to_string(light.renderQueue) + "].linear", light.linear);
-			setFloat(name +  "[" + std::to_string(light.renderQueue) + "].quadratic", light.quadratic);
-			setFloat(name +  "[" + std::to_string(light.renderQueue) + "].constant", light.constant);
+			setFloat(name + "[" + std::to_string(light.renderQueue) + "].linear", light.linear);
+			setFloat(name + "[" + std::to_string(light.renderQueue) + "].quadratic", light.quadratic);
+			setFloat(name + "[" + std::to_string(light.renderQueue) + "].constant", light.constant);
 			break;
 		case 1:
 			name = "dirLight";
@@ -775,21 +906,21 @@ void Shader::setLight(LightSource& light, vec3 parentObjPos)
 		case 2:
 			name = "sLight";
 			if (light.renderQueue == 0)
-			{ 
+			{
 				light.renderQueue = spotLightNum;
 				spotLightNum++;
 			}
-			setFloat(name +  "[" + std::to_string(light.renderQueue - 1) + "].linear", light.linear);
-			setFloat(name +  "[" + std::to_string(light.renderQueue - 1) + "].quadratic", light.quadratic);
-			setFloat(name +  "[" + std::to_string(light.renderQueue - 1) + "].constant", light.constant);
+			setFloat(name + "[" + std::to_string(light.renderQueue - 1) + "].linear", light.linear);
+			setFloat(name + "[" + std::to_string(light.renderQueue - 1) + "].quadratic", light.quadratic);
+			setFloat(name + "[" + std::to_string(light.renderQueue - 1) + "].constant", light.constant);
 			setVector(name + "[" + std::to_string(light.renderQueue - 1) + "].diffuse", light.diffuse.x, light.diffuse.y, light.diffuse.z);
 			setVector(name + "[" + std::to_string(light.renderQueue - 1) + "].specular", light.specular.x, light.specular.y, light.specular.z);
 			setVector(name + "[" + std::to_string(light.renderQueue - 1) + "].ambient", light.ambient.x, light.ambient.y, light.ambient.z);
 			setVector(name + "[" + std::to_string(light.renderQueue - 1) + "].colour", light.colour.x, light.colour.y, light.colour.z, light.colour.w);
 			setVector(name + "[" + std::to_string(light.renderQueue - 1) + "].position", light.position.x + parentObjPos.x, light.position.y + parentObjPos.y, light.position.z + parentObjPos.z);
 			setVector(name + "[" + std::to_string(light.renderQueue - 1) + "].direction", light.direction.x, light.direction.y, light.direction.z);
-			setFloat(name +  "[" + std::to_string(light.renderQueue - 1) + "].cutoff", cos(radians(light.cutoff)));
-			setFloat(name +  "[" + std::to_string(light.renderQueue - 1) + "].outerCutoff", cos(radians(light.outerCutoff)));
+			setFloat(name + "[" + std::to_string(light.renderQueue - 1) + "].cutoff", cos(radians(light.cutoff)));
+			setFloat(name + "[" + std::to_string(light.renderQueue - 1) + "].outerCutoff", cos(radians(light.outerCutoff)));
 			break;
 		case 3:
 			name = "aLight";
@@ -936,7 +1067,7 @@ void Framebuffer::Create(Texture* tex, GLenum FBtype, std::string name)
 	texture = tex;
 	name_ = name;
 	type = FBtype;
-	
+
 	int currentFBO;
 	GLenum binding;
 	switch (FBtype) {

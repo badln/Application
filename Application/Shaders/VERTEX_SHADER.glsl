@@ -1,12 +1,14 @@
 #version 330 core
 layout (location = 0) in vec3 aPos;
 layout (location = 1) in vec3 aNormal;
-layout (location = 2) in vec2 aTexCoord;
+layout (location = 2) in vec3 aCol;
+layout (location = 3) in vec2 aTexCoord;
 
 out vec2 TexCoord;
 out vec3 FragPos;
 out vec3 Normal;
 out vec3 Position;
+out vec3 Colour;
 
 uniform mat4 model = mat4(1.0f);
 uniform mat4 view = mat4(1.0f);
@@ -37,6 +39,7 @@ void main()
 			);
     }
     TexCoord = aTexCoord;
+    Colour = vec3(aCol);
     Position = vec3(gl_Position.x, gl_Position.y, gl_Position.z);
     
 };
