@@ -30,6 +30,7 @@ float Gamepad::RIGHT_STICK_Y()
 }
 vec2 Gamepad::LEFT_STICK(double ft)
 {
+	//ft = frametime
 	vec2 ret = vec2(padState.axes[GLFW_GAMEPAD_AXIS_LEFT_X], padState.axes[GLFW_GAMEPAD_AXIS_LEFT_Y]);
 	ret.x = CalculateDeadZone(ret.x);
 	ret.y = CalculateDeadZone(ret.y);
