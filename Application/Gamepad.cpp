@@ -33,11 +33,13 @@ vec2 Gamepad::LEFT_STICK(double ft)
 	vec2 ret = vec2(padState.axes[GLFW_GAMEPAD_AXIS_LEFT_X], padState.axes[GLFW_GAMEPAD_AXIS_LEFT_Y]);
 	ret.x = CalculateDeadZone(ret.x);
 	ret.y = CalculateDeadZone(ret.y);
+
+	//NaN prevention (needed)
 	if (ret.x != ret.x)
 		ret.x = 0;
-
 	if (ret.y != ret.y)
 		ret.y = 0;
+	
 	ret = vec2(clamp(ret.x, -1, 1), clamp(ret.y, -1, 1));
 	LS_X_ADDITIVE += ret.x * Sensitivity * ft;
 	LS_Y_ADDITIVE += ret.y * Sensitivity * ft;
@@ -48,11 +50,13 @@ vec2 Gamepad::RIGHT_STICK(double ft)
 	vec2 ret = vec2(padState.axes[GLFW_GAMEPAD_AXIS_RIGHT_X], padState.axes[GLFW_GAMEPAD_AXIS_RIGHT_Y]);
 	ret.x = CalculateDeadZone(ret.x);
 	ret.y = CalculateDeadZone(ret.y);
+	
+	//NaN prevention (needed)
 	if (ret.x != ret.x)
 		ret.x = 0;
-
 	if (ret.y != ret.y)
 		ret.y = 0;
+	
 	ret = vec2(clamp(ret.x, -1, 1), clamp(ret.y, -1, 1));
 	RS_X_ADDITIVE += ret.x * Sensitivity * ft;
 	RS_Y_ADDITIVE += ret.y * Sensitivity * ft;
