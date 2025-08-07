@@ -16,6 +16,7 @@ public:
 			std::cout << newStr;
 		}
 	}
+	//could have just used objects maybe but i didnt want to
 	void Log(vec2 vec, bool newLine = true, int col = 37)
 	{
 		Log(std::to_string(vec.x) + ", " + std::to_string(vec.y));
