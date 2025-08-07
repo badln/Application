@@ -363,7 +363,7 @@ int main()
 	obj.SetModel("Objects/Primitives/Cube.obj", true);
 	obj.renderer.mesh.data.textures.push_back(Texture("Images/IMG_4766.png", TextureType::Diffuse));
 */
-
+	//framebuffer texture, used for render resolution
 	Framebuffer fb;
 	Texture fbTexture(TextureType::Render);
 	fb.Create(&fbTexture, GL_FRAMEBUFFER, "Test");
