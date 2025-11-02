@@ -1,4 +1,4 @@
-#include <iostream>
+/*#include <iostream>
 
 
 
@@ -49,4 +49,4 @@ public:
 	{
 		Log(str, newLine, 35);
 	}
-};
+};*/

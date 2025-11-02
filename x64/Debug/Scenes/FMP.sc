@@ -3,7 +3,7 @@
 cm Main
 cmm true
 cmp -75.635887f, 22.039347f, 85.790657f
-cmcc 0.1f, 0.1f, 0.1f, 0.1f
+cmcc 0.0f, 0.0f, 0.0f
 cmfov 75.0f
 cmy 4.899979f
 cmpt 4.100014f
@@ -28,7 +28,7 @@ mt none
 
 m Objects/fmp/FMP.fbx
 mtf true
-p 1.0f, 3.0f, 3.0f
+p 1.0f, 3.0f, 10.75f
 s 1.0f, 1.0f, 1.0f
 r -90.0f, 0.0f, -90.0f
 
@@ -65,19 +65,109 @@ lc 1.0f, 1.0f, 1.0f, 1.0f
 
 sh litShader
 
-#OBJECT light2
+#OBJECT lampPostSL1
 
-o light
-p -26.187992f, 28.160755f, 99.132446f
+o lampPostSL1
+p -30.734018f, 33.734272f, 93.003159f
 
 l true
 d 0.0f, -1.0f, 0.0f
-co 17.5f
+lin 0.027f
+q 0.0028
+co 13.5f
+oco 20.5f
+t 2
+la 1.0f, 1.0f, 1.0f
+ld 1.0f, 1.0f, 1.0f
+lc 1.0f, 0.7f, 0.475f, 1.0f
+
+sh litShader
+
+#OBJECT lampPostPL1
+
+o lampPostPL1
+p -30.734018f, 33.734272f, 93.003159f
+
+l true
+d 0.0f, -1.0f, 0.0f
+co 13.5f
 oco 20.5f
 t 0
 la 1.0f, 1.0f, 1.0f
 ld 1.0f, 1.0f, 1.0f
-lc 1.0f, 1.0f, 1.0f, 1.0f
+lc 1.0f, 0.7f, 0.475f, 1.0f
+
+sh litShader
+
+
+
+#OBJECT lampPostSL2
+
+o lampPostSL2
+p -71.326431f, 31.990007f, 78.987411f
+
+l true
+d 0.0f, -1.0f, 0.0f
+lin 0.027f
+q 0.0028
+co 13.5f
+oco 20.5f
+t 2
+la 1.0f, 1.0f, 1.0f
+ld 1.0f, 1.0f, 1.0f
+lc 1.0f, 0.7f, 0.475f, 1.0f
+
+sh litShader
+
+#OBJECT lampPostPL2
+
+o lampPostPL2
+p -71.326431f, 31.990007f, 78.987411f
+
+l true
+d 0.0f, -1.0f, 0.0f
+co 13.5f
+oco 20.5f
+t 0
+la 1.0f, 1.0f, 1.0f
+ld 1.0f, 1.0f, 1.0f
+lc 1.0f, 0.7f, 0.475f, 1.0f
+
+sh litShader
+
+
+
+#OBJECT lampPostSL3
+
+o lampPostSL3
+p  -15.687519f, 33.789406f, 40.368816f
+
+l true
+d 0.0f, -1.0f, 0.0f
+lin 0.027f
+q 0.0028
+co 13.5f
+oco 20.5f
+t 2
+la 1.0f, 1.0f, 1.0f
+ld 1.0f, 1.0f, 1.0f
+lc 1.0f, 0.7f, 0.475f, 1.0f
+
+sh litShader
+
+#OBJECT lampPostPL3
+
+o lampPostPL3
+p  -15.687519f, 33.789406f, 40.368816f
+
+l true
+d 0.0f, -1.0f, 0.0f
+co 13.5f
+oco 20.5f
+t 0
+la 1.0f, 1.0f, 1.0f
+ld 1.0f, 1.0f, 1.0f
+lc 1.0f, 0.7f, 0.475f, 1.0f
 
 sh litShader
 

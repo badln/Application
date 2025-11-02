@@ -1,16 +1,14 @@
-#ifndef STB_IMAGE_IMPLEMENTATION 
+/*#ifndef STB_IMAGE_IMPLEMENTATION 
 #define STB_IMAGE_IMPLEMENTATION
 #define STB_IMAGE_RESIZE_IMPLEMENTATION
 #include "stb_image.h"
 #include "stb_image_resize2.h"
 #include "objects.h"
-#include "engine.h"
 
 void stripUnicode(std::string& str)
 {
 	str.erase(remove_if(str.begin(), str.end(), [](char c) {return !(c >= 0 && c < 128); }), str.end());
 }
-
 
 std::string Camera::name() { return name_; }
 void Camera::name(std::string str) { name_ = str; }
@@ -66,6 +64,8 @@ void Camera::SetCameraDir(bool isGamepad, double GamepadSens) {
 
 	xOffset *= EngineInfo.MouseSensitivity;
 	yOffset *= EngineInfo.MouseSensitivity;
+
+	std::cout << "x: " << xOffset << ", y: " << yOffset << "\n";
 
 	yaw += xOffset;
 	pitch += yOffset;
@@ -150,7 +150,6 @@ void Texture::SetFromMemory(aiTexture* texture, int typeNum, vec2 dimensions, bo
 }
 void Texture::Set(std::string location, int typeNum, vec2 dimensions, bool flip, int size)
 {
-	std::cout << "Flag\n";
 	if (type != TextureType::Render)
 	{
 		if (!texAssigned_)
@@ -439,7 +438,7 @@ void ObjContainer::Draw(Shader& lightGizmo, mat4 projection, mat4 view, vec2 win
 		transform.localScale = parent_->transform.scale * this->transform.scale;
 		renderer.mesh.Draw(renderer.material.culling, *renderer.material.shader, EngineInfo.pi, transform);
 	}
-	if (light.enabled && EngineInfo.drawGizmos)
+	if (light.enabled && drawGizmos)
 	{
 		lightGizmo.use();
 		lightGizmo.setFloat("windowSizeX", windowSize.x);
@@ -1093,4 +1092,4 @@ void Framebuffer::Create(Texture* tex, GLenum FBtype, std::string name)
 
 	glBindFramebuffer(FBtype, currentFBO);
 }
-#endif
+#endif*/

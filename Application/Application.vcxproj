@@ -125,7 +125,7 @@
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>assimp-vc143-mtd.lib;glfw3.lib;opengl32.lib;$(CoreLibraryDependencies);%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>assimp-vc143-mt.lib;glfw3.lib;opengl32.lib;$(CoreLibraryDependencies);%(AdditionalDependencies)</AdditionalDependencies>
       <AdditionalOptions>/ENTRY:"mainCRTStartup" %(AdditionalOptions)</AdditionalOptions>
       <AdditionalLibraryDirectories>$(SolutionDir)\Application\Libraries\Libs</AdditionalLibraryDirectories>
     </Link>
@@ -156,20 +156,39 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="DeviceInfo.cpp" />
     <ClCompile Include="Gamepad.cpp" />
     <ClCompile Include="glad.c" />
+    <ClCompile Include="KTYTime.cpp" />
+    <ClCompile Include="ProgramBase.cpp" />
     <ClCompile Include="Scene.cpp" />
-    <ClInclude Include="engine.h" />
+    <ClCompile Include="Shader.cpp" />
+    <ClInclude Include="DebugColours.h" />
+    <ClInclude Include="DeviceInfo.h" />
+    <ClInclude Include="KTYEngine.h" />
+    <ClInclude Include="Entity.h" />
+    <ClInclude Include="oldengine.h" />
     <ClInclude Include="Gamepad.h" />
+    <ClInclude Include="KTYKeyboard.h" />
+    <ClInclude Include="MainProgram.h" />
+    <ClInclude Include="Mouse.h" />
+    <ClInclude Include="ProgramBase.h" />
+    <ClInclude Include="Logger.h" />
     <ClInclude Include="main.h" />
+    <ClInclude Include="EngineMaths.h" />
     <ClInclude Include="objects.h" />
     <ClCompile Include="objects.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClInclude Include="Renderer.h" />
     <ClInclude Include="Scene.h" />
+    <ClInclude Include="KTYTime.h" />
+    <ClInclude Include="Shader.h" />
     <ClInclude Include="transform.h" />
+    <ClInclude Include="Vector3.h" />
+    <ClInclude Include="Vector2.h" />
+    <ClInclude Include="Vector4.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="EngineResources\Colour.h" />
     <ClInclude Include="EngineResources\Console.h" />
   </ItemGroup>
   <ItemGroup>
@@ -181,14 +200,8 @@
   <ItemGroup>
     <None Include="Scenes\FMP.sc" />
     <None Include="Scenes\Hornet.sc" />
-    <None Include="Shaders\GEOMETRY_FRAG_SHADER.glsl" />
-    <None Include="Shaders\GEOMETRY_SHADER.glsl" />
-    <None Include="Shaders\GEOMETRY_VERT_SHADER.glsl" />
-    <None Include="Shaders\LIGHTING_FRAGMENT_SHADER.glsl" />
-    <None Include="Shaders\DEFAULT_FRAGMENT_SHADER.glsl" />
-    <None Include="Shaders\DEFAULT_VERTEX_SHADER.glsl" />
-    <None Include="Shaders\POST_PROCESS.glsl" />
-    <None Include="Shaders\VERTEX_SHADER.glsl" />
+    <None Include="Shaders\fragment.glsl" />
+    <None Include="Shaders\vertex.glsl" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

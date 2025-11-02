@@ -1,3 +1,5 @@
+/*
+
 #include "Scene.h"
 #include "main.h"
 #include "EngineResources/Console.h"
@@ -85,7 +87,7 @@ void ReadScene(std::string scenePath)
 			try {
 				std::string par = parameter(scene);
 				std::string tlv = thisLineValue(scene);
-				//FIXME: must be a better way of doing this
+				// TODO : must be a better way of doing this
 				if (scene.substr(1, 6) == "CAMERA")
 				{
 					camera = new Camera;
@@ -258,4 +260,4 @@ void SetActiveScene(std::string scenePath)
 	ReadScene(scenePath);
 	for (int i = 0; i < worldCameras.size(); i++)
 		worldCameras[i]->SetCameraDir();
-}
+}*/

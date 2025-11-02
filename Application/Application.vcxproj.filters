@@ -1,73 +1,158 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <ClCompile Include="glad.c" />
-    <ClCompile Include="main.cpp" />
-    <ClCompile Include="objects.cpp" />
-    <ClCompile Include="Scene.cpp" />
-    <ClCompile Include="Gamepad.cpp" />
+    <ClCompile Include="main.cpp">
+      <Filter>Engine\Core\Renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="Gamepad.cpp">
+      <Filter>Engine\Input</Filter>
+    </ClCompile>
+    <ClCompile Include="Scene.cpp">
+      <Filter>Old</Filter>
+    </ClCompile>
+    <ClCompile Include="glad.c">
+      <Filter>Engine\Core</Filter>
+    </ClCompile>
+    <ClCompile Include="objects.cpp">
+      <Filter>Old</Filter>
+    </ClCompile>
+    <ClCompile Include="KTYTime.cpp">
+      <Filter>Engine\Core</Filter>
+    </ClCompile>
+    <ClCompile Include="DeviceInfo.cpp">
+      <Filter>Device</Filter>
+    </ClCompile>
+    <ClCompile Include="Shader.cpp">
+      <Filter>Engine\Core\Renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="ProgramBase.cpp">
+      <Filter>Engine\Core\Renderer</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="EngineResources\Colour.h">
-      <Filter>EngineResources</Filter>
-    </ClInclude>
     <ClInclude Include="EngineResources\Console.h">
-      <Filter>EngineResources</Filter>
+      <Filter>Old\EngineResources</Filter>
     </ClInclude>
-    <ClInclude Include="objects.h" />
-    <ClInclude Include="transform.h" />
-    <ClInclude Include="engine.h" />
-    <ClInclude Include="Scene.h" />
-    <ClInclude Include="main.h" />
-    <ClInclude Include="Gamepad.h" />
+    <ClInclude Include="main.h">
+      <Filter>Engine\Core\Renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="transform.h">
+      <Filter>Engine\Maths</Filter>
+    </ClInclude>
+    <ClInclude Include="Gamepad.h">
+      <Filter>Engine\Input</Filter>
+    </ClInclude>
+    <ClInclude Include="Vector2.h">
+      <Filter>Engine\Maths</Filter>
+    </ClInclude>
+    <ClInclude Include="EngineMaths.h">
+      <Filter>Engine\Maths</Filter>
+    </ClInclude>
+    <ClInclude Include="Logger.h">
+      <Filter>Engine\Debug</Filter>
+    </ClInclude>
+    <ClInclude Include="DebugColours.h">
+      <Filter>Engine\Debug</Filter>
+    </ClInclude>
+    <ClInclude Include="Vector3.h">
+      <Filter>Engine\Maths</Filter>
+    </ClInclude>
+    <ClInclude Include="Vector4.h">
+      <Filter>Engine\Maths</Filter>
+    </ClInclude>
+    <ClInclude Include="ProgramBase.h">
+      <Filter>Engine\Core\Renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="DeviceInfo.h">
+      <Filter>Device</Filter>
+    </ClInclude>
+    <ClInclude Include="oldengine.h">
+      <Filter>Old</Filter>
+    </ClInclude>
+    <ClInclude Include="objects.h">
+      <Filter>Old</Filter>
+    </ClInclude>
+    <ClInclude Include="Scene.h">
+      <Filter>Old</Filter>
+    </ClInclude>
+    <ClInclude Include="MainProgram.h">
+      <Filter>Engine\Core\Renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="Mouse.h">
+      <Filter>Engine\Input</Filter>
+    </ClInclude>
+    <ClInclude Include="KTYKeyboard.h">
+      <Filter>Engine\Input</Filter>
+    </ClInclude>
+    <ClInclude Include="KTYTime.h">
+      <Filter>Engine\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="Shader.h">
+      <Filter>Engine\Core\Renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="Entity.h">
+      <Filter>Engine\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="KTYEngine.h">
+      <Filter>Engine\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="Renderer.h">
+      <Filter>Engine\Core\Renderer</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Image Include="IMG_2209.ico" />
   </ItemGroup>
   <ItemGroup>
-    <Filter Include="EngineResources">
-      <UniqueIdentifier>{22d2c26a-6ce9-496d-8f08-5d54d994b8db}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Shaders">
-      <UniqueIdentifier>{c80c3031-2ad7-437c-9685-59bc905f6751}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Scenes">
       <UniqueIdentifier>{23dd7d09-eb1f-4814-ba77-68abe86a0d46}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Engine">
+      <UniqueIdentifier>{28c291af-a9ee-44b6-afb6-64ac13d770aa}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Engine\Maths">
+      <UniqueIdentifier>{8bbe40eb-c847-4ecb-b79b-695e1d22f871}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Engine\Input">
+      <UniqueIdentifier>{4ed1ed0b-f54a-4525-a324-99ff06a0fa18}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Engine\Debug">
+      <UniqueIdentifier>{24ddf995-7f6b-4605-9dd3-ccb796671d0d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Device">
+      <UniqueIdentifier>{9b24e0a1-1fbc-4102-b484-eed5584e599c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Engine\Core">
+      <UniqueIdentifier>{8109c243-4db5-4f65-90d8-ad88713e9da6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Engine\Core\Renderer">
+      <UniqueIdentifier>{291bea25-0007-4f03-9db0-794eb7259d56}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Old">
+      <UniqueIdentifier>{4aa06eb9-45ac-457c-89c5-edc24e9c4795}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Old\EngineResources">
+      <UniqueIdentifier>{22d2c26a-6ce9-496d-8f08-5d54d994b8db}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Engine\Core\Renderer\Shaders">
+      <UniqueIdentifier>{9234ae03-e16f-4078-9a7c-733326922cad}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="Application.rc" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Shaders\DEFAULT_FRAGMENT_SHADER.glsl">
-      <Filter>Shaders</Filter>
-    </None>
-    <None Include="Shaders\DEFAULT_VERTEX_SHADER.glsl">
-      <Filter>Shaders</Filter>
-    </None>
-    <None Include="Shaders\LIGHTING_FRAGMENT_SHADER.glsl">
-      <Filter>Shaders</Filter>
-    </None>
-    <None Include="Shaders\VERTEX_SHADER.glsl">
-      <Filter>Shaders</Filter>
-    </None>
-    <None Include="Shaders\GEOMETRY_SHADER.glsl">
-      <Filter>Shaders</Filter>
-    </None>
-    <None Include="Shaders\GEOMETRY_VERT_SHADER.glsl">
-      <Filter>Shaders</Filter>
-    </None>
-    <None Include="Shaders\GEOMETRY_FRAG_SHADER.glsl">
-      <Filter>Shaders</Filter>
-    </None>
-    <None Include="Shaders\POST_PROCESS.glsl">
-      <Filter>Shaders</Filter>
-    </None>
     <None Include="Scenes\Hornet.sc">
       <Filter>Scenes</Filter>
     </None>
     <None Include="Scenes\FMP.sc">
       <Filter>Scenes</Filter>
+    </None>
+    <None Include="Shaders\fragment.glsl">
+      <Filter>Engine\Core\Renderer\Shaders</Filter>
+    </None>
+    <None Include="Shaders\vertex.glsl">
+      <Filter>Engine\Core\Renderer\Shaders</Filter>
     </None>
   </ItemGroup>
 </Project>

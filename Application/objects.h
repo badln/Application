@@ -1,4 +1,4 @@
-
+/*
 #include <iostream>
 
 #include "Libraries/Include/glad/glad.h"
@@ -15,7 +15,7 @@
 #include <vector>
 #include <thread>
 #include <future>
-#include "engine.h"
+#include "oldengine.h"
 
 #include <assimp/Importer.hpp>
 #include <assimp/scene.h>
@@ -25,6 +25,7 @@ using namespace glm;
 
 
 extern int frame;
+extern bool drawGizmos;
 extern unsigned int lightPointArray;
 extern vec2 windowSize;
 extern vec2 renderResolution;
@@ -339,4 +340,4 @@ public:
 	void Delete() {
 		glDeleteFramebuffers(1, &FBO_);
 	}
-};
+};*/

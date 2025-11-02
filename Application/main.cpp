@@ -1,18 +1,20 @@
 
 #include "main.h"
 #include "Scene.h"
-#include "EngineResources/Console.h"
 #include "Gamepad.h";
+#include "MainProgram.h"
 using namespace glm;
 
 //TODO :: Completely rewrite textures yuck
+
+MainProgram prog;
+
+/* Old vars
 
 typedef unsigned char Byte;
 typedef Byte cs_byte;
 
 WindowConsole Console;
-
-vec2 windowSize;
 vec2 renderResolution = EngineInfo.renderResolution;
 
 int frame = 0;
@@ -20,22 +22,19 @@ std::vector <Texture> globalTextures;
 std::vector <ObjContainer*> objects;
 std::vector <Shader*> shaders;
 std::vector <Camera*> worldCameras;
+bool drawGizmos;
 
 Camera* mainCamera = NULL;
 ObjContainer Scene;
 Gamepad pad;
 
 unsigned int lightPointArray;
-
 float speedMultiplier = 30.0f;
 int drawCalls = 0;
 int spotLightNum, pointLightNum;
-bool downArrowPressed, upArrowPressed, leftArrowPressed, rightArrowPressed, spacePressed, ctrlPressed, escPressed, inWireframe = false;
+bool downArrowPressed, upArrowPressed, leftArrowPressed, rightArrowPressed, spacePressed, ctrlPressed, escPressed, r3Pressed, inWireframe = false;
 
 bool mouseClickedThisFrame = false;
-void mouse_callback(GLFWwindow* window, double xpos, double ypos);
-void scroll_callback(GLFWwindow* window, double xOffset, double yOffset);
-float scrollDir;
 bool looking = true;
 
 float desiredFrametime = 1 / (EngineInfo.desiredFramerate + 1);
@@ -45,211 +44,12 @@ bool useScreenRefreshRate = false;
 
 mat4 orthoscopicMat;
 mat4 projectionMat;
-
-struct {
-	vec3 zero = vec3(0.0f);
-	vec3 one = vec3(1.0f);
-
-	vec3 forward = vec3(0.0f, 0.0f, 1.0f);
-	vec3 backward = vec3(0.0f, 0.0f, -1.0f);
-
-	vec3 left = vec3(1.0f, 0.0f, 0.0f);
-	vec3 right = vec3(-1.0f, 0.0f, 0.0f);
-
-	vec3 up = vec3(0.0f, 1.0f, 0.0f);
-	vec3 down = vec3(0.0f, -1.0f, 0.0f);
-
-	float Distance(vec3 v, vec3 w)
-	{
-		float x = pow((v.x - w.x), 2);
-		float y = pow((v.y - w.y), 2);
-		float z = pow((v.z - w.z), 2);
-
-		return sqrt(x + y + z);
-	}
-}Vector3;
-
-float AddRotation, xAngle, yAngle = 0;
-float clamp(float val, float min, float max, bool loop = false)
-{
-	if (val < min)
-	{
-		if (loop)
-		{
-			int c = (int)val / -max;
-			val += max * (c + 1);
-		}
-		else
-			val = min;
-	}
-	if (val > max)
-	{
-		if (loop)
-		{
-			int c = (int)val / max;
-			val -= max * c;
-		}
-		else
-			val = max;
-	}
-	return val;
-}
-std::string bool_str(bool b)
-{
-	if (std::to_string(b) == "0")
-		return "False";
-	else
-		return "True";
+*/
+int main() {
+	prog.Begin();
 }
 
-void UpdateWindowSize(GLFWwindow* window)
-{
-	int width, height;
-	glfwGetWindowSize(window, &width, &height);
-	if (width == 0 || height == 0)
-		return;
-	EngineInfo.windowSize.x = width;
-	EngineInfo.windowSize.y = height;
-}
-void scroll_callback(GLFWwindow* window, double xOffset, double yOffset)
-{
-	scrollDir = yOffset;
-}
-void mouse_callback(GLFWwindow* window, double xposIn, double yposIn)
-{
-	mainCamera->SetCameraDir(window, xposIn, yposIn, looking);
-}
-
-void framebuffer_size_callback(GLFWwindow* window, int width, int height)
-{
-	glViewport(0, 0, width, height);
-}
-
-std::string windowName = "3D Renderer (Prototype)";
-
-//-------------//
-// Inputs go here
-//-------------//
-
-bool processPadInput(GLFWwindow* window, Gamepad* pad)
-{
-	if (glfwJoystickIsGamepad(pad->thisPad) && pad->padConnected == false)
-	{
-		//Controller connected
-		pad->padName = glfwGetGamepadName(GLFW_JOYSTICK_1);
-
-		Console.PushWarning("Pad '" + pad->padName + "' connected.");
-		pad->padConnected = true;
-	}
-	else if (!glfwJoystickIsGamepad(pad->thisPad) && pad->padConnected)
-	{
-		//Controller disconnected
-		Console.PushWarning("Pad '" + pad->padName + "' disconnected.");
-		pad->padConnected = false;
-	}
-	return glfwGetGamepadState(pad->thisPad, &pad->padState);
-
-}
-
-void processInput(GLFWwindow* window)
-{
-	if ((glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS) && escPressed == false)
-	{
-		//glfwSetWindowShouldClose(window, true);
-		escPressed = true;
-		if (glfwGetInputMode(window, GLFW_CURSOR) == GLFW_CURSOR_DISABLED)
-		{
-			glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
-			looking = false;
-		}
-		else {
-			mainCamera->firstCamFrame = true;
-			looking = true;
-			glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
-		}
-	}
-	//if (glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_LEFT) == GLFW_PRESS)
-	if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_RELEASE)
-	{
-		escPressed = false;
-	}
-
-	if (glfwGetKey(window, GLFW_KEY_LEFT_CONTROL) == GLFW_RELEASE)
-	{
-		ctrlPressed = false;
-	}
-	if (glfwGetKey(window, GLFW_KEY_LEFT_CONTROL) == GLFW_PRESS && ctrlPressed == false)
-	{
-		//------------------------------------//
-		// Toggles wireframe rendering on or off
-		//------------------------------------//
-		ctrlPressed = true;
-
-		if (inWireframe)
-		{
-			glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
-			inWireframe = !inWireframe;
-		}
-		else
-		{
-			glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
-			inWireframe = !inWireframe;
-		}
-	}if (glfwGetKey(window, GLFW_KEY_SPACE) == GLFW_RELEASE)
-	{
-		if (spacePressed)
-		{
-			spacePressed = false;
-		}
-	}
-	if (glfwGetKey(window, GLFW_KEY_UP) == GLFW_PRESS)
-	{
-		upArrowPressed = true;
-		downArrowPressed = false;
-	}
-	else
-	{
-		upArrowPressed = false;
-	}
-	if (glfwGetKey(window, GLFW_KEY_DOWN) == GLFW_PRESS)
-	{
-		upArrowPressed = false;
-		downArrowPressed = true;
-	}
-	else
-	{
-		downArrowPressed = false;
-	}
-	if (glfwGetKey(window, GLFW_KEY_LEFT) == GLFW_PRESS)
-	{
-		leftArrowPressed = true;
-		rightArrowPressed = false;
-	}
-	else
-	{
-		leftArrowPressed = false;
-	}
-	if (glfwGetKey(window, GLFW_KEY_RIGHT) == GLFW_PRESS)
-	{
-		leftArrowPressed = false;
-		rightArrowPressed = true;
-	}
-	else
-	{
-		rightArrowPressed = false;
-	}
-}
-void InfoDump()
-{
-	SYSTEM_INFO sysInfo;
-
-	GetSystemInfo(&sysInfo);
-
-	EngineInfo.LogEngineInfo();
-	std::string displayAdaptor(reinterpret_cast<const char*>(glGetString(GL_RENDERER)));
-	std::string glVersion(reinterpret_cast<const char*>(glGetString(GL_SHADING_LANGUAGE_VERSION)));
-	Console.Log("Display Adaptor: " + displayAdaptor + ", OpenGL Version " + glVersion + ", " + std::to_string(sysInfo.dwNumberOfProcessors) + " CPU threads avaliable.");
-}
+/*
 int main()
 {
 	//--------------------------//
@@ -267,52 +67,9 @@ int main()
 		Console.PushError("Failed to initialise GLFW.");
 	}
 
-	const GLFWvidmode* mode = glfwGetVideoMode(glfwGetPrimaryMonitor());
-
-	glfwWindowHint(GLFW_RED_BITS, mode->redBits);
-	glfwWindowHint(GLFW_GREEN_BITS, mode->greenBits);
-	glfwWindowHint(GLFW_BLUE_BITS, mode->blueBits);
-	glfwWindowHint(GLFW_REFRESH_RATE, mode->refreshRate);
+	InitWindow();
 
 
-	GLFWmonitor* monitor = NULL;
-	switch (EngineInfo.currentWindowType)
-	{
-	case 0:
-		monitor = glfwGetPrimaryMonitor();
-		break;
-	case 1:
-		glfwWindowHint(GLFW_DECORATED, 1);
-		break;
-	case 2:
-		glfwWindowHint(GLFW_DECORATED, 0);
-		break;
-	}
-
-	GLFWwindow* window = glfwCreateWindow(EngineInfo.windowSize.x, EngineInfo.windowSize.y, "Loading objects...", monitor, NULL);
-	if (useScreenRefreshRate)
-	{
-		desiredFrametime = 1 / (mode->refreshRate + 1);
-	}
-	//glfwSetWIndow sets window position from top left corner of window. 
-	//Given the screen is 1080p and the windiw is 1280x800, x padding is 320.
-	//320 + 1280 + 320 = 1920, 320 is padding. 
-	glfwSetWindowPos(window, (mode->width - EngineInfo.windowSize.x) / 2 /* x padding */, (mode->height - EngineInfo.windowSize.y) / 2 /* y padding */);
-	if (window == NULL)
-	{
-		Console.PushError("Window creation failed for unknown reason.");
-		glfwTerminate();
-		return -1;
-	}
-
-	glfwMakeContextCurrent(window);
-	if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress))
-	{
-		Console.PushError("Failed to initialize GLAD");
-		return -1;
-	}
-	glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
-	SetWindowIcon("Images/IMG_4766.png", window);
 	InfoDump();
 	glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 	glfwSetCursorPosCallback(window, mouse_callback);
@@ -335,17 +92,6 @@ int main()
 	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), 0);
 	glBindVertexArray(0);
 
-	float screenQuad[] = {
-        // positions   // texCoords
-        -1.0f,  1.0f,  0.0f, 1.0f,
-        -1.0f, -1.0f,  0.0f, 0.0f,
-         1.0f, -1.0f,  1.0f, 0.0f,
-
-        -1.0f,  1.0f,  0.0f, 1.0f,
-         1.0f, -1.0f,  1.0f, 0.0f,
-         1.0f,  1.0f,  1.0f, 1.0f
-    };
-
 	glGenVertexArrays(1, &quadVAO);
 	glGenBuffers(1, &quadVBO);
 	glBindVertexArray(quadVAO);
@@ -356,16 +102,15 @@ int main()
 	glEnableVertexAttribArray(1);
 	glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 4 * sizeof(float), (void*)(2 * sizeof(float)));
 
+	// TODO : Completely rework scene loading, include the legacy scenes as an option
+
 	SetActiveScene("Scenes/FMP.sc");
+	ApplySettings();
+	vec3 startPos = vec3(-75.635887f, 22.039347f, 85.790657f);
 	
-	/*
-	ObjContainer obj("Cube");
-	obj.SetModel("Objects/Primitives/Cube.obj", true);
-	obj.renderer.mesh.data.textures.push_back(Texture("Images/IMG_4766.png", TextureType::Diffuse));
-*/
 
 	Framebuffer fb;
-	Texture fbTexture(TextureType::Render);
+	Texture fbTexture(TextureType::Render, EngineInfo.renderResolution);
 	fb.Create(&fbTexture, GL_FRAMEBUFFER, "Test");
 	EngineInfo.renderResolution = fb.texture->size();
 
@@ -376,6 +121,12 @@ int main()
 	glEnable(GL_CULL_FACE);
 	glEnable(GL_MULTISAMPLE);
 	glDepthFunc(GL_LESS);
+	drawGizmos = EngineInfo.drawGizmos;
+
+	if (useScreenRefreshRate)
+	{
+		desiredFrametime = 1 / (mode->refreshRate + 1);
+	}
 	while (!glfwWindowShouldClose(window))
 	{
 		vec4 col = mainCamera->clearColour;
@@ -462,6 +213,7 @@ int main()
 					}
 				}
 			}
+
 			fb.use(0);
 			glViewport(0, 0, EngineInfo.windowSize.x, EngineInfo.windowSize.y);
 			glDisable(GL_DEPTH_TEST);
@@ -484,6 +236,30 @@ int main()
 			mainCamera->Position += (speedMultiplier * (float)EngineInfo.frameTime) * mainCamera->forward * ( - pad.LEFT_STICK(EngineInfo.frameTime).y);
 			mainCamera->Position -= normalize(cross(mainCamera->forward, mainCamera->up)) * (speedMultiplier * (float)EngineInfo.frameTime) * -pad.LEFT_STICK(EngineInfo.frameTime).x;
 
+			if (mainCamera->Position.x > startPos.x + 100 ||
+				mainCamera->Position.y > startPos.y + 100 ||
+				mainCamera->Position.z > startPos.z + 100 ||
+
+				mainCamera->Position.x < startPos.x - 100 ||
+				mainCamera->Position.y < startPos.y - 100 ||
+				mainCamera->Position.z < startPos.z - 100 ||
+				pad.padState.buttons[GLFW_GAMEPAD_BUTTON_X]
+				)
+			{
+				mainCamera->Position = startPos;
+				mainCamera->pitch = 4.100014f;
+				mainCamera->yaw = 4.899979f;
+				mainCamera->SetCameraDir();
+			}
+			if (pad.padState.buttons[GLFW_GAMEPAD_BUTTON_RIGHT_THUMB] && !r3Pressed) {
+				EngineInfo.drawGizmos = !EngineInfo.drawGizmos;
+				drawGizmos = EngineInfo.drawGizmos;
+				r3Pressed = true;
+				Console.Log(EngineInfo.drawGizmos);
+			}
+			else if (!pad.padState.buttons[GLFW_GAMEPAD_BUTTON_RIGHT_THUMB] && r3Pressed) {
+				r3Pressed = false;
+			}
 
 			if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
 			{
@@ -511,7 +287,7 @@ int main()
 			}
 			if (objects.size() != 0) {
 
-				if (glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_RIGHT) == GLFW_PRESS && mouseClickedThisFrame == false)
+				if ((glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_RIGHT) == GLFW_PRESS || pad.padState.buttons[GLFW_GAMEPAD_BUTTON_RIGHT_BUMPER]) && mouseClickedThisFrame == false)
 				{
 					distance = 0;
 					mouseClickedThisFrame = true;
@@ -531,13 +307,14 @@ int main()
 					}
 					lightDistanceToCam = Vector3.Distance(objects[num]->transform.position, mainCamera->Position);
 				}
-				else if (glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_RIGHT) == GLFW_RELEASE && mouseClickedThisFrame)
+				else if ((glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_RIGHT) == GLFW_RELEASE || !pad.padState.buttons[GLFW_GAMEPAD_BUTTON_RIGHT_BUMPER]) && mouseClickedThisFrame)
 				{
 					mouseClickedThisFrame = false;
 
 				}
-				if (glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_RIGHT) == GLFW_PRESS)
+				if ((glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_RIGHT) == GLFW_PRESS || pad.padState.buttons[GLFW_GAMEPAD_BUTTON_RIGHT_BUMPER]))
 				{
+					
 					Console.Log("Light pos: ", false);
 					Console.Log(objects[num]->transform.position);
 					Console.Log("light dir: ", false);
@@ -564,7 +341,7 @@ int main()
 			endOfFrameTime = glfwGetTime();
 			EngineInfo.frameTime = endOfFrameTime - endOfFrameTimeLastFrame;
 			frameRate = 1 / EngineInfo.frameTime;
-			//Console.Log(std::to_string(frameRate));
+			Console.Log(std::to_string(frameRate));
 			//----------------------------------------------------------------------------------------------------//
 			//                                            END OF FRAME
 			//----------------------------------------------------------------------------------------------------//	
@@ -581,4 +358,4 @@ int main()
 	}
 	objects.clear();
 	return 0;
-}
+}*/

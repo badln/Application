@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<DEFECTS>
+  <DEFECT>
+    <SFA>
+      <FILEPATH>C:\Users\faye\Desktop\Projects\Application\Application\</FILEPATH>
+      <FILENAME>engine.h</FILENAME>
+      <LINE>41</LINE>
+      <COLUMN>0</COLUMN>
+    </SFA>
+    <DEFECTCODE>26495</DEFECTCODE>
+    <DESCRIPTION>Variable '&lt;unnamed-type-EngineInfo&gt;::frameTime' is uninitialized. Always initialize a member variable (type.6).</DESCRIPTION>
+    <FUNCTION>&lt;unnamed-type-EngineInfo&gt;::{ctor}</FUNCTION>
+    <DECORATED>??0&lt;unnamed-type-EngineInfo&gt;@@QEAA@XZ</DECORATED>
+    <FUNCLINE>41</FUNCLINE>
+    <ADDITIONALINFO>
+      <targetSymbol>&lt;unnamed-type-EngineInfo&gt;::frameTime</targetSymbol>
+    </ADDITIONALINFO>
+    <PATH></PATH>
+  </DEFECT>
+</DEFECTS>

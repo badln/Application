@@ -1,4 +1,4 @@
-#pragma once
+/*#pragma once
 
 #include "main.h"
 
@@ -10,4 +10,4 @@ bool str_bool(std::string string);
 int ParseStringToInt(std::string string);
 float ParseStringToFloat(std::string string);
 void ReadScene(std::string scenePath);
-void SetActiveScene(std::string scenePath);
+void SetActiveScene(std::string scenePath);*/
