@@ -427,7 +427,7 @@ void Mesh::Draw(int faceCulling, Shader& shader, float pi, Transform transform)
 }
 Mesh::Mesh() {}
 
-void ObjContainer::Draw(Shader& lightGizmo, mat4 projection, mat4 view, vec2 windowSize)
+void ObjContainer::Draw(Shader& lightGizmo, mat4 projection, mat4 view, vec2 KTYGlobal::windowSize)
 {
 	if (this == &Scene)
 		return;
@@ -441,8 +441,8 @@ void ObjContainer::Draw(Shader& lightGizmo, mat4 projection, mat4 view, vec2 win
 	if (light.enabled && drawGizmos)
 	{
 		lightGizmo.use();
-		lightGizmo.setFloat("windowSizeX", windowSize.x);
-		lightGizmo.setFloat("windowSizeY", windowSize.y);
+		lightGizmo.setFloat("windowSizeX", KTYGlobal::windowSize.x);
+		lightGizmo.setFloat("windowSizeY", KTYGlobal::windowSize.y);
 		lightGizmo.setMatAndTransform(transform, mat4(1));
 		lightGizmo.setMatrix("projection", projection);
 		lightGizmo.setMatrix("view", view);
@@ -983,7 +983,7 @@ void ObjContainer::name(const char* string)
 {
 	name_ = string;
 }
-void ObjContainer::Destroy()
+void ObjContainer::Destroy
 {
 	objects.erase(objects.begin() + placeInArray);
 	delete this;

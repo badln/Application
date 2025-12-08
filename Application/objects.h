@@ -27,7 +27,7 @@ using namespace glm;
 extern int frame;
 extern bool drawGizmos;
 extern unsigned int lightPointArray;
-extern vec2 windowSize;
+extern vec2 KTYGlobal::windowSize;
 extern vec2 renderResolution;
 void SetWindowIcon(const char* path, GLFWwindow* window);
 class Camera {
@@ -300,7 +300,7 @@ public:
 	void SetModel(std::string path, bool flipTextures = false);
 	void SetModel(const char* path, bool flipTextures = false);
 	void SetModel(Model model, bool flipTextures = false);
-	void Draw(Shader &lightGizmo, mat4 projection, mat4 view, vec2 windowSize);
+	void Draw(Shader &lightGizmo, mat4 projection, mat4 view, vec2 KTYGlobal::windowSize);
 
 	const int& childCount() const { return children.size(); }
 	ObjContainer(const char* objectName);
@@ -310,7 +310,7 @@ public:
 	Transform transform = Transform();
 	Renderer renderer = Renderer();
 	LightSource light; 
-	void Destroy();
+	void Destroy;
 };
 extern std::vector <ObjContainer*> objects;
 extern int drawCalls;

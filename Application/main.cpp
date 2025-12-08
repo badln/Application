@@ -1,15 +1,42 @@
 
+//compile with: /doc
+
 #include "main.h"
 #include "Scene.h"
 #include "Gamepad.h";
-#include "MainProgram.h"
+#include "MainProgram.cpp"
+#include "global.h"
+#include "Entity.h"
+
 using namespace glm;
 
-//TODO :: Completely rewrite textures yuck
+//Defining global variables
+
+Vector2 KTYGlobal::windowSize;
+Vector2 KTYGlobal::renderSize;
+
+const GLFWvidmode* KTYGlobal::_monitorInfo;
+
+int KTYGlobal::_glMaxTextures;
+
+int KTYGlobal::_frame;
+
+bool KTYGlobal::_focus;
+
+GLFWwindow* KTYGlobal::_mainWindow;
+
+#pragma region Initialiser
 
 MainProgram prog;
 
-/* Old vars
+int main() {
+	prog.Begin("KTYEngine Test");
+}
+
+#pragma endregion Initialiser
+
+#pragma region SeaOfDeadCode
+/*
 
 typedef unsigned char Byte;
 typedef Byte cs_byte;
@@ -45,10 +72,6 @@ bool useScreenRefreshRate = false;
 mat4 orthoscopicMat;
 mat4 projectionMat;
 */
-int main() {
-	prog.Begin();
-}
-
 /*
 int main()
 {
@@ -132,7 +155,7 @@ int main()
 		vec4 col = mainCamera->clearColour;
 		glClearColor(col.r, col.g, col.b, col.a);
 		UpdateWindowSize(window);
-		windowSize = EngineInfo.windowSize;
+		KTYGlobal::windowSize = EngineInfo.KTYGlobal::windowSize;
 		if (glfwGetTime() > endOfFrameTime + desiredFrametime)
 		{
 			orthoscopicMat = glm::ortho(0.0f, EngineInfo.renderResolution.x, 0.0f, EngineInfo.renderResolution.y, 0.1f, 100.0f);
@@ -215,7 +238,7 @@ int main()
 			}
 
 			fb.use(0);
-			glViewport(0, 0, EngineInfo.windowSize.x, EngineInfo.windowSize.y);
+			glViewport(0, 0, EngineInfo.KTYGlobal::windowSize.x, EngineInfo.KTYGlobal::windowSize.y);
 			glDisable(GL_DEPTH_TEST);
 			glClear(GL_COLOR_BUFFER_BIT);
 			screenShader.use();
@@ -352,10 +375,11 @@ int main()
 	for (int i = 0; i < objects.size(); i++)
 	{
 		try {
-			//objects[i]->Destroy();
+			//objects[i]->Destroy;
 		}
 		catch (std::exception e) {}
 	}
 	objects.clear();
 	return 0;
 }*/
+#pragma endregion SeaOfDeadCode

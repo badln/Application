@@ -4,7 +4,7 @@
 #include <fstream>
 #include <type_traits>
 #include "DebugColours.h"
-#include "EngineMaths.h"
+#include "KTYMath.h"
 #include "KTYTime.h"
 
 using namespace KTYTime;
@@ -28,7 +28,7 @@ public:
 		std::cout.rdbuf(oldBuf);
 	}
 	template <typename T> 
-	static void CLog(T obj, const char* col = DBG_WHITE, bool newLine = true, std::streambuf* buffer = std::cout.rdbuf()) {
+	static void CLog(T obj = NULL, const char* col = DBG_WHITE, bool newLine = true, std::streambuf* buffer = std::cout.rdbuf()) {
 		Out(LogType::Log, obj, col, newLine, buffer);
 	}
 	template <typename T>
@@ -94,7 +94,7 @@ public:
 	}
 
 	template <typename T>
-	void CLog(T obj, const char* col = 0, bool newLine = true, std::streambuf* buffer = std::cout.rdbuf()) {
+	void CLog(T obj = NULL, const char* col = 0, bool newLine = true, std::streambuf* buffer = std::cout.rdbuf()) {
 		if (col == 0 && defaultColour != DBG_WHITE)
 			col = defaultColour;
 		else if (col == 0)

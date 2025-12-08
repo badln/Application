@@ -1,82 +1,184 @@
-//Some specific OpenGL stuff
-#include "Libraries\Include\glad\glad.h"
+#pragma once
 
-//general stuff
-#include <iostream>
-#include <string>
+#include "Entity.h"
 
-//OpenGL Mathematics
-#include "Libraries/Include/glm/glm.hpp"
-#include "Libraries/Include/glm/gtc/matrix_transform.hpp"
-#include "Libraries/Include/glm/gtc/type_ptr.hpp"
+struct Transform{
+private:
+	
+	glm::mat4 transformMatrix = glm::mat4(1);
+	glm::mat4 rotationMatrix  = glm::mat4(1);
+	glm::mat4 scaleMatrix     = glm::mat4(1);
+	glm::mat4 _calcMatrix     = glm::mat4(1);
 
+	/// <summary>
+	/// Calculates matrix given various factors. Use calculatedMatrix() to return the transform matrix in it's current state.
+	/// </summary>
+	/// <param name="parentMatrix"></param>
+	/// <param name="pos"></param>
+	/// <param name="scale"></param>
+	/// <param name="rot"></param>
+	/// <returns></returns>
+	glm::mat4 localOrWorldMatrix(Vector3 pos, Vector3 scale, Vector3 rot, glm::mat4 parent = glm::mat4(1)) {
 
-using namespace glm;
+		transformMatrix = glm::translate(glm::mat4(1), pos.glm());
+		
+		rotationMatrix = glm::rotate(glm::mat4(1), (float)Math::Radians(rot.y), Vector3::YAxis().glm());
+		rotationMatrix = glm::rotate(rotationMatrix, (float)Math::Radians(rot.x), Vector3::XAxis().glm());
+		rotationMatrix = glm::rotate(rotationMatrix, (float)Math::Radians(rot.z), Vector3::ZAxis().glm());
 
+		scaleMatrix = glm::scale(glm::mat4(1), scale.glm());
 
-class Transforms
-{
+		_calcMatrix = parent * (transformMatrix * rotationMatrix * scaleMatrix);
+		globalPosition = _calcMatrix[3];
+		return _calcMatrix;
+	};
+
+	float y, p, r = 0;
+
+	Vector3 globalPosition = Vector3::zero();
+
 public:
-	std::string VecToString(vec3 vec)
-	{
-		return (std::to_string(vec.x) + ", " + std::to_string(vec.y) + ", " + std::to_string(vec.z));
+
+	glm::mat4 calculatedMatrix() {
+		return _calcMatrix;
 	}
 
-	vec4 TranslateVector(vec3 initial, vec3 dist)
-	{
-		vec4 vec(initial, 1.0f);
-		mat4 trans = mat4(1.0f);
-
-		trans = translate(trans, dist);
-		vec = trans * vec;
-		return vec;
-	}
-	vec4 RotateVector(vec3 initial, float degrees, vec3 axis)
-	{
-		vec4 vec(initial, 1.0f);
-		mat4 trans = mat4(1.0f);
-
-		trans = rotate(trans, radians(degrees), axis);
-		vec = trans * vec;
-		return vec;
+	glm::mat4 calculatedTransformMatrix() {
+		return transformMatrix;
 	}
 
-	vec4 ScaleVector(vec3 initial, vec3 scalevec)
-	{
-
-		vec4 vec(initial, 1.0f);
-		mat4 trans = mat4(1.0f);
-
-		trans = scale(trans, scalevec);
-		vec = trans * vec;
-		return vec;
+	glm::mat4 calculatedScaleMatrix() {
+		return scaleMatrix;
 	}
 
-	//For matrix stuff
-
-	mat4 TranslateMatrix(mat4 initial, vec3 dist)
-	{
-		mat4 trans = mat4(1.0f);
-
-		trans = translate(trans, dist);
-		trans = trans * initial;
-		return trans;
-	}
-	mat4 RotateMatrix(mat4 initial, float degrees, vec3 axis)
-	{
-		mat4 trans = mat4(1.0f);
-
-		trans = rotate(trans, radians(degrees), axis);
-		trans = trans * initial;
-		return trans;
-	}
-	mat4 ScaleMatrix(mat4 initial, vec3 scaleVec)
-	{
-		mat4 trans = mat4(1.0f);
-
-		trans = scale(trans, scaleVec);
-		trans = trans * initial;
-		return trans;
+	glm::mat4 calculatedRotationMatrix() {
+		return rotationMatrix;
 	}
 
+	Vector3 GlobalPosition() { return globalPosition; }
+
+	/// <summary>
+    /// The position of the transform. It is suggested to use localPosition.
+    /// </summary>
+	Vector3 position = Vector3::zero();
+	/// <summary>
+	/// The rotation of the transform (in radians). It is suggested to use localRotation.
+	/// </summary>
+	Vector3 rotation;
+	/// <summary>
+	/// The scale of the transform.  It is suggested to use localScale.
+	/// </summary>
+	Vector3 scale = Vector3::one();
+
+	/// <summary>
+	/// The local position of the transform.
+	/// </summary>
+	Vector3 localPosition = Vector3::zero();
+	/// <summary>
+	/// The local rotation of the transform (in radians).
+	/// </summary>
+	Vector3 localRotation;
+	/// <summary>
+	/// The local scale of the transform.
+	/// </summary>
+	Vector3 localScale = Vector3::one();
+	
+	glm::mat4 WorldMatrix(Transform* parent = nullptr) {
+		if (parent != nullptr) {
+			return localOrWorldMatrix(localPosition, localScale, localRotation, parent->calculatedMatrix());
+		}
+		return localOrWorldMatrix(position + localPosition, scale * localScale, rotation + localRotation);
+	}
+	Vector3 forward() {
+		Vector3 euler = Math::Radians(rotation + localRotation);
+		return Vector3(
+			glm::cos (euler.x) * glm::sin(euler.y),
+			-glm::sin(euler.x),
+			glm::cos (euler.x) * glm::cos(euler.y)
+		);
+	}
+
+	Vector3 left() {
+		Vector3 euler = Math::Radians(rotation + localRotation);
+		return Vector3(
+			 glm::cos(euler.y),
+			0,
+			-glm::sin(euler.y)
+		);
+	}
+
+	Vector3 up() {
+		Vector3 euler = Math::Radians(rotation + localRotation);
+		return Vector3(
+			glm::sin(euler.x) * glm::sin(euler.y),
+			glm::cos(euler.x),
+			glm::sin(euler.x) * glm::cos(euler.y)
+		);
+	}
+
+	Vector3 back() { return -forward(); }
+	Vector3 right() { return -left(); }
+	Vector3 down() { return -up(); }
+
+	Transform() {};
+	Transform(
+		Vector3 pos,
+		Vector3 rot,
+		Vector3 sc,
+
+		Vector3 lPos = Vector3(0),
+		Vector3 lRot = Vector3(0),
+		Vector3 lSc  = Vector3(0)
+	)
+	{
+		position	= pos;
+		rotation    = rot;
+		scale		= sc;
+
+		localPosition    = lPos;
+		localRotation    = lRot;
+		localScale       = lSc;
+	}
+	Transform& operator+=(const Transform& t) {
+		position         + t.position;
+		rotation         + t.rotation;
+		scale			 + t.scale;
+
+		localPosition    + t.localPosition;
+		localRotation    + t.localRotation;
+		localScale       + t.localScale;
+		return *this;
+	}
+	Transform& operator-=(const Transform& t) {
+		position         - t.position;
+		rotation         - t.rotation;
+		scale			 - t.scale;
+
+		localPosition    - t.localPosition;
+		localRotation    - t.localRotation;
+		localScale       - t.localScale;
+		return *this;
+	}
 };
+inline Transform operator+(const Transform& t1, const Transform& t2) {
+	return Transform(
+		t1.position         + t2.position,
+		t1.rotation         + t2.rotation,
+		t1.scale			+ t2.scale,
+
+		t1.localPosition    + t2.localPosition,
+		t1.localRotation    + t2.localRotation,
+		t1.localScale       + t2.localScale
+	);
+}
+inline Transform operator-(const Transform& t1, const Transform& t2) {
+	return Transform{
+		t1.position         - t2.position,
+		t1.rotation         - t2.rotation,
+		t1.scale			- t2.scale,
+
+		t1.localPosition    - t2.localPosition,
+		t1.localRotation    - t2.localRotation,
+		t1.localScale       - t2.localScale
+	};
+}

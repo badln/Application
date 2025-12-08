@@ -10,6 +10,7 @@
 namespace KTYTime {
 	class Time {
 	private:
+
 		static struct tm localtime() {
 			struct tm t;
 			time_t now = time(0);
@@ -59,8 +60,18 @@ namespace KTYTime {
 	public:
 
 		static void SetDeltaTime(double dt) { _deltaTime = dt; }
-		static double deltaTime() { return _deltaTime; }
-
+		
+		static double timescale;
+		/// <summary>
+		/// Returns deltaTime multiplied by Time::timescale.
+		/// </summary>
+		/// <returns></returns>
+		static double deltaTime() { return _deltaTime * timescale; }
+		/// <summary>
+		/// Returns deltatime without being multiplied by Time::timescale. Useful for controlling timescale smoothly.
+		/// </summary>
+		/// <returns></returns>
+		static double rawDeltaTime() { return _deltaTime; }
 
 		static double timeSinceDeviceStartup();
 
@@ -112,14 +123,12 @@ namespace KTYTime {
 
 		class dateTime {
 		public:
-			static std::string dmy() {
-				return conv(dmy::Day) + "/" + conv(dmy::Month) + "/" + conv(dmy::Year);
+			static std::string dmy() {				return conv(dmy::Day) + "/" + conv(dmy::Month) + "/" + conv(dmy::Year);
 			}
-			static std::string mdy() {
-				return conv(dmy::Month) + "/" + conv(dmy::Day) + "/" + conv(dmy::Year);
+			static std::string mdy() {				return conv(dmy::Month) + "/" + conv(dmy::Day) + "/" + conv(dmy::Year);
 			}
 			static int daylightSavings() { return localtime().tm_isdst; }
-			static int year() { return localtime().tm_year - 1900; }
+			static int year() { return localtime().tm_year + 1900; }
 			static int month() { return localtime().tm_mon; }
 			static int hour() { return localtime().tm_hour; }
 			static int minute() { return localtime().tm_min; }

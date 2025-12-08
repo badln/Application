@@ -255,7 +255,7 @@ void SetActiveScene(std::string scenePath)
 	Scene.name(currentScene.c_str());
 	for (int i = 1; i < objects.size(); i++)
 	{
-		objects[i]->Destroy();
+		objects[i]->Destroy;
 	}
 	ReadScene(scenePath);
 	for (int i = 0; i < worldCameras.size(); i++)

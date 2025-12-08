@@ -7,36 +7,37 @@
 #include <array>
 #include <unordered_map>
 #include <set>
+#include "Transform.h"
 
-using Entity = std::uint32_t;
+using EntityID = std::uint32_t;
 using ComponentType = std::uint8_t;
 
-const Entity MaxEntities = 5000;
+const EntityID MaxEntities = 5000;
 const ComponentType MaxComponents = 32;
 
+class Entity;
 using EntitySignature = std::bitset<MaxComponents>;
 
-class ObjectBehaviour {
+class EntityComponent {
 public:
 
-	Entity parent;
+	Entity* entity = nullptr;
 
 	bool isActive = true;
+	bool hasRun = false;
 
-	virtual void Update() {}
+	/// <summary>Runs once at component initialisation. NOTE: Construct as "void Start() override".</summary>
 	virtual void Start() {}
+	/// <summary>Runs once every frame. NOTE: Construct as "void Update() override".</summary>
+	virtual void Update() {}
+	/// <summary>Runs once after the initial update. Use sparingly, usually for rendering (Objects drawn after values set in all Update() functions.) NOTE: Construct as "void RenderFunc() override".</summary>
+	virtual void RenderFunc() {}
 };
-struct Transform : public ObjectBehaviour {
-	Vector3 position = Vector3::zero();
-	Vector3 eulerAngles = Vector3::zero();
-	Vector3 scale = Vector3::one();
-};
-
 class EntityManager {
-	// Queue of unused entity IDs
-	std::queue<Entity> mAvailableEntities{};
+	// Queue of unused EntityID IDs
+	std::queue<EntityID> mAvailableEntities{};
 
-	// Array of signatures where the index corresponds to the entity ID
+	// Array of signatures where the index corresponds to the EntityID ID
 	std::array<EntitySignature, MaxEntities> mSignatures{};
 
 	// Total living entities - used to keep limits on how many exist
@@ -48,33 +49,33 @@ class EntityManager {
 	}
 public:
 	EntityManager() {
-		for (Entity e = 0; e < MaxEntities; e++) {
+		for (EntityID e = 0; e < MaxEntities; e++) {
 			mAvailableEntities.push(e);
 		}
 	}
-	Entity CreateEntity() {
-		assert(mLivingEntityCount < MaxEntities && "Max entity count reached!");
+	EntityID CreateEntity() {
+		assert(mLivingEntityCount < MaxEntities && "Max EntityID count reached!");
 
-		Entity thisId = mAvailableEntities.front();
+		EntityID thisId = mAvailableEntities.front();
 		mAvailableEntities.pop();
 		mLivingEntityCount++;
 		return thisId;
 	}
-	void DestroyEntity(Entity e) {
-		assert(e < MaxEntities && "Entity out of range.");
+	void DestroyEntity(EntityID e) {
+		assert(e < MaxEntities && "EntityID out of range.");
 
 		mSignatures[e].reset();
 		mAvailableEntities.push(e);
 		mLivingEntityCount--;
 	}
-	void SetEntitySignature(Entity e, EntitySignature es) {
-		assert(e < MaxEntities && "Entity out of range.");
+	void SetEntitySignature(EntityID e, EntitySignature es) {
+		assert(e < MaxEntities && "EntityID out of range.");
 		mSignatures[e] = es;
 
 	}
-	EntitySignature GetSignature(Entity e)
+	EntitySignature GetSignature(EntityID e)
 	{
-		assert(e < MaxEntities && "Entity out of range.");
+		assert(e < MaxEntities && "EntityID out of range.");
 		return mSignatures[e];
 	}
 };
@@ -82,45 +83,52 @@ class IComponentArray
 {
 public:
 	virtual ~IComponentArray() = default;
-	virtual void EntityDestroyed(Entity e) = 0;
+	virtual void EntityDestroyed(EntityID e) = 0;
 	virtual void UpdateBehaviour() {}
+	virtual void UpdatePostBehaviour() {}
 };
 template <typename T>
 class ComponentArray : public IComponentArray {
 private:
-	// Map from an entity ID to an array index.
-	std::unordered_map<Entity, size_t> mEntityToIndexMap;
+	// Map from an EntityID ID to an array index.
+	std::unordered_map<EntityID, size_t> mEntityToIndexMap;
 
-	// Map from an array index to an entity ID.
-	std::unordered_map<size_t, Entity> mIndexToEntityMap;
+	// Map from an array index to an EntityID ID.
+	std::unordered_map<size_t, EntityID> mIndexToEntityMap;
 
 	// Total size of valid entries in the array.
 	size_t mSize;
-
-	std::array<T, MaxEntities> mComponentArray;
 public:
+	std::array<T, MaxEntities> mComponentArray;
 	void UpdateBehaviour() override {
 
 		for (int i = 0; i < mSize; i++) {
-			if(mComponentArray[i].isActive)
+			if (mComponentArray[i].isActive && mComponentArray[i].hasRun) {
 				mComponentArray[i].Update();
+			}
 		}
 	}
-	void InsertData(Entity e, T component) {
-		assert(mEntityToIndexMap.find(e) == mEntityToIndexMap.end() && "Component added to same entity more than once.");
-		
+	void UpdatePostBehaviour() override {
+
+		for (int i = 0; i < mSize; i++) {
+			if (mComponentArray[i].isActive && mComponentArray[i].hasRun) {
+				mComponentArray[i].RenderFunc();
+			}
+		}
+	}
+	EntityComponent* InsertData(Entity* entity, EntityID e, T component) {
+		assert(mEntityToIndexMap.find(e) == mEntityToIndexMap.end() && "Component added to same EntityID more than once.");
+
 		size_t newIndex = mSize;
 		mEntityToIndexMap[e] = newIndex;
 		mIndexToEntityMap[newIndex] = e;
 		mComponentArray[newIndex] = component;
-		
-		if (component.isActive) {
-			component.Start();
-			component.parent = e;
-		}
+
+		//mComponentArray[newIndex].parent = entity;
 		mSize++;
+		return &mComponentArray[newIndex];
 	}
-	void RemoveData(Entity e) {
+	void RemoveData(EntityID e) {
 		assert(mEntityToIndexMap.find(e) == mEntityToIndexMap.end() && "Removing non-existent component!");
 
 		size_t mIndexOfRemovedEntity = mEntityToIndexMap[e];
@@ -128,7 +136,7 @@ public:
 		mComponentArray[mIndexOfRemovedEntity] = mComponentArray[mIndexOfLastElement];
 
 		//Update map
-		Entity lastElementEntity = mIndexToEntityMap[mIndexOfLastElement];
+		EntityID lastElementEntity = mIndexToEntityMap[mIndexOfLastElement];
 		mEntityToIndexMap[lastElementEntity] = mIndexOfRemovedEntity;
 		mIndexToEntityMap[mIndexOfRemovedEntity] = lastElementEntity;
 
@@ -137,11 +145,11 @@ public:
 
 		mSize--;
 	}
-	T& GetData(Entity e) {
-		assert(mEntityToIndexMap.find(e) != mEntityToIndexMap.end() && "Retrieving nonexistent entity!");
+	T& GetData(EntityID e) {
+		assert(mEntityToIndexMap.find(e) != mEntityToIndexMap.end() && "Retrieving nonexistent EntityID! " + e);
 		return mComponentArray[mEntityToIndexMap[e]];
 	}
-	void EntityDestroyed(Entity e) override {
+	void EntityDestroyed(EntityID e) override {
 		if (mEntityToIndexMap.find(e) != mEntityToIndexMap.end())
 		{
 			RemoveData(e);
@@ -160,6 +168,13 @@ private:
 	ComponentType mNextComponentType{};
 
 	// Convenience function to get the statically casted pointer to the ComponentArray of type T.
+
+	template <typename SrcType, typename T>
+	bool IsType(const SrcType* src)
+	{
+		return (dynamic_cast<T>(src) != NULL);
+	}
+public:
 	template<typename T>
 	std::shared_ptr<ComponentArray<T>> GetComponentArray()
 	{
@@ -171,18 +186,12 @@ private:
 
 		return std::static_pointer_cast<ComponentArray<T>>(mComponentArrays[typeName]);
 	}
-	template <typename SrcType, typename T>
-	bool IsType(const SrcType* src)
-	{
-		return (dynamic_cast<T>(src) != NULL);
-	}
-public:
 	template <typename T>
 	void RegisterComponent() {
 		const char* typeName = typeid(T).name();
 		assert(mComponentTypes.find(typeName) == mComponentTypes.end() && "Registering component type more than once.");
 
-		mComponentTypes.insert({typeName, mNextComponentType});
+		mComponentTypes.insert({ typeName, mNextComponentType });
 
 		mComponentArrays.insert({ typeName, std::make_shared<ComponentArray<T>>() });
 
@@ -198,34 +207,34 @@ public:
 		return mComponentTypes[typeName];
 	}
 	template<typename T>
-	void AddComponent(Entity entity, T component)
+	EntityComponent* AddComponent(Entity* entity, EntityID e, T component)
 	{
-		GetComponentArray<T>()->InsertData(entity, component);
+		return GetComponentArray<T>()->InsertData(entity, e, component);
 	}
 
 	template<typename T>
-	void RemoveComponent(Entity entity)
+	void RemoveComponent(EntityID e)
 	{
 		if (typeid(T) == typeid(Transform)) {
 			Debug::Warning("Cannot remove transform from component.");
-			return; 
+			return;
 		}
-		GetComponentArray<T>()->RemoveData(entity);
+		GetComponentArray<T>()->RemoveData(e);
 	}
 
 	template<typename T>
-	T& GetComponent(Entity entity)
+	T& GetComponent(EntityID e)
 	{
-		return GetComponentArray<T>()->GetData(entity);
+		return GetComponentArray<T>()->GetData(e);
 	}
 
-	void EntityDestroyed(Entity entity)
+	void EntityDestroyed(EntityID e)
 	{
 		for (auto const& pair : mComponentArrays)
 		{
 			auto const& component = pair.second;
 
-			component->EntityDestroyed(entity);
+			component->EntityDestroyed(e);
 		}
 	}
 	void Update() {
@@ -236,11 +245,19 @@ public:
 			component->UpdateBehaviour();
 		}
 	}
+	void RenderFunc() {
+		for (auto const& pair : mComponentArrays)
+		{
+			auto const& component = pair.second;
+
+			component->UpdatePostBehaviour();		
+		}
+	}
 };
 
 class EntitySystem {
 public:
-	std::set<Entity> mEntities;
+	std::set<EntityID> mEntities;
 };
 class EntitySystemManager {
 private:
@@ -265,13 +282,13 @@ public:
 		assert(mSystems.find(typeName) != mSystems.end() && "System used before registered.");
 		mSignatures.insert({ typeName, es });
 	}
-	void EntityDestroyed(Entity e) {
+	void EntityDestroyed(EntityID e) {
 		for (auto const& pair : mSystems) {
 			auto const& system = pair.second;
 			system->mEntities.erase(e);
 		}
 	}
-	void EntitySignatureChanged(Entity e, EntitySignature es) {
+	void EntitySignatureChanged(EntityID e, EntitySignature es) {
 		for (auto const& pair : mSystems) {
 
 			auto const& type = pair.first;
@@ -285,26 +302,28 @@ public:
 		}
 	}
 };
-class ObjectSystem {
+class Object {
 private:
-	std::unique_ptr<ComponentManager> mComponentManager;
-	std::unique_ptr<EntityManager> mEntityManager;
-	std::unique_ptr<EntitySystemManager> mSystemManager;
+	static std::unique_ptr<EntityManager> mEntityManager;
+	static std::unique_ptr<EntitySystemManager> mSystemManager;
 public:
-	void Init() {
+	static std::unique_ptr<ComponentManager> mComponentManager;
+	static void Init() {
 		mComponentManager = std::make_unique<ComponentManager>();
 		mEntityManager = std::make_unique<EntityManager>();
 		mSystemManager = std::make_unique<EntitySystemManager>();
 	}
-	void Update() {
+	static void Update() {
 		mComponentManager->Update();
 	}
-	Entity CreateEntity(Transform t = Transform{}) {
-		Entity e = mEntityManager->CreateEntity();
-		mComponentManager->AddComponent<Transform>(e, t);
+	static void RenderFunc() {
+		mComponentManager->RenderFunc();
+	}
+	static EntityID CreateEntity(Entity* entity) {
+		EntityID e = mEntityManager->CreateEntity();
 		return e;
 	}
-	void DestroyEntity(Entity e)
+	static void DestroyEntity(EntityID e)
 	{
 		mEntityManager->DestroyEntity(e);
 
@@ -313,22 +332,23 @@ public:
 		mSystemManager->EntityDestroyed(e);
 	}
 	template <typename T>
-	void RegisterComponent() {
+	static void RegisterComponent() {
 		mComponentManager->RegisterComponent<T>();
 	}
 	template<typename T>
-	void AddComponent(Entity e, T component)
+	static EntityComponent* AddComponent(Entity* entity, EntityID e, T component)
 	{
-		mComponentManager->AddComponent<T>(e, component);
+		EntityComponent* r = mComponentManager->AddComponent<T>(entity, e, component);
 
 		auto signature = mEntityManager->GetSignature(e);
 		signature.set(mComponentManager->GetComponentType<T>(), true);
 		mEntityManager->SetEntitySignature(e, signature);
 
 		mSystemManager->EntitySignatureChanged(e, signature);
+		return r;
 	}
 	template<typename T>
-	void RemoveComponent(Entity e)
+	static void RemoveComponent(EntityID e)
 	{
 		mComponentManager->RemoveComponent<T>(e);
 
@@ -339,27 +359,132 @@ public:
 		mSystemManager->EntitySignatureChanged(e, signature);
 	}
 	template<typename T>
-	T& GetComponent(Entity e)
+	static T& GetComponent(EntityID e)
 	{
 		return mComponentManager->GetComponent<T>(e);
 	}
 
 	template<typename T>
-	ComponentType GetComponentType()
+	static ComponentType GetComponentType()
 	{
 		return mComponentManager->GetComponentType<T>();
 	}
 	// System methods
 	template<typename T>
-	std::shared_ptr<T> RegisterSystem()
+	static std::shared_ptr<T> RegisterSystem()
 	{
 		return mSystemManager->RegisterEntitySystem<T>();
 	}
 
 	template<typename T>
-	void SetSystemSignature(EntitySignature signature)
+	static void SetSystemSignature(EntitySignature signature)
 	{
 		mSystemManager->SetSignature<T>(signature);
 	}
+};
+
+class Entity {
+private:
+	Entity* parent;
+	std::vector<Entity*> children;
+public:
+
+#define NAMEPREFIX(name, string) "[" + name + "] " + string 
+
+	std::string name = "New Entity";
+	EntityID thisEntityID;
+
+	Transform transform;
+
+	Entity* Parent() { return parent; }
+	Entity* SetParent(Entity* newParent) {
+		if (newParent == nullptr) {
+			Debug::Warning(NAMEPREFIX(name, "Cannot set a null parent. Use UnsetParent() to unparent an entity."));
+			return this;
+		}
+		if (newParent == parent) {
+			Debug::Warning(NAMEPREFIX(name, "Parent is already set to this parent!"));
+			return this;
+		}
+		if (parent != nullptr)
+			UnsetParent();
+		parent = newParent;
+		newParent->children.push_back(this);
+		return newParent; 
+	}
+	void UnsetParent() {
+		if (parent == nullptr) {
+			Debug::Warning(NAMEPREFIX(name, "Parent already cleared!"));
+		}
+		for (int i = 0; i < parent->children.size(); i++) {
+			if (parent->children[i]->thisEntityID == thisEntityID) {
+				parent->children.erase(parent->children.begin() + i);
+				parent = nullptr;
+			}
+			Debug::Warning(NAMEPREFIX(name, "Self not found in parent child vector"));
+			parent = nullptr;
+			return; 
+		}
+	}
+
+	/// <summary>
+	/// Tries finding a child given a childEntityID. 
+	/// </summary>
+	/// <param name="childEntityName"></param>
+	/// <returns></returns>
+	Entity* FindChild(EntityID childEntityID) {
+		for (auto const& entity : children) {
+			if (entity->thisEntityID == childEntityID)
+				return entity; 
+		}
+		Debug::Error("Child entity " + std::to_string(childEntityID) + std::string(" was not found. Defaulting to parent."));
+		return this;
+	}
+	/// <summary>
+	/// Tries finding a child given a childEntityName.
+	/// </summary>
+	/// <param name="childEntityName"></param>
+	/// <returns></returns>
+	Entity* FindChild(std::string childEntityName) {
+		for (auto const& entity : children) {
+			if (entity->name == childEntityName)
+				return entity;
+		}
+		Debug::Error("Child entity " + childEntityName + " was not found. Defaulting to parent.");
+	}
+	
+	template <typename T>
+	T& GetComponent() {
+		return Object::GetComponent<T>(thisEntityID);
+	}
+	template <typename T>
+	void AddComponent(T newComponent = T{}) {
+		EntityComponent* component = Object::AddComponent(this, thisEntityID, newComponent);
+		component->entity = this;
+		if (component->isActive && !component->hasRun) {
+			component->Start();
+			component->hasRun = true;
+		}
+	}
+	template <typename T>
+	void RemoveComponent() {
+		Object::RemoveComponen < t<T>(thisEntityID);
+	}
+	template <typename T>
+	ComponentType GetComponentType() {
+		return Object::GetComponentType<T>();
+	}
+	static Entity CreateEntity(std::string _name = "New Entity") {
+		Entity e;
+		e.name = _name;
+		e.thisEntityID = Object::CreateEntity(&e);
+		return e;
+	}
+	Entity() {};
+	Entity(std::string _name) {
+		name = _name;
+		thisEntityID = Object::CreateEntity(this);
+	}
+
 };
 #endif

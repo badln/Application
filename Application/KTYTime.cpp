@@ -29,3 +29,4 @@ std::string KTYTime::Time::timestamp() {
 double KTYTime::Time::_timeAtStartup;
 double KTYTime::Time::_deltaTime;
 bool KTYTime::Time::_init;
+double KTYTime::Time::timescale = 1;

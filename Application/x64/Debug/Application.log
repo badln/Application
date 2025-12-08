@@ -1,86 +1,160 @@
-﻿  main.cpp
-C:\Users\faye\Desktop\Projects\Application\Application\EngineMaths.h(11,73): warning C4244: 'return': conversion from 'double' to 'float', possible loss of data
+﻿C:\Program Files\Microsoft Visual Studio\18\Insiders\MSBuild\Microsoft\VC\v180\Microsoft.CppBuild.targets(548,5): warning MSB8028: The intermediate directory (x64\Debug\) contains files shared from another project (Application.vcxproj).  This can lead to incorrect clean and rebuild behavior.
+  Scanning sources for module dependencies...
+  main.cpp
+C:\Users\faye\Desktop\Projects\Application\Application\Vector2.h(47,19): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
   (compiling source file 'main.cpp')
   
-C:\Users\faye\Desktop\Projects\Application\Application\main.cpp(4,10): warning C4067: unexpected tokens following preprocessor directive - expected a newline
-C:\Users\faye\Desktop\Projects\Application\Application\KTYKeyboard.h(132,13): warning C4091: 'static ': ignored on left of 'KeyState' when no variable is declared
+C:\Users\faye\Desktop\Projects\Application\Application\Vector2.h(58,19): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
   (compiling source file 'main.cpp')
   
-C:\Users\faye\Desktop\Projects\Application\Application\Shader.h(35,70): warning C4244: 'argument': conversion from 'double' to 'GLfloat', possible loss of data
+C:\Users\faye\Desktop\Projects\Application\Application\Vector3.h(57,20): warning C4244: 'return': conversion from 'double' to 'float', possible loss of data
   (compiling source file 'main.cpp')
   
-C:\Users\faye\Desktop\Projects\Application\Application\Shader.h(35,61): warning C4244: 'argument': conversion from 'double' to 'GLfloat', possible loss of data
+C:\Users\faye\Desktop\Projects\Application\Application\Vector4.h(40,19): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
   (compiling source file 'main.cpp')
   
-C:\Users\faye\Desktop\Projects\Application\Application\Shader.h(38,79): warning C4244: 'argument': conversion from 'double' to 'GLfloat', possible loss of data
+C:\Users\faye\Desktop\Projects\Application\Application\Vector4.h(55,19): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
   (compiling source file 'main.cpp')
   
-C:\Users\faye\Desktop\Projects\Application\Application\Shader.h(38,70): warning C4244: 'argument': conversion from 'double' to 'GLfloat', possible loss of data
+C:\Users\faye\Desktop\Projects\Application\Application\main.cpp(6,21): warning C4067: unexpected tokens following preprocessor directive - expected a newline
+C:\Users\faye\Desktop\Projects\Application\Application\KTYMouse.h(88,15): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
   (compiling source file 'main.cpp')
   
-C:\Users\faye\Desktop\Projects\Application\Application\Shader.h(38,61): warning C4244: 'argument': conversion from 'double' to 'GLfloat', possible loss of data
+C:\Users\faye\Desktop\Projects\Application\Application\KTYMouse.h(89,15): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
   (compiling source file 'main.cpp')
   
-C:\Users\faye\Desktop\Projects\Application\Application\Shader.h(41,88): warning C4244: 'argument': conversion from 'double' to 'GLfloat', possible loss of data
+C:\Users\faye\Desktop\Projects\Application\Application\KTYMouse.h(93,14): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
   (compiling source file 'main.cpp')
   
-C:\Users\faye\Desktop\Projects\Application\Application\Shader.h(41,79): warning C4244: 'argument': conversion from 'double' to 'GLfloat', possible loss of data
+C:\Users\faye\Desktop\Projects\Application\Application\KTYMouse.h(94,14): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
   (compiling source file 'main.cpp')
   
-C:\Users\faye\Desktop\Projects\Application\Application\Shader.h(41,70): warning C4244: 'argument': conversion from 'double' to 'GLfloat', possible loss of data
+C:\Users\faye\Desktop\Projects\Application\Application\KTYMouse.h(217,22): warning C4244: '=': conversion from 'double' to 'LONG', possible loss of data
   (compiling source file 'main.cpp')
   
-C:\Users\faye\Desktop\Projects\Application\Application\Shader.h(41,61): warning C4244: 'argument': conversion from 'double' to 'GLfloat', possible loss of data
+C:\Users\faye\Desktop\Projects\Application\Application\KTYMouse.h(218,22): warning C4244: '=': conversion from 'double' to 'LONG', possible loss of data
   (compiling source file 'main.cpp')
   
-C:\Users\faye\Desktop\Projects\Application\Application\ProgramBase.h(57,49): warning C4244: 'argument': conversion from 'double' to 'int', possible loss of data
+C:\Users\faye\Desktop\Projects\Application\Application\Texture.h(67,23): warning C4018: '<': signed/unsigned mismatch
   (compiling source file 'main.cpp')
   
-C:\Users\faye\Desktop\Projects\Application\Application\ProgramBase.h(57,39): warning C4244: 'argument': conversion from 'double' to 'int', possible loss of data
+C:\Users\faye\Desktop\Projects\Application\Application\Texture.h(68,36): warning C4244: '=': conversion from 'double' to '_Ty', possible loss of data
+C:\Users\faye\Desktop\Projects\Application\Application\Texture.h(68,36): warning C4244:         with
+C:\Users\faye\Desktop\Projects\Application\Application\Texture.h(68,36): warning C4244:         [
+C:\Users\faye\Desktop\Projects\Application\Application\Texture.h(68,36): warning C4244:             _Ty=unsigned char
+C:\Users\faye\Desktop\Projects\Application\Application\Texture.h(68,36): warning C4244:         ]
   (compiling source file 'main.cpp')
   
-C:\Users\faye\Desktop\Projects\Application\Application\ProgramBase.h(58,140): warning C4244: 'argument': conversion from 'T' to 'int', possible loss of data
-C:\Users\faye\Desktop\Projects\Application\Application\ProgramBase.h(58,140): warning C4244:         with
-C:\Users\faye\Desktop\Projects\Application\Application\ProgramBase.h(58,140): warning C4244:         [
-C:\Users\faye\Desktop\Projects\Application\Application\ProgramBase.h(58,140): warning C4244:             T=float
-C:\Users\faye\Desktop\Projects\Application\Application\ProgramBase.h(58,140): warning C4244:         ]
+C:\Users\faye\Desktop\Projects\Application\Application\Texture.h(112,14): warning C4244: 'initializing': conversion from 'double' to 'int', possible loss of data
   (compiling source file 'main.cpp')
   
-C:\Users\faye\Desktop\Projects\Application\Application\ProgramBase.h(58,75): warning C4244: 'argument': conversion from 'T' to 'int', possible loss of data
-C:\Users\faye\Desktop\Projects\Application\Application\ProgramBase.h(58,75): warning C4244:         with
-C:\Users\faye\Desktop\Projects\Application\Application\ProgramBase.h(58,75): warning C4244:         [
-C:\Users\faye\Desktop\Projects\Application\Application\ProgramBase.h(58,75): warning C4244:             T=float
-C:\Users\faye\Desktop\Projects\Application\Application\ProgramBase.h(58,75): warning C4244:         ]
+C:\Users\faye\Desktop\Projects\Application\Application\Texture.h(113,13): warning C4244: 'initializing': conversion from 'double' to 'int', possible loss of data
   (compiling source file 'main.cpp')
   
-C:\Users\faye\Desktop\Projects\Application\Application\ProgramBase.h(84,49): warning C4244: 'argument': conversion from 'double' to 'GLsizei', possible loss of data
+C:\Users\faye\Desktop\Projects\Application\Application\Texture.h(114,24): warning C4244: '=': conversion from 'double' to '_Ty', possible loss of data
+C:\Users\faye\Desktop\Projects\Application\Application\Texture.h(114,24): warning C4244:         with
+C:\Users\faye\Desktop\Projects\Application\Application\Texture.h(114,24): warning C4244:         [
+C:\Users\faye\Desktop\Projects\Application\Application\Texture.h(114,24): warning C4244:             _Ty=unsigned char
+C:\Users\faye\Desktop\Projects\Application\Application\Texture.h(114,24): warning C4244:         ]
   (compiling source file 'main.cpp')
   
-C:\Users\faye\Desktop\Projects\Application\Application\ProgramBase.h(84,33): warning C4244: 'argument': conversion from 'double' to 'GLsizei', possible loss of data
+C:\Users\faye\Desktop\Projects\Application\Application\Texture.h(115,24): warning C4244: '=': conversion from 'double' to '_Ty', possible loss of data
+C:\Users\faye\Desktop\Projects\Application\Application\Texture.h(115,24): warning C4244:         with
+C:\Users\faye\Desktop\Projects\Application\Application\Texture.h(115,24): warning C4244:         [
+C:\Users\faye\Desktop\Projects\Application\Application\Texture.h(115,24): warning C4244:             _Ty=unsigned char
+C:\Users\faye\Desktop\Projects\Application\Application\Texture.h(115,24): warning C4244:         ]
   (compiling source file 'main.cpp')
   
-C:\Users\faye\Desktop\Projects\Application\Application\ProgramBase.h(97,18): warning C4244: '=': conversion from 'double' to 'int', possible loss of data
+C:\Users\faye\Desktop\Projects\Application\Application\Texture.h(116,24): warning C4244: '=': conversion from 'double' to '_Ty', possible loss of data
+C:\Users\faye\Desktop\Projects\Application\Application\Texture.h(116,24): warning C4244:         with
+C:\Users\faye\Desktop\Projects\Application\Application\Texture.h(116,24): warning C4244:         [
+C:\Users\faye\Desktop\Projects\Application\Application\Texture.h(116,24): warning C4244:             _Ty=unsigned char
+C:\Users\faye\Desktop\Projects\Application\Application\Texture.h(116,24): warning C4244:         ]
   (compiling source file 'main.cpp')
   
-C:\Users\faye\Desktop\Projects\Application\Application\MainProgram.h(5,10): warning C4067: unexpected tokens following preprocessor directive - expected a newline
+C:\Users\faye\Desktop\Projects\Application\Application\Texture.h(117,24): warning C4244: '=': conversion from 'double' to '_Ty', possible loss of data
+C:\Users\faye\Desktop\Projects\Application\Application\Texture.h(117,24): warning C4244:         with
+C:\Users\faye\Desktop\Projects\Application\Application\Texture.h(117,24): warning C4244:         [
+C:\Users\faye\Desktop\Projects\Application\Application\Texture.h(117,24): warning C4244:             _Ty=unsigned char
+C:\Users\faye\Desktop\Projects\Application\Application\Texture.h(117,24): warning C4244:         ]
   (compiling source file 'main.cpp')
   
-C:\Users\faye\Desktop\Projects\Application\Application\MainProgram.h(40,23): warning C4305: 'argument': truncation from 'double' to 'GLfloat'
+C:\Users\faye\Desktop\Projects\Application\Application\Shader.h(48,66): warning C4244: 'argument': conversion from 'double' to 'GLfloat', possible loss of data
   (compiling source file 'main.cpp')
   
-C:\Users\faye\Desktop\Projects\Application\Application\MainProgram.h(40,16): warning C4305: 'argument': truncation from 'double' to 'GLfloat'
+C:\Users\faye\Desktop\Projects\Application\Application\Shader.h(48,59): warning C4244: 'argument': conversion from 'double' to 'GLfloat', possible loss of data
   (compiling source file 'main.cpp')
   
-C:\Users\faye\Desktop\Projects\Application\Application\MainProgram.h(49,30): warning C4244: '+=': conversion from 'double' to 'float', possible loss of data
+C:\Users\faye\Desktop\Projects\Application\Application\Shader.h(52,73): warning C4244: 'argument': conversion from 'double' to 'GLfloat', possible loss of data
   (compiling source file 'main.cpp')
   
-C:\Users\faye\Desktop\Projects\Application\Application\MainProgram.h(52,30): warning C4244: '-=': conversion from 'double' to 'float', possible loss of data
+C:\Users\faye\Desktop\Projects\Application\Application\Shader.h(52,66): warning C4244: 'argument': conversion from 'double' to 'GLfloat', possible loss of data
   (compiling source file 'main.cpp')
   
-C:\Users\faye\Desktop\Projects\Application\Application\MainProgram.h(55,30): warning C4244: '-=': conversion from 'double' to 'float', possible loss of data
+C:\Users\faye\Desktop\Projects\Application\Application\Shader.h(52,59): warning C4244: 'argument': conversion from 'double' to 'GLfloat', possible loss of data
   (compiling source file 'main.cpp')
   
-C:\Users\faye\Desktop\Projects\Application\Application\MainProgram.h(58,30): warning C4244: '+=': conversion from 'double' to 'float', possible loss of data
+C:\Users\faye\Desktop\Projects\Application\Application\Shader.h(56,80): warning C4244: 'argument': conversion from 'double' to 'GLfloat', possible loss of data
   (compiling source file 'main.cpp')
   
-  Application.vcxproj -> C:\Users\faye\Desktop\Projects\Application\x64\Debug\Application.exe
+C:\Users\faye\Desktop\Projects\Application\Application\Shader.h(56,73): warning C4244: 'argument': conversion from 'double' to 'GLfloat', possible loss of data
+  (compiling source file 'main.cpp')
+  
+C:\Users\faye\Desktop\Projects\Application\Application\Shader.h(56,66): warning C4244: 'argument': conversion from 'double' to 'GLfloat', possible loss of data
+  (compiling source file 'main.cpp')
+  
+C:\Users\faye\Desktop\Projects\Application\Application\Shader.h(56,59): warning C4244: 'argument': conversion from 'double' to 'GLfloat', possible loss of data
+  (compiling source file 'main.cpp')
+  
+C:\Users\faye\Desktop\Projects\Application\Application\Framebuffer.h(3,20): warning C4067: unexpected tokens following preprocessor directive - expected a newline
+  (compiling source file 'main.cpp')
+  
+C:\Users\faye\Desktop\Projects\Application\Application\Camera.h(132,3): warning C4244: 'argument': conversion from 'double' to 'GLfloat', possible loss of data
+  (compiling source file 'main.cpp')
+  
+C:\Users\faye\Desktop\Projects\Application\Application\Camera.h(135,58): warning C4244: 'argument': conversion from 'double' to 'GLsizei', possible loss of data
+  (compiling source file 'main.cpp')
+  
+C:\Users\faye\Desktop\Projects\Application\Application\Camera.h(135,46): warning C4244: 'argument': conversion from 'double' to 'GLsizei', possible loss of data
+  (compiling source file 'main.cpp')
+  
+C:\Users\faye\Desktop\Projects\Application\Application\Camera.h(135,34): warning C4244: 'argument': conversion from 'double' to 'GLint', possible loss of data
+  (compiling source file 'main.cpp')
+  
+C:\Users\faye\Desktop\Projects\Application\Application\Camera.h(135,22): warning C4244: 'argument': conversion from 'double' to 'GLint', possible loss of data
+  (compiling source file 'main.cpp')
+  
+C:\Users\faye\Desktop\Projects\Application\Application\ProgramBase.h(68,45): warning C4244: 'argument': conversion from 'double' to 'int', possible loss of data
+  (compiling source file 'main.cpp')
+  
+C:\Users\faye\Desktop\Projects\Application\Application\ProgramBase.h(68,37): warning C4244: 'argument': conversion from 'double' to 'int', possible loss of data
+  (compiling source file 'main.cpp')
+  
+C:\Users\faye\Desktop\Projects\Application\Application\ProgramBase.h(69,174): warning C4244: 'argument': conversion from 'double' to 'int', possible loss of data
+  (compiling source file 'main.cpp')
+  
+C:\Users\faye\Desktop\Projects\Application\Application\ProgramBase.h(69,92): warning C4244: 'argument': conversion from 'double' to 'int', possible loss of data
+  (compiling source file 'main.cpp')
+  
+C:\Users\faye\Desktop\Projects\Application\Application\Renderer.h(93,58): warning C4267: 'argument': conversion from 'size_t' to 'GLsizei', possible loss of data
+  (compiling source file 'main.cpp')
+  
+C:\Users\faye\Desktop\Projects\Application\Application\Renderer.h(96,56): warning C4267: 'argument': conversion from 'size_t' to 'GLsizei', possible loss of data
+  (compiling source file 'main.cpp')
+  
+C:\Users\faye\Desktop\Projects\Application\Application\CameraController.h(2,20): warning C4067: unexpected tokens following preprocessor directive - expected a newline
+  (compiling source file 'main.cpp')
+  
+C:\Users\faye\Desktop\Projects\Application\Application\CameraController.h(71,48): warning C4390: ';': empty controlled statement found; is this the intent?
+  (compiling source file 'main.cpp')
+  
+C:\Users\faye\Desktop\Projects\Application\Application\Portal.h(2,20): warning C4067: unexpected tokens following preprocessor directive - expected a newline
+  (compiling source file 'main.cpp')
+  
+C:\Users\faye\Desktop\Projects\Application\Application\MainProgram.cpp(104,24): warning C4305: '=': truncation from 'double' to 'float'
+  (compiling source file 'main.cpp')
+  
+C:\Users\faye\Desktop\Projects\Application\Application\MainProgram.cpp(115,27): warning C4244: '+=': conversion from 'double' to 'float', possible loss of data
+  (compiling source file 'main.cpp')
+  
+  Application.vcxproj -> C:\Users\faye\Desktop\Projects\Application\x64\Debug\KTYEngine.exe

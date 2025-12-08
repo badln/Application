@@ -7,7 +7,7 @@
         {
           "ruleId": "C26495",
           "message": {
-            "text": "Variable '<unnamed-type-EngineInfo>::frameTime' is uninitialized. Always initialize a member variable (type.6)."
+            "text": "Variable 'Entity::thisEntityID' is uninitialized. Always initialize a member variable (type.6)."
           },
           "analysisTarget": {
             "uri": "file:///c:/users/faye/desktop/projects/application/application/main.cpp"
@@ -16,30 +16,30 @@
             {
               "physicalLocation": {
                 "artifactLocation": {
-                  "uri": "file:///C:/Users/faye/Desktop/Projects/Application/Application/engine.h"
+                  "uri": "file:///C:/Users/faye/Desktop/Projects/Application/Application/Entity.h"
                 },
                 "region": {
-                  "startLine": 41,
-                  "startColumn": 1
+                  "startLine": 429,
+                  "startColumn": 2
                 }
               },
               "logicalLocations": [
                 {
-                  "fullyQualifiedName": "<unnamed-type-EngineInfo>::{ctor}",
-                  "decoratedName": "??0<unnamed-type-EngineInfo>@@QEAA@XZ",
+                  "fullyQualifiedName": "Entity::{ctor}",
+                  "decoratedName": "??0Entity@@QEAA@XZ",
                   "kind": "function"
                 }
               ]
             }
           ],
           "properties": {
-            "targetSymbol": "<unnamed-type-EngineInfo>::frameTime"
+            "targetSymbol": "Entity::thisEntityID"
           }
         },
         {
           "ruleId": "C26495",
           "message": {
-            "text": "Variable 'Gamepad::LS_Y_ADDITIVE' is uninitialized. Always initialize a member variable (type.6)."
+            "text": "Variable 'Texture::_dataAssigned' is uninitialized. Always initialize a member variable (type.6)."
           },
           "analysisTarget": {
             "uri": "file:///c:/users/faye/desktop/projects/application/application/main.cpp"
@@ -48,30 +48,30 @@
             {
               "physicalLocation": {
                 "artifactLocation": {
-                  "uri": "file:///C:/Users/faye/Desktop/Projects/Application/Application/Gamepad.h"
+                  "uri": "file:///C:/Users/faye/Desktop/Projects/Application/Application/Texture.h"
                 },
                 "region": {
-                  "startLine": 24,
+                  "startLine": 125,
                   "startColumn": 1
                 }
               },
               "logicalLocations": [
                 {
-                  "fullyQualifiedName": "Gamepad::{ctor}",
-                  "decoratedName": "??0Gamepad@@QEAA@XZ",
+                  "fullyQualifiedName": "Texture::{ctor}",
+                  "decoratedName": "??0Texture@@QEAA@XZ",
                   "kind": "function"
                 }
               ]
             }
           ],
           "properties": {
-            "targetSymbol": "Gamepad::LS_Y_ADDITIVE"
+            "targetSymbol": "Texture::_dataAssigned"
           }
         },
         {
           "ruleId": "C26495",
           "message": {
-            "text": "Variable 'Gamepad::RS_X_ADDITIVE' is uninitialized. Always initialize a member variable (type.6)."
+            "text": "Variable 'Texture::_initialised' is uninitialized. Always initialize a member variable (type.6)."
           },
           "analysisTarget": {
             "uri": "file:///c:/users/faye/desktop/projects/application/application/main.cpp"
@@ -80,30 +80,30 @@
             {
               "physicalLocation": {
                 "artifactLocation": {
-                  "uri": "file:///C:/Users/faye/Desktop/Projects/Application/Application/Gamepad.h"
+                  "uri": "file:///C:/Users/faye/Desktop/Projects/Application/Application/Texture.h"
                 },
                 "region": {
-                  "startLine": 24,
+                  "startLine": 125,
                   "startColumn": 1
                 }
               },
               "logicalLocations": [
                 {
-                  "fullyQualifiedName": "Gamepad::{ctor}",
-                  "decoratedName": "??0Gamepad@@QEAA@XZ",
+                  "fullyQualifiedName": "Texture::{ctor}",
+                  "decoratedName": "??0Texture@@QEAA@XZ",
                   "kind": "function"
                 }
               ]
             }
           ],
           "properties": {
-            "targetSymbol": "Gamepad::RS_X_ADDITIVE"
+            "targetSymbol": "Texture::_initialised"
           }
         },
         {
           "ruleId": "C26495",
           "message": {
-            "text": "Variable 'Gamepad::LS_X_ADDITIVE' is uninitialized. Always initialize a member variable (type.6)."
+            "text": "Variable 'Texture::_channels' is uninitialized. Always initialize a member variable (type.6)."
           },
           "analysisTarget": {
             "uri": "file:///c:/users/faye/desktop/projects/application/application/main.cpp"
@@ -112,30 +112,30 @@
             {
               "physicalLocation": {
                 "artifactLocation": {
-                  "uri": "file:///C:/Users/faye/Desktop/Projects/Application/Application/Gamepad.h"
+                  "uri": "file:///C:/Users/faye/Desktop/Projects/Application/Application/Texture.h"
                 },
                 "region": {
-                  "startLine": 24,
+                  "startLine": 125,
                   "startColumn": 1
                 }
               },
               "logicalLocations": [
                 {
-                  "fullyQualifiedName": "Gamepad::{ctor}",
-                  "decoratedName": "??0Gamepad@@QEAA@XZ",
+                  "fullyQualifiedName": "Texture::{ctor}",
+                  "decoratedName": "??0Texture@@QEAA@XZ",
                   "kind": "function"
                 }
               ]
             }
           ],
           "properties": {
-            "targetSymbol": "Gamepad::LS_X_ADDITIVE"
+            "targetSymbol": "Texture::_channels"
           }
         },
         {
           "ruleId": "C26495",
           "message": {
-            "text": "Variable 'Gamepad::RS_Y_ADDITIVE' is uninitialized. Always initialize a member variable (type.6)."
+            "text": "Variable 'Texture::_thisID' is uninitialized. Always initialize a member variable (type.6)."
           },
           "analysisTarget": {
             "uri": "file:///c:/users/faye/desktop/projects/application/application/main.cpp"
@@ -144,30 +144,30 @@
             {
               "physicalLocation": {
                 "artifactLocation": {
-                  "uri": "file:///C:/Users/faye/Desktop/Projects/Application/Application/Gamepad.h"
+                  "uri": "file:///C:/Users/faye/Desktop/Projects/Application/Application/Texture.h"
                 },
                 "region": {
-                  "startLine": 24,
+                  "startLine": 125,
                   "startColumn": 1
                 }
               },
               "logicalLocations": [
                 {
-                  "fullyQualifiedName": "Gamepad::{ctor}",
-                  "decoratedName": "??0Gamepad@@QEAA@XZ",
+                  "fullyQualifiedName": "Texture::{ctor}",
+                  "decoratedName": "??0Texture@@QEAA@XZ",
                   "kind": "function"
                 }
               ]
             }
           ],
           "properties": {
-            "targetSymbol": "Gamepad::RS_Y_ADDITIVE"
+            "targetSymbol": "Texture::_thisID"
           }
         },
         {
           "ruleId": "C26495",
           "message": {
-            "text": "Variable 'Gamepad::padState' is uninitialized. Always initialize a member variable (type.6)."
+            "text": "Variable 'Texture::_format' is uninitialized. Always initialize a member variable (type.6)."
           },
           "analysisTarget": {
             "uri": "file:///c:/users/faye/desktop/projects/application/application/main.cpp"
@@ -176,2130 +176,30 @@
             {
               "physicalLocation": {
                 "artifactLocation": {
-                  "uri": "file:///C:/Users/faye/Desktop/Projects/Application/Application/Gamepad.h"
+                  "uri": "file:///C:/Users/faye/Desktop/Projects/Application/Application/Texture.h"
                 },
                 "region": {
-                  "startLine": 24,
+                  "startLine": 125,
                   "startColumn": 1
                 }
               },
               "logicalLocations": [
                 {
-                  "fullyQualifiedName": "Gamepad::{ctor}",
-                  "decoratedName": "??0Gamepad@@QEAA@XZ",
+                  "fullyQualifiedName": "Texture::{ctor}",
+                  "decoratedName": "??0Texture@@QEAA@XZ",
                   "kind": "function"
                 }
               ]
             }
           ],
           "properties": {
-            "targetSymbol": "Gamepad::padState"
-          }
-        },
-        {
-          "ruleId": "C6001",
-          "message": {
-            "text": "Using uninitialized memory 'lightDistanceToCam'."
-          },
-          "analysisTarget": {
-            "uri": "file:///c:/users/faye/desktop/projects/application/application/main.cpp"
-          },
-          "locations": [
-            {
-              "physicalLocation": {
-                "artifactLocation": {
-                  "uri": "file:///C:/Users/faye/Desktop/Projects/Application/Application/main.cpp"
-                },
-                "region": {
-                  "startLine": 545,
-                  "startColumn": 34
-                }
-              },
-              "logicalLocations": [
-                {
-                  "fullyQualifiedName": "main",
-                  "decoratedName": "main",
-                  "kind": "function"
-                }
-              ]
-            }
-          ],
-          "codeFlows": [
-            {
-              "threadFlows": [
-                {
-                  "locations": [
-                    {
-                      "location": {
-                        "physicalLocation": {
-                          "artifactLocation": {
-                            "uri": "file:///C:/Users/faye/Desktop/Projects/Application/Application/main.cpp"
-                          },
-                          "region": {
-                            "startLine": 258,
-                            "startColumn": 12
-                          }
-                        }
-                      },
-                      "importance": "unimportant"
-                    },
-                    {
-                      "location": {
-                        "physicalLocation": {
-                          "artifactLocation": {
-                            "uri": "file:///C:/Users/faye/Desktop/Projects/Application/Application/main.cpp"
-                          },
-                          "region": {
-                            "startLine": 259,
-                            "startColumn": 13
-                          }
-                        }
-                      },
-                      "importance": "unimportant"
-                    },
-                    {
-                      "location": {
-                        "physicalLocation": {
-                          "artifactLocation": {
-                            "uri": "file:///C:/Users/faye/Desktop/Projects/Application/Application/main.cpp"
-                          },
-                          "region": {
-                            "startLine": 260,
-                            "startColumn": 10
-                          }
-                        }
-                      },
-                      "importance": "unimportant"
-                    },
-                    {
-                      "location": {
-                        "physicalLocation": {
-                          "artifactLocation": {
-                            "uri": "file:///C:/Users/faye/Desktop/Projects/Application/Application/main.cpp"
-                          },
-                          "region": {
-                            "startLine": 261,
-                            "startColumn": 16
-                          }
-                        }
-                      },
-                      "importance": "unimportant"
-                    },
-                    {
-                      "location": {
-                        "physicalLocation": {
-                          "artifactLocation": {
-                            "uri": "file:///C:/Users/faye/Desktop/Projects/Application/Application/main.cpp"
-                          },
-                          "region": {
-                            "startLine": 262,
-                            "startColumn": 16
-                          }
-                        }
-                      },
-                      "importance": "unimportant"
-                    },
-                    {
-                      "location": {
-                        "physicalLocation": {
-                          "artifactLocation": {
-                            "uri": "file:///C:/Users/faye/Desktop/Projects/Application/Application/main.cpp"
-                          },
-                          "region": {
-                            "startLine": 263,
-                            "startColumn": 16
-                          }
-                        }
-                      },
-                      "importance": "unimportant"
-                    },
-                    {
-                      "location": {
-                        "physicalLocation": {
-                          "artifactLocation": {
-                            "uri": "file:///C:/Users/faye/Desktop/Projects/Application/Application/main.cpp"
-                          },
-                          "region": {
-                            "startLine": 264,
-                            "startColumn": 16
-                          }
-                        }
-                      },
-                      "importance": "unimportant"
-                    },
-                    {
-                      "location": {
-                        "physicalLocation": {
-                          "artifactLocation": {
-                            "uri": "file:///C:/Users/faye/Desktop/Projects/Application/Application/main.cpp"
-                          },
-                          "region": {
-                            "startLine": 265,
-                            "startColumn": 6
-                          }
-                        }
-                      },
-                      "importance": "unimportant"
-                    },
-                    {
-                      "location": {
-                        "physicalLocation": {
-                          "artifactLocation": {
-                            "uri": "file:///C:/Users/faye/Desktop/Projects/Application/Application/main.cpp"
-                          },
-                          "region": {
-                            "startLine": 270,
-                            "startColumn": 21
-                          }
-                        }
-                      },
-                      "importance": "unimportant"
-                    },
-                    {
-                      "location": {
-                        "physicalLocation": {
-                          "artifactLocation": {
-                            "uri": "file:///C:/Users/faye/Desktop/Projects/Application/Application/main.cpp"
-                          },
-                          "region": {
-                            "startLine": 272,
-                            "startColumn": 16
-                          }
-                        }
-                      },
-                      "importance": "unimportant"
-                    },
-                    {
-                      "location": {
-                        "physicalLocation": {
-                          "artifactLocation": {
-                            "uri": "file:///C:/Users/faye/Desktop/Projects/Application/Application/main.cpp"
-                          },
-                          "region": {
-                            "startLine": 273,
-                            "startColumn": 16
-                          }
-                        }
-                      },
-                      "importance": "unimportant"
-                    },
-                    {
-                      "location": {
-                        "physicalLocation": {
-                          "artifactLocation": {
-                            "uri": "file:///C:/Users/faye/Desktop/Projects/Application/Application/main.cpp"
-                          },
-                          "region": {
-                            "startLine": 274,
-                            "startColumn": 16
-                          }
-                        }
-                      },
-                      "importance": "unimportant"
-                    },
-                    {
-                      "location": {
-                        "physicalLocation": {
-                          "artifactLocation": {
-                            "uri": "file:///C:/Users/faye/Desktop/Projects/Application/Application/main.cpp"
-                          },
-                          "region": {
-                            "startLine": 275,
-                            "startColumn": 16
-                          }
-                        }
-                      },
-                      "importance": "unimportant"
-                    },
-                    {
-                      "location": {
-                        "physicalLocation": {
-                          "artifactLocation": {
-                            "uri": "file:///C:/Users/faye/Desktop/Projects/Application/Application/main.cpp"
-                          },
-                          "region": {
-                            "startLine": 278,
-                            "startColumn": 15
-                          }
-                        }
-                      },
-                      "importance": "unimportant"
-                    },
-                    {
-                      "location": {
-                        "physicalLocation": {
-                          "artifactLocation": {
-                            "uri": "file:///C:/Users/faye/Desktop/Projects/Application/Application/main.cpp"
-                          },
-                          "region": {
-                            "startLine": 279,
-                            "startColumn": 20
-                          }
-                        }
-                      },
-                      "importance": "unimportant"
-                    },
-                    {
-                      "location": {
-                        "physicalLocation": {
-                          "artifactLocation": {
-                            "uri": "file:///C:/Users/faye/Desktop/Projects/Application/Application/main.cpp"
-                          },
-                          "region": {
-                            "startLine": 281,
-                            "startColumn": 2
-                          }
-                        }
-                      },
-                      "importance": "unimportant"
-                    },
-                    {
-                      "location": {
-                        "physicalLocation": {
-                          "artifactLocation": {
-                            "uri": "file:///C:/Users/faye/Desktop/Projects/Application/Application/main.cpp"
-                          },
-                          "region": {
-                            "startLine": 282,
-                            "startColumn": 11
-                          }
-                        }
-                      },
-                      "importance": "unimportant"
-                    },
-                    {
-                      "location": {
-                        "physicalLocation": {
-                          "artifactLocation": {
-                            "uri": "file:///C:/Users/faye/Desktop/Projects/Application/Application/main.cpp"
-                          },
-                          "region": {
-                            "startLine": 292,
-                            "startColumn": 14
-                          }
-                        }
-                      },
-                      "importance": "unimportant"
-                    },
-                    {
-                      "location": {
-                        "physicalLocation": {
-                          "artifactLocation": {
-                            "uri": "file:///C:/Users/faye/Desktop/Projects/Application/Application/main.cpp"
-                          },
-                          "region": {
-                            "startLine": 293,
-                            "startColumn": 6
-                          }
-                        }
-                      },
-                      "importance": "unimportant"
-                    },
-                    {
-                      "location": {
-                        "physicalLocation": {
-                          "artifactLocation": {
-                            "uri": "file:///C:/Users/faye/Desktop/Projects/Application/Application/main.cpp"
-                          },
-                          "region": {
-                            "startLine": 300,
-                            "startColumn": 18
-                          }
-                        }
-                      },
-                      "importance": "unimportant"
-                    },
-                    {
-                      "location": {
-                        "physicalLocation": {
-                          "artifactLocation": {
-                            "uri": "file:///C:/Users/faye/Desktop/Projects/Application/Application/main.cpp"
-                          },
-                          "region": {
-                            "startLine": 301,
-                            "startColumn": 13
-                          }
-                        }
-                      },
-                      "importance": "unimportant"
-                    },
-                    {
-                      "location": {
-                        "physicalLocation": {
-                          "artifactLocation": {
-                            "uri": "file:///C:/Users/faye/Desktop/Projects/Application/Application/main.cpp"
-                          },
-                          "region": {
-                            "startLine": 308,
-                            "startColumn": 24
-                          }
-                        }
-                      },
-                      "importance": "unimportant"
-                    },
-                    {
-                      "location": {
-                        "physicalLocation": {
-                          "artifactLocation": {
-                            "uri": "file:///C:/Users/faye/Desktop/Projects/Application/Application/main.cpp"
-                          },
-                          "region": {
-                            "startLine": 309,
-                            "startColumn": 6
-                          }
-                        }
-                      },
-                      "importance": "unimportant"
-                    },
-                    {
-                      "location": {
-                        "physicalLocation": {
-                          "artifactLocation": {
-                            "uri": "file:///C:/Users/faye/Desktop/Projects/Application/Application/main.cpp"
-                          },
-                          "region": {
-                            "startLine": 314,
-                            "startColumn": 32
-                          }
-                        }
-                      },
-                      "importance": "unimportant"
-                    },
-                    {
-                      "location": {
-                        "physicalLocation": {
-                          "artifactLocation": {
-                            "uri": "file:///C:/Users/faye/Desktop/Projects/Application/Application/main.cpp"
-                          },
-                          "region": {
-                            "startLine": 315,
-                            "startColumn": 15
-                          }
-                        }
-                      },
-                      "importance": "unimportant"
-                    },
-                    {
-                      "location": {
-                        "physicalLocation": {
-                          "artifactLocation": {
-                            "uri": "file:///C:/Users/faye/Desktop/Projects/Application/Application/main.cpp"
-                          },
-                          "region": {
-                            "startLine": 316,
-                            "startColumn": 10
-                          }
-                        }
-                      },
-                      "importance": "unimportant"
-                    },
-                    {
-                      "location": {
-                        "physicalLocation": {
-                          "artifactLocation": {
-                            "uri": "file:///C:/Users/faye/Desktop/Projects/Application/Application/main.cpp"
-                          },
-                          "region": {
-                            "startLine": 317,
-                            "startColumn": 18
-                          }
-                        }
-                      },
-                      "importance": "unimportant"
-                    },
-                    {
-                      "location": {
-                        "physicalLocation": {
-                          "artifactLocation": {
-                            "uri": "file:///C:/Users/faye/Desktop/Projects/Application/Application/main.cpp"
-                          },
-                          "region": {
-                            "startLine": 318,
-                            "startColumn": 26
-                          }
-                        }
-                      },
-                      "importance": "unimportant"
-                    },
-                    {
-                      "location": {
-                        "physicalLocation": {
-                          "artifactLocation": {
-                            "uri": "file:///C:/Users/faye/Desktop/Projects/Application/Application/main.cpp"
-                          },
-                          "region": {
-                            "startLine": 319,
-                            "startColumn": 23
-                          }
-                        }
-                      },
-                      "importance": "unimportant"
-                    },
-                    {
-                      "location": {
-                        "physicalLocation": {
-                          "artifactLocation": {
-                            "uri": "file:///C:/Users/faye/Desktop/Projects/Application/Application/main.cpp"
-                          },
-                          "region": {
-                            "startLine": 321,
-                            "startColumn": 73
-                          }
-                        }
-                      },
-                      "importance": "unimportant"
-                    },
-                    {
-                      "location": {
-                        "physicalLocation": {
-                          "artifactLocation": {
-                            "uri": "file:///C:/Users/faye/Desktop/Projects/Application/Application/main.cpp"
-                          },
-                          "region": {
-                            "startLine": 321,
-                            "startColumn": 9
-                          }
-                        }
-                      },
-                      "importance": "unimportant"
-                    },
-                    {
-                      "location": {
-                        "physicalLocation": {
-                          "artifactLocation": {
-                            "uri": "file:///C:/Users/faye/Desktop/Projects/Application/Application/main.cpp"
-                          },
-                          "region": {
-                            "startLine": 322,
-                            "startColumn": 82
-                          }
-                        }
-                      },
-                      "importance": "unimportant"
-                    },
-                    {
-                      "location": {
-                        "physicalLocation": {
-                          "artifactLocation": {
-                            "uri": "file:///C:/Users/faye/Desktop/Projects/Application/Application/main.cpp"
-                          },
-                          "region": {
-                            "startLine": 322,
-                            "startColumn": 9
-                          }
-                        }
-                      },
-                      "importance": "unimportant"
-                    },
-                    {
-                      "location": {
-                        "physicalLocation": {
-                          "artifactLocation": {
-                            "uri": "file:///C:/Users/faye/Desktop/Projects/Application/Application/main.cpp"
-                          },
-                          "region": {
-                            "startLine": 323,
-                            "startColumn": 74
-                          }
-                        }
-                      },
-                      "importance": "unimportant"
-                    },
-                    {
-                      "location": {
-                        "physicalLocation": {
-                          "artifactLocation": {
-                            "uri": "file:///C:/Users/faye/Desktop/Projects/Application/Application/main.cpp"
-                          },
-                          "region": {
-                            "startLine": 323,
-                            "startColumn": 9
-                          }
-                        }
-                      },
-                      "importance": "unimportant"
-                    },
-                    {
-                      "location": {
-                        "physicalLocation": {
-                          "artifactLocation": {
-                            "uri": "file:///C:/Users/faye/Desktop/Projects/Application/Application/main.cpp"
-                          },
-                          "region": {
-                            "startLine": 325,
-                            "startColumn": 8
-                          }
-                        }
-                      },
-                      "importance": "unimportant"
-                    },
-                    {
-                      "location": {
-                        "physicalLocation": {
-                          "artifactLocation": {
-                            "uri": "file:///C:/Users/faye/Desktop/Projects/Application/Application/main.cpp"
-                          },
-                          "region": {
-                            "startLine": 328,
-                            "startColumn": 15
-                          }
-                        }
-                      },
-                      "importance": "unimportant"
-                    },
-                    {
-                      "location": {
-                        "physicalLocation": {
-                          "artifactLocation": {
-                            "uri": "file:///C:/Users/faye/Desktop/Projects/Application/Application/main.cpp"
-                          },
-                          "region": {
-                            "startLine": 328,
-                            "startColumn": 20
-                          }
-                        }
-                      },
-                      "importance": "unimportant"
-                    },
-                    {
-                      "location": {
-                        "physicalLocation": {
-                          "artifactLocation": {
-                            "uri": "file:///C:/Users/faye/Desktop/Projects/Application/Application/main.cpp"
-                          },
-                          "region": {
-                            "startLine": 328,
-                            "startColumn": 29
-                          }
-                        }
-                      },
-                      "importance": "unimportant"
-                    },
-                    {
-                      "location": {
-                        "physicalLocation": {
-                          "artifactLocation": {
-                            "uri": "file:///C:/Users/faye/Desktop/Projects/Application/Application/main.cpp"
-                          },
-                          "region": {
-                            "startLine": 329,
-                            "startColumn": 14
-                          }
-                        }
-                      },
-                      "importance": "unimportant"
-                    },
-                    {
-                      "location": {
-                        "physicalLocation": {
-                          "artifactLocation": {
-                            "uri": "file:///C:/Users/faye/Desktop/Projects/Application/Application/main.cpp"
-                          },
-                          "region": {
-                            "startLine": 330,
-                            "startColumn": 19
-                          }
-                        }
-                      },
-                      "importance": "unimportant"
-                    },
-                    {
-                      "location": {
-                        "physicalLocation": {
-                          "artifactLocation": {
-                            "uri": "file:///C:/Users/faye/Desktop/Projects/Application/Application/main.cpp"
-                          },
-                          "region": {
-                            "startLine": 331,
-                            "startColumn": 19
-                          }
-                        }
-                      },
-                      "importance": "unimportant"
-                    },
-                    {
-                      "location": {
-                        "physicalLocation": {
-                          "artifactLocation": {
-                            "uri": "file:///C:/Users/faye/Desktop/Projects/Application/Application/main.cpp"
-                          },
-                          "region": {
-                            "startLine": 332,
-                            "startColumn": 14
-                          }
-                        }
-                      },
-                      "importance": "unimportant"
-                    },
-                    {
-                      "location": {
-                        "physicalLocation": {
-                          "artifactLocation": {
-                            "uri": "file:///C:/Users/faye/Desktop/Projects/Application/Application/main.cpp"
-                          },
-                          "region": {
-                            "startLine": 333,
-                            "startColumn": 14
-                          }
-                        }
-                      },
-                      "importance": "unimportant"
-                    },
-                    {
-                      "location": {
-                        "physicalLocation": {
-                          "artifactLocation": {
-                            "uri": "file:///C:/Users/faye/Desktop/Projects/Application/Application/main.cpp"
-                          },
-                          "region": {
-                            "startLine": 334,
-                            "startColumn": 27
-                          }
-                        }
-                      },
-                      "importance": "unimportant"
-                    },
-                    {
-                      "location": {
-                        "physicalLocation": {
-                          "artifactLocation": {
-                            "uri": "file:///C:/Users/faye/Desktop/Projects/Application/Application/main.cpp"
-                          },
-                          "region": {
-                            "startLine": 335,
-                            "startColumn": 23
-                          }
-                        }
-                      },
-                      "importance": "unimportant"
-                    },
-                    {
-                      "location": {
-                        "physicalLocation": {
-                          "artifactLocation": {
-                            "uri": "file:///C:/Users/faye/Desktop/Projects/Application/Application/main.cpp"
-                          },
-                          "region": {
-                            "startLine": 336,
-                            "startColumn": 19
-                          }
-                        }
-                      },
-                      "importance": "unimportant"
-                    },
-                    {
-                      "location": {
-                        "physicalLocation": {
-                          "artifactLocation": {
-                            "uri": "file:///C:/Users/faye/Desktop/Projects/Application/Application/main.cpp"
-                          },
-                          "region": {
-                            "startLine": 338,
-                            "startColumn": 8
-                          }
-                        }
-                      },
-                      "importance": "unimportant"
-                    },
-                    {
-                      "location": {
-                        "physicalLocation": {
-                          "artifactLocation": {
-                            "uri": "file:///C:/Users/faye/Desktop/Projects/Application/Application/main.cpp"
-                          },
-                          "region": {
-                            "startLine": 349,
-                            "startColumn": 19
-                          }
-                        }
-                      },
-                      "importance": "unimportant"
-                    },
-                    {
-                      "location": {
-                        "physicalLocation": {
-                          "artifactLocation": {
-                            "uri": "file:///C:/Users/faye/Desktop/Projects/Application/Application/main.cpp"
-                          },
-                          "region": {
-                            "startLine": 350,
-                            "startColumn": 14
-                          }
-                        }
-                      },
-                      "importance": "unimportant"
-                    },
-                    {
-                      "location": {
-                        "physicalLocation": {
-                          "artifactLocation": {
-                            "uri": "file:///C:/Users/faye/Desktop/Projects/Application/Application/main.cpp"
-                          },
-                          "region": {
-                            "startLine": 351,
-                            "startColumn": 19
-                          }
-                        }
-                      },
-                      "importance": "unimportant"
-                    },
-                    {
-                      "location": {
-                        "physicalLocation": {
-                          "artifactLocation": {
-                            "uri": "file:///C:/Users/faye/Desktop/Projects/Application/Application/main.cpp"
-                          },
-                          "region": {
-                            "startLine": 352,
-                            "startColumn": 14
-                          }
-                        }
-                      },
-                      "importance": "unimportant"
-                    },
-                    {
-                      "location": {
-                        "physicalLocation": {
-                          "artifactLocation": {
-                            "uri": "file:///C:/Users/faye/Desktop/Projects/Application/Application/main.cpp"
-                          },
-                          "region": {
-                            "startLine": 353,
-                            "startColumn": 14
-                          }
-                        }
-                      },
-                      "importance": "unimportant"
-                    },
-                    {
-                      "location": {
-                        "physicalLocation": {
-                          "artifactLocation": {
-                            "uri": "file:///C:/Users/faye/Desktop/Projects/Application/Application/main.cpp"
-                          },
-                          "region": {
-                            "startLine": 354,
-                            "startColumn": 27
-                          }
-                        }
-                      },
-                      "importance": "unimportant"
-                    },
-                    {
-                      "location": {
-                        "physicalLocation": {
-                          "artifactLocation": {
-                            "uri": "file:///C:/Users/faye/Desktop/Projects/Application/Application/main.cpp"
-                          },
-                          "region": {
-                            "startLine": 355,
-                            "startColumn": 23
-                          }
-                        }
-                      },
-                      "importance": "unimportant"
-                    },
-                    {
-                      "location": {
-                        "physicalLocation": {
-                          "artifactLocation": {
-                            "uri": "file:///C:/Users/faye/Desktop/Projects/Application/Application/main.cpp"
-                          },
-                          "region": {
-                            "startLine": 356,
-                            "startColumn": 27
-                          }
-                        }
-                      },
-                      "importance": "unimportant"
-                    },
-                    {
-                      "location": {
-                        "physicalLocation": {
-                          "artifactLocation": {
-                            "uri": "file:///C:/Users/faye/Desktop/Projects/Application/Application/main.cpp"
-                          },
-                          "region": {
-                            "startLine": 357,
-                            "startColumn": 23
-                          }
-                        }
-                      },
-                      "importance": "unimportant"
-                    },
-                    {
-                      "location": {
-                        "physicalLocation": {
-                          "artifactLocation": {
-                            "uri": "file:///C:/Users/faye/Desktop/Projects/Application/Application/main.cpp"
-                          },
-                          "region": {
-                            "startLine": 359,
-                            "startColumn": 17
-                          }
-                        }
-                      },
-                      "importance": "unimportant"
-                    },
-                    {
-                      "location": {
-                        "physicalLocation": {
-                          "artifactLocation": {
-                            "uri": "file:///C:/Users/faye/Desktop/Projects/Application/Application/main.cpp"
-                          },
-                          "region": {
-                            "startLine": 359,
-                            "startColumn": 16
-                          }
-                        }
-                      },
-                      "importance": "unimportant"
-                    },
-                    {
-                      "location": {
-                        "physicalLocation": {
-                          "artifactLocation": {
-                            "uri": "file:///C:/Users/faye/Desktop/Projects/Application/Application/main.cpp"
-                          },
-                          "region": {
-                            "startLine": 367,
-                            "startColumn": 14
-                          }
-                        }
-                      },
-                      "importance": "unimportant"
-                    },
-                    {
-                      "location": {
-                        "physicalLocation": {
-                          "artifactLocation": {
-                            "uri": "file:///C:/Users/faye/Desktop/Projects/Application/Application/main.cpp"
-                          },
-                          "region": {
-                            "startLine": 368,
-                            "startColumn": 10
-                          }
-                        }
-                      },
-                      "importance": "unimportant"
-                    },
-                    {
-                      "location": {
-                        "physicalLocation": {
-                          "artifactLocation": {
-                            "uri": "file:///C:/Users/faye/Desktop/Projects/Application/Application/main.cpp"
-                          },
-                          "region": {
-                            "startLine": 369,
-                            "startColumn": 40
-                          }
-                        }
-                      },
-                      "importance": "unimportant"
-                    },
-                    {
-                      "location": {
-                        "physicalLocation": {
-                          "artifactLocation": {
-                            "uri": "file:///C:/Users/faye/Desktop/Projects/Application/Application/main.cpp"
-                          },
-                          "region": {
-                            "startLine": 369,
-                            "startColumn": 11
-                          }
-                        }
-                      },
-                      "importance": "unimportant"
-                    },
-                    {
-                      "location": {
-                        "physicalLocation": {
-                          "artifactLocation": {
-                            "uri": "file:///C:/Users/faye/Desktop/Projects/Application/Application/main.cpp"
-                          },
-                          "region": {
-                            "startLine": 370,
-                            "startColumn": 30
-                          }
-                        }
-                      },
-                      "importance": "unimportant"
-                    },
-                    {
-                      "location": {
-                        "physicalLocation": {
-                          "artifactLocation": {
-                            "uri": "file:///C:/Users/faye/Desktop/Projects/Application/Application/main.cpp"
-                          },
-                          "region": {
-                            "startLine": 372,
-                            "startColumn": 8
-                          }
-                        },
-                        "message": {
-                          "text": "'lightDistanceToCam' is not initialized"
-                        }
-                      },
-                      "kinds": [
-                        "declaration"
-                      ],
-                      "importance": "essential"
-                    },
-                    {
-                      "location": {
-                        "physicalLocation": {
-                          "artifactLocation": {
-                            "uri": "file:///C:/Users/faye/Desktop/Projects/Application/Application/main.cpp"
-                          },
-                          "region": {
-                            "startLine": 373,
-                            "startColumn": 6
-                          }
-                        }
-                      },
-                      "importance": "unimportant"
-                    },
-                    {
-                      "location": {
-                        "physicalLocation": {
-                          "artifactLocation": {
-                            "uri": "file:///C:/Users/faye/Desktop/Projects/Application/Application/main.cpp"
-                          },
-                          "region": {
-                            "startLine": 374,
-                            "startColumn": 8
-                          }
-                        }
-                      },
-                      "importance": "unimportant"
-                    },
-                    {
-                      "location": {
-                        "physicalLocation": {
-                          "artifactLocation": {
-                            "uri": "file:///C:/Users/faye/Desktop/Projects/Application/Application/main.cpp"
-                          },
-                          "region": {
-                            "startLine": 375,
-                            "startColumn": 20
-                          }
-                        }
-                      },
-                      "importance": "unimportant"
-                    },
-                    {
-                      "location": {
-                        "physicalLocation": {
-                          "artifactLocation": {
-                            "uri": "file:///C:/Users/faye/Desktop/Projects/Application/Application/main.cpp"
-                          },
-                          "region": {
-                            "startLine": 376,
-                            "startColumn": 10
-                          }
-                        }
-                      },
-                      "importance": "unimportant"
-                    },
-                    {
-                      "location": {
-                        "physicalLocation": {
-                          "artifactLocation": {
-                            "uri": "file:///C:/Users/faye/Desktop/Projects/Application/Application/main.cpp"
-                          },
-                          "region": {
-                            "startLine": 377,
-                            "startColumn": 10
-                          }
-                        }
-                      },
-                      "importance": "unimportant"
-                    },
-                    {
-                      "location": {
-                        "physicalLocation": {
-                          "artifactLocation": {
-                            "uri": "file:///C:/Users/faye/Desktop/Projects/Application/Application/main.cpp"
-                          },
-                          "region": {
-                            "startLine": 378,
-                            "startColumn": 13
-                          }
-                        }
-                      },
-                      "importance": "unimportant"
-                    },
-                    {
-                      "location": {
-                        "physicalLocation": {
-                          "artifactLocation": {
-                            "uri": "file:///C:/Users/faye/Desktop/Projects/Application/Application/main.cpp"
-                          },
-                          "region": {
-                            "startLine": 379,
-                            "startColumn": 9
-                          }
-                        },
-                        "message": {
-                          "text": "Enter this loop, (assume '!glfwWindowShouldClose(window)')"
-                        }
-                      },
-                      "kinds": [
-                        "branch"
-                      ]
-                    },
-                    {
-                      "location": {
-                        "physicalLocation": {
-                          "artifactLocation": {
-                            "uri": "file:///C:/Users/faye/Desktop/Projects/Application/Application/main.cpp"
-                          },
-                          "region": {
-                            "startLine": 381,
-                            "startColumn": 8
-                          }
-                        }
-                      },
-                      "importance": "unimportant"
-                    },
-                    {
-                      "location": {
-                        "physicalLocation": {
-                          "artifactLocation": {
-                            "uri": "file:///C:/Users/faye/Desktop/Projects/Application/Application/main.cpp"
-                          },
-                          "region": {
-                            "startLine": 382,
-                            "startColumn": 15
-                          }
-                        }
-                      },
-                      "importance": "unimportant"
-                    },
-                    {
-                      "location": {
-                        "physicalLocation": {
-                          "artifactLocation": {
-                            "uri": "file:///C:/Users/faye/Desktop/Projects/Application/Application/main.cpp"
-                          },
-                          "region": {
-                            "startLine": 383,
-                            "startColumn": 19
-                          }
-                        }
-                      },
-                      "importance": "unimportant"
-                    },
-                    {
-                      "location": {
-                        "physicalLocation": {
-                          "artifactLocation": {
-                            "uri": "file:///C:/Users/faye/Desktop/Projects/Application/Application/main.cpp"
-                          },
-                          "region": {
-                            "startLine": 384,
-                            "startColumn": 14
-                          }
-                        }
-                      },
-                      "importance": "unimportant"
-                    },
-                    {
-                      "location": {
-                        "physicalLocation": {
-                          "artifactLocation": {
-                            "uri": "file:///C:/Users/faye/Desktop/Projects/Application/Application/main.cpp"
-                          },
-                          "region": {
-                            "startLine": 385,
-                            "startColumn": 21
-                          }
-                        },
-                        "message": {
-                          "text": "Enter this branch, (assume '<branch condition>')"
-                        }
-                      },
-                      "kinds": [
-                        "branch"
-                      ]
-                    },
-                    {
-                      "location": {
-                        "physicalLocation": {
-                          "artifactLocation": {
-                            "uri": "file:///C:/Users/faye/Desktop/Projects/Application/Application/main.cpp"
-                          },
-                          "region": {
-                            "startLine": 387,
-                            "startColumn": 19
-                          }
-                        }
-                      },
-                      "importance": "unimportant"
-                    },
-                    {
-                      "location": {
-                        "physicalLocation": {
-                          "artifactLocation": {
-                            "uri": "file:///C:/Users/faye/Desktop/Projects/Application/Application/main.cpp"
-                          },
-                          "region": {
-                            "startLine": 388,
-                            "startColumn": 18
-                          }
-                        }
-                      },
-                      "importance": "unimportant"
-                    },
-                    {
-                      "location": {
-                        "physicalLocation": {
-                          "artifactLocation": {
-                            "uri": "file:///C:/Users/faye/Desktop/Projects/Application/Application/main.cpp"
-                          },
-                          "region": {
-                            "startLine": 390,
-                            "startColumn": 9
-                          }
-                        }
-                      },
-                      "importance": "unimportant"
-                    },
-                    {
-                      "location": {
-                        "physicalLocation": {
-                          "artifactLocation": {
-                            "uri": "file:///C:/Users/faye/Desktop/Projects/Application/Application/main.cpp"
-                          },
-                          "region": {
-                            "startLine": 391,
-                            "startColumn": 9
-                          }
-                        }
-                      },
-                      "importance": "unimportant"
-                    },
-                    {
-                      "location": {
-                        "physicalLocation": {
-                          "artifactLocation": {
-                            "uri": "file:///C:/Users/faye/Desktop/Projects/Application/Application/main.cpp"
-                          },
-                          "region": {
-                            "startLine": 397,
-                            "startColumn": 21
-                          }
-                        }
-                      },
-                      "importance": "unimportant"
-                    },
-                    {
-                      "location": {
-                        "physicalLocation": {
-                          "artifactLocation": {
-                            "uri": "file:///C:/Users/faye/Desktop/Projects/Application/Application/main.cpp"
-                          },
-                          "region": {
-                            "startLine": 398,
-                            "startColumn": 16
-                          }
-                        }
-                      },
-                      "importance": "unimportant"
-                    },
-                    {
-                      "location": {
-                        "physicalLocation": {
-                          "artifactLocation": {
-                            "uri": "file:///C:/Users/faye/Desktop/Projects/Application/Application/main.cpp"
-                          },
-                          "region": {
-                            "startLine": 399,
-                            "startColumn": 26
-                          }
-                        }
-                      },
-                      "importance": "unimportant"
-                    },
-                    {
-                      "location": {
-                        "physicalLocation": {
-                          "artifactLocation": {
-                            "uri": "file:///C:/Users/faye/Desktop/Projects/Application/Application/main.cpp"
-                          },
-                          "region": {
-                            "startLine": 400,
-                            "startColumn": 26
-                          }
-                        }
-                      },
-                      "importance": "unimportant"
-                    },
-                    {
-                      "location": {
-                        "physicalLocation": {
-                          "artifactLocation": {
-                            "uri": "file:///C:/Users/faye/Desktop/Projects/Application/Application/main.cpp"
-                          },
-                          "region": {
-                            "startLine": 401,
-                            "startColumn": 11
-                          }
-                        }
-                      },
-                      "importance": "unimportant"
-                    },
-                    {
-                      "location": {
-                        "physicalLocation": {
-                          "artifactLocation": {
-                            "uri": "file:///C:/Users/faye/Desktop/Projects/Application/Application/main.cpp"
-                          },
-                          "region": {
-                            "startLine": 402,
-                            "startColumn": 13
-                          }
-                        }
-                      },
-                      "importance": "unimportant"
-                    },
-                    {
-                      "location": {
-                        "physicalLocation": {
-                          "artifactLocation": {
-                            "uri": "file:///C:/Users/faye/Desktop/Projects/Application/Application/main.cpp"
-                          },
-                          "region": {
-                            "startLine": 402,
-                            "startColumn": 22
-                          }
-                        },
-                        "message": {
-                          "text": "Skip this loop, (assume 'i<globalTextures.size()' is false)"
-                        }
-                      },
-                      "kinds": [
-                        "branch"
-                      ]
-                    },
-                    {
-                      "location": {
-                        "physicalLocation": {
-                          "artifactLocation": {
-                            "uri": "file:///C:/Users/faye/Desktop/Projects/Application/Application/main.cpp"
-                          },
-                          "region": {
-                            "startLine": 418,
-                            "startColumn": 10
-                          }
-                        }
-                      },
-                      "importance": "unimportant"
-                    },
-                    {
-                      "location": {
-                        "physicalLocation": {
-                          "artifactLocation": {
-                            "uri": "file:///C:/Users/faye/Desktop/Projects/Application/Application/main.cpp"
-                          },
-                          "region": {
-                            "startLine": 419,
-                            "startColumn": 11
-                          }
-                        }
-                      },
-                      "importance": "unimportant"
-                    },
-                    {
-                      "location": {
-                        "physicalLocation": {
-                          "artifactLocation": {
-                            "uri": "file:///C:/Users/faye/Desktop/Projects/Application/Application/main.cpp"
-                          },
-                          "region": {
-                            "startLine": 420,
-                            "startColumn": 12
-                          }
-                        }
-                      },
-                      "importance": "unimportant"
-                    },
-                    {
-                      "location": {
-                        "physicalLocation": {
-                          "artifactLocation": {
-                            "uri": "file:///C:/Users/faye/Desktop/Projects/Application/Application/main.cpp"
-                          },
-                          "region": {
-                            "startLine": 421,
-                            "startColumn": 14
-                          }
-                        }
-                      },
-                      "importance": "unimportant"
-                    },
-                    {
-                      "location": {
-                        "physicalLocation": {
-                          "artifactLocation": {
-                            "uri": "file:///C:/Users/faye/Desktop/Projects/Application/Application/main.cpp"
-                          },
-                          "region": {
-                            "startLine": 422,
-                            "startColumn": 13
-                          }
-                        }
-                      },
-                      "importance": "unimportant"
-                    },
-                    {
-                      "location": {
-                        "physicalLocation": {
-                          "artifactLocation": {
-                            "uri": "file:///C:/Users/faye/Desktop/Projects/Application/Application/main.cpp"
-                          },
-                          "region": {
-                            "startLine": 422,
-                            "startColumn": 22
-                          }
-                        },
-                        "message": {
-                          "text": "Skip this loop, (assume 'i<objects.size()' is false)"
-                        }
-                      },
-                      "kinds": [
-                        "branch"
-                      ]
-                    },
-                    {
-                      "location": {
-                        "physicalLocation": {
-                          "artifactLocation": {
-                            "uri": "file:///C:/Users/faye/Desktop/Projects/Application/Application/main.cpp"
-                          },
-                          "region": {
-                            "startLine": 465,
-                            "startColumn": 10
-                          }
-                        }
-                      },
-                      "importance": "unimportant"
-                    },
-                    {
-                      "location": {
-                        "physicalLocation": {
-                          "artifactLocation": {
-                            "uri": "file:///C:/Users/faye/Desktop/Projects/Application/Application/main.cpp"
-                          },
-                          "region": {
-                            "startLine": 466,
-                            "startColumn": 14
-                          }
-                        }
-                      },
-                      "importance": "unimportant"
-                    },
-                    {
-                      "location": {
-                        "physicalLocation": {
-                          "artifactLocation": {
-                            "uri": "file:///C:/Users/faye/Desktop/Projects/Application/Application/main.cpp"
-                          },
-                          "region": {
-                            "startLine": 467,
-                            "startColumn": 13
-                          }
-                        }
-                      },
-                      "importance": "unimportant"
-                    },
-                    {
-                      "location": {
-                        "physicalLocation": {
-                          "artifactLocation": {
-                            "uri": "file:///C:/Users/faye/Desktop/Projects/Application/Application/main.cpp"
-                          },
-                          "region": {
-                            "startLine": 468,
-                            "startColumn": 11
-                          }
-                        }
-                      },
-                      "importance": "unimportant"
-                    },
-                    {
-                      "location": {
-                        "physicalLocation": {
-                          "artifactLocation": {
-                            "uri": "file:///C:/Users/faye/Desktop/Projects/Application/Application/main.cpp"
-                          },
-                          "region": {
-                            "startLine": 469,
-                            "startColumn": 20
-                          }
-                        }
-                      },
-                      "importance": "unimportant"
-                    },
-                    {
-                      "location": {
-                        "physicalLocation": {
-                          "artifactLocation": {
-                            "uri": "file:///C:/Users/faye/Desktop/Projects/Application/Application/main.cpp"
-                          },
-                          "region": {
-                            "startLine": 470,
-                            "startColumn": 23
-                          }
-                        }
-                      },
-                      "importance": "unimportant"
-                    },
-                    {
-                      "location": {
-                        "physicalLocation": {
-                          "artifactLocation": {
-                            "uri": "file:///C:/Users/faye/Desktop/Projects/Application/Application/main.cpp"
-                          },
-                          "region": {
-                            "startLine": 470,
-                            "startColumn": 24
-                          }
-                        }
-                      },
-                      "importance": "unimportant"
-                    },
-                    {
-                      "location": {
-                        "physicalLocation": {
-                          "artifactLocation": {
-                            "uri": "file:///C:/Users/faye/Desktop/Projects/Application/Application/main.cpp"
-                          },
-                          "region": {
-                            "startLine": 470,
-                            "startColumn": 23
-                          }
-                        }
-                      },
-                      "importance": "unimportant"
-                    },
-                    {
-                      "location": {
-                        "physicalLocation": {
-                          "artifactLocation": {
-                            "uri": "file:///C:/Users/faye/Desktop/Projects/Application/Application/main.cpp"
-                          },
-                          "region": {
-                            "startLine": 471,
-                            "startColumn": 26
-                          }
-                        }
-                      },
-                      "importance": "unimportant"
-                    },
-                    {
-                      "location": {
-                        "physicalLocation": {
-                          "artifactLocation": {
-                            "uri": "file:///C:/Users/faye/Desktop/Projects/Application/Application/main.cpp"
-                          },
-                          "region": {
-                            "startLine": 471,
-                            "startColumn": 27
-                          }
-                        }
-                      },
-                      "importance": "unimportant"
-                    },
-                    {
-                      "location": {
-                        "physicalLocation": {
-                          "artifactLocation": {
-                            "uri": "file:///C:/Users/faye/Desktop/Projects/Application/Application/main.cpp"
-                          },
-                          "region": {
-                            "startLine": 471,
-                            "startColumn": 26
-                          }
-                        }
-                      },
-                      "importance": "unimportant"
-                    },
-                    {
-                      "location": {
-                        "physicalLocation": {
-                          "artifactLocation": {
-                            "uri": "file:///C:/Users/faye/Desktop/Projects/Application/Application/main.cpp"
-                          },
-                          "region": {
-                            "startLine": 472,
-                            "startColumn": 25
-                          }
-                        }
-                      },
-                      "importance": "unimportant"
-                    },
-                    {
-                      "location": {
-                        "physicalLocation": {
-                          "artifactLocation": {
-                            "uri": "file:///C:/Users/faye/Desktop/Projects/Application/Application/main.cpp"
-                          },
-                          "region": {
-                            "startLine": 472,
-                            "startColumn": 26
-                          }
-                        }
-                      },
-                      "importance": "unimportant"
-                    },
-                    {
-                      "location": {
-                        "physicalLocation": {
-                          "artifactLocation": {
-                            "uri": "file:///C:/Users/faye/Desktop/Projects/Application/Application/main.cpp"
-                          },
-                          "region": {
-                            "startLine": 472,
-                            "startColumn": 25
-                          }
-                        }
-                      },
-                      "importance": "unimportant"
-                    },
-                    {
-                      "location": {
-                        "physicalLocation": {
-                          "artifactLocation": {
-                            "uri": "file:///C:/Users/faye/Desktop/Projects/Application/Application/main.cpp"
-                          },
-                          "region": {
-                            "startLine": 473,
-                            "startColumn": 21
-                          }
-                        }
-                      },
-                      "importance": "unimportant"
-                    },
-                    {
-                      "location": {
-                        "physicalLocation": {
-                          "artifactLocation": {
-                            "uri": "file:///C:/Users/faye/Desktop/Projects/Application/Application/main.cpp"
-                          },
-                          "region": {
-                            "startLine": 474,
-                            "startColumn": 8
-                          }
-                        },
-                        "message": {
-                          "text": "Skip this branch, (assume 'inWireframe' is false)"
-                        }
-                      },
-                      "kinds": [
-                        "branch"
-                      ]
-                    },
-                    {
-                      "location": {
-                        "physicalLocation": {
-                          "artifactLocation": {
-                            "uri": "file:///C:/Users/faye/Desktop/Projects/Application/Application/main.cpp"
-                          },
-                          "region": {
-                            "startLine": 477,
-                            "startColumn": 17
-                          }
-                        }
-                      },
-                      "importance": "unimportant"
-                    },
-                    {
-                      "location": {
-                        "physicalLocation": {
-                          "artifactLocation": {
-                            "uri": "file:///C:/Users/faye/Desktop/Projects/Application/Application/main.cpp"
-                          },
-                          "region": {
-                            "startLine": 478,
-                            "startColumn": 16
-                          }
-                        }
-                      },
-                      "importance": "unimportant"
-                    },
-                    {
-                      "location": {
-                        "physicalLocation": {
-                          "artifactLocation": {
-                            "uri": "file:///C:/Users/faye/Desktop/Projects/Application/Application/main.cpp"
-                          },
-                          "region": {
-                            "startLine": 480,
-                            "startColumn": 8
-                          }
-                        },
-                        "message": {
-                          "text": "Skip this branch, (assume 'inWireframe' is false)"
-                        }
-                      },
-                      "kinds": [
-                        "branch"
-                      ]
-                    },
-                    {
-                      "location": {
-                        "physicalLocation": {
-                          "artifactLocation": {
-                            "uri": "file:///C:/Users/faye/Desktop/Projects/Application/Application/main.cpp"
-                          },
-                          "region": {
-                            "startLine": 482,
-                            "startColumn": 19
-                          }
-                        }
-                      },
-                      "importance": "unimportant"
-                    },
-                    {
-                      "location": {
-                        "physicalLocation": {
-                          "artifactLocation": {
-                            "uri": "file:///C:/Users/faye/Desktop/Projects/Application/Application/main.cpp"
-                          },
-                          "region": {
-                            "startLine": 483,
-                            "startColumn": 28
-                          }
-                        }
-                      },
-                      "importance": "unimportant"
-                    },
-                    {
-                      "location": {
-                        "physicalLocation": {
-                          "artifactLocation": {
-                            "uri": "file:///C:/Users/faye/Desktop/Projects/Application/Application/main.cpp"
-                          },
-                          "region": {
-                            "startLine": 484,
-                            "startColumn": 25
-                          }
-                        }
-                      },
-                      "importance": "unimportant"
-                    },
-                    {
-                      "location": {
-                        "physicalLocation": {
-                          "artifactLocation": {
-                            "uri": "file:///C:/Users/faye/Desktop/Projects/Application/Application/main.cpp"
-                          },
-                          "region": {
-                            "startLine": 485,
-                            "startColumn": 25
-                          }
-                        }
-                      },
-                      "importance": "unimportant"
-                    },
-                    {
-                      "location": {
-                        "physicalLocation": {
-                          "artifactLocation": {
-                            "uri": "file:///C:/Users/faye/Desktop/Projects/Application/Application/main.cpp"
-                          },
-                          "region": {
-                            "startLine": 488,
-                            "startColumn": 39
-                          }
-                        },
-                        "message": {
-                          "text": "Skip this branch, (assume 'glfwGetKey(window, 87)==1' is false)"
-                        }
-                      },
-                      "kinds": [
-                        "branch"
-                      ]
-                    },
-                    {
-                      "location": {
-                        "physicalLocation": {
-                          "artifactLocation": {
-                            "uri": "file:///C:/Users/faye/Desktop/Projects/Application/Application/main.cpp"
-                          },
-                          "region": {
-                            "startLine": 492,
-                            "startColumn": 39
-                          }
-                        },
-                        "message": {
-                          "text": "Skip this branch, (assume 'glfwGetKey(window, 83)==1' is false)"
-                        }
-                      },
-                      "kinds": [
-                        "branch"
-                      ]
-                    },
-                    {
-                      "location": {
-                        "physicalLocation": {
-                          "artifactLocation": {
-                            "uri": "file:///C:/Users/faye/Desktop/Projects/Application/Application/main.cpp"
-                          },
-                          "region": {
-                            "startLine": 496,
-                            "startColumn": 39
-                          }
-                        },
-                        "message": {
-                          "text": "Skip this branch, (assume 'glfwGetKey(window, 65)==1' is false)"
-                        }
-                      },
-                      "kinds": [
-                        "branch"
-                      ]
-                    },
-                    {
-                      "location": {
-                        "physicalLocation": {
-                          "artifactLocation": {
-                            "uri": "file:///C:/Users/faye/Desktop/Projects/Application/Application/main.cpp"
-                          },
-                          "region": {
-                            "startLine": 500,
-                            "startColumn": 39
-                          }
-                        },
-                        "message": {
-                          "text": "Skip this branch, (assume 'glfwGetKey(window, 68)==1' is false)"
-                        }
-                      },
-                      "kinds": [
-                        "branch"
-                      ]
-                    },
-                    {
-                      "location": {
-                        "physicalLocation": {
-                          "artifactLocation": {
-                            "uri": "file:///C:/Users/faye/Desktop/Projects/Application/Application/main.cpp"
-                          },
-                          "region": {
-                            "startLine": 504,
-                            "startColumn": 53
-                          }
-                        },
-                        "message": {
-                          "text": "Skip this branch, (assume '<branch condition>' is false)"
-                        }
-                      },
-                      "kinds": [
-                        "branch"
-                      ]
-                    },
-                    {
-                      "location": {
-                        "physicalLocation": {
-                          "artifactLocation": {
-                            "uri": "file:///C:/Users/faye/Desktop/Projects/Application/Application/main.cpp"
-                          },
-                          "region": {
-                            "startLine": 508,
-                            "startColumn": 53
-                          }
-                        },
-                        "message": {
-                          "text": "Skip this branch, (assume '<branch condition>' is false)"
-                        }
-                      },
-                      "kinds": [
-                        "branch"
-                      ]
-                    },
-                    {
-                      "location": {
-                        "physicalLocation": {
-                          "artifactLocation": {
-                            "uri": "file:///C:/Users/faye/Desktop/Projects/Application/Application/main.cpp"
-                          },
-                          "region": {
-                            "startLine": 512,
-                            "startColumn": 23
-                          }
-                        },
-                        "message": {
-                          "text": "Enter this branch, (assume 'objects.size()!=0')"
-                        }
-                      },
-                      "kinds": [
-                        "branch"
-                      ]
-                    },
-                    {
-                      "location": {
-                        "physicalLocation": {
-                          "artifactLocation": {
-                            "uri": "file:///C:/Users/faye/Desktop/Projects/Application/Application/main.cpp"
-                          },
-                          "region": {
-                            "startLine": 514,
-                            "startColumn": 75
-                          }
-                        },
-                        "message": {
-                          "text": "Skip this branch, (assume '<branch condition>' is false)"
-                        }
-                      },
-                      "kinds": [
-                        "branch"
-                      ]
-                    },
-                    {
-                      "location": {
-                        "physicalLocation": {
-                          "artifactLocation": {
-                            "uri": "file:///C:/Users/faye/Desktop/Projects/Application/Application/main.cpp"
-                          },
-                          "region": {
-                            "startLine": 534,
-                            "startColumn": 82
-                          }
-                        },
-                        "message": {
-                          "text": "Skip this branch, (assume '<branch condition>' is false)"
-                        }
-                      },
-                      "kinds": [
-                        "branch"
-                      ]
-                    },
-                    {
-                      "location": {
-                        "physicalLocation": {
-                          "artifactLocation": {
-                            "uri": "file:///C:/Users/faye/Desktop/Projects/Application/Application/main.cpp"
-                          },
-                          "region": {
-                            "startLine": 539,
-                            "startColumn": 61
-                          }
-                        },
-                        "message": {
-                          "text": "Enter this branch, (assume '<branch condition>')"
-                        }
-                      },
-                      "kinds": [
-                        "branch"
-                      ]
-                    },
-                    {
-                      "location": {
-                        "physicalLocation": {
-                          "artifactLocation": {
-                            "uri": "file:///C:/Users/faye/Desktop/Projects/Application/Application/main.cpp"
-                          },
-                          "region": {
-                            "startLine": 541,
-                            "startColumn": 18
-                          }
-                        }
-                      },
-                      "importance": "unimportant"
-                    },
-                    {
-                      "location": {
-                        "physicalLocation": {
-                          "artifactLocation": {
-                            "uri": "file:///C:/Users/faye/Desktop/Projects/Application/Application/main.cpp"
-                          },
-                          "region": {
-                            "startLine": 541,
-                            "startColumn": 17
-                          }
-                        }
-                      },
-                      "importance": "unimportant"
-                    },
-                    {
-                      "location": {
-                        "physicalLocation": {
-                          "artifactLocation": {
-                            "uri": "file:///C:/Users/faye/Desktop/Projects/Application/Application/main.cpp"
-                          },
-                          "region": {
-                            "startLine": 542,
-                            "startColumn": 17
-                          }
-                        }
-                      },
-                      "importance": "unimportant"
-                    },
-                    {
-                      "location": {
-                        "physicalLocation": {
-                          "artifactLocation": {
-                            "uri": "file:///C:/Users/faye/Desktop/Projects/Application/Application/main.cpp"
-                          },
-                          "region": {
-                            "startLine": 543,
-                            "startColumn": 18
-                          }
-                        }
-                      },
-                      "importance": "unimportant"
-                    },
-                    {
-                      "location": {
-                        "physicalLocation": {
-                          "artifactLocation": {
-                            "uri": "file:///C:/Users/faye/Desktop/Projects/Application/Application/main.cpp"
-                          },
-                          "region": {
-                            "startLine": 543,
-                            "startColumn": 17
-                          }
-                        }
-                      },
-                      "importance": "unimportant"
-                    },
-                    {
-                      "location": {
-                        "physicalLocation": {
-                          "artifactLocation": {
-                            "uri": "file:///C:/Users/faye/Desktop/Projects/Application/Application/main.cpp"
-                          },
-                          "region": {
-                            "startLine": 544,
-                            "startColumn": 17
-                          }
-                        }
-                      },
-                      "importance": "unimportant"
-                    },
-                    {
-                      "location": {
-                        "physicalLocation": {
-                          "artifactLocation": {
-                            "uri": "file:///C:/Users/faye/Desktop/Projects/Application/Application/main.cpp"
-                          },
-                          "region": {
-                            "startLine": 545,
-                            "startColumn": 25
-                          }
-                        },
-                        "message": {
-                          "text": "'lightDistanceToCam' is an Input to and receives the Return value from 'clamp' (declared on line 73)"
-                        }
-                      },
-                      "kinds": [
-                        "declaration"
-                      ]
-                    },
-                    {
-                      "location": {
-                        "physicalLocation": {
-                          "artifactLocation": {
-                            "uri": "file:///C:/Users/faye/Desktop/Projects/Application/Application/main.cpp"
-                          },
-                          "region": {
-                            "startLine": 546,
-                            "startColumn": 11
-                          }
-                        }
-                      },
-                      "importance": "unimportant"
-                    },
-                    {
-                      "location": {
-                        "physicalLocation": {
-                          "artifactLocation": {
-                            "uri": "file:///C:/Users/faye/Desktop/Projects/Application/Application/main.cpp"
-                          },
-                          "region": {
-                            "startLine": 547,
-                            "startColumn": 39
-                          }
-                        }
-                      },
-                      "importance": "unimportant"
-                    },
-                    {
-                      "location": {
-                        "physicalLocation": {
-                          "artifactLocation": {
-                            "uri": "file:///C:/Users/faye/Desktop/Projects/Application/Application/main.cpp"
-                          },
-                          "region": {
-                            "startLine": 548,
-                            "startColumn": 36
-                          }
-                        }
-                      },
-                      "importance": "unimportant"
-                    },
-                    {
-                      "location": {
-                        "physicalLocation": {
-                          "artifactLocation": {
-                            "uri": "file:///C:/Users/faye/Desktop/Projects/Application/Application/main.cpp"
-                          },
-                          "region": {
-                            "startLine": 545,
-                            "startColumn": 34
-                          }
-                        },
-                        "message": {
-                          "text": "'lightDistanceToCam' is used, but may not have been initialized"
-                        }
-                      },
-                      "kinds": [
-                        "usage"
-                      ],
-                      "importance": "essential"
-                    }
-                  ]
-                }
-              ]
-            }
-          ]
-        },
-        {
-          "ruleId": "C26495",
-          "message": {
-            "text": "Variable 'Framebuffer::texture' is uninitialized. Always initialize a member variable (type.6)."
-          },
-          "analysisTarget": {
-            "uri": "file:///c:/users/faye/desktop/projects/application/application/main.cpp"
-          },
-          "locations": [
-            {
-              "physicalLocation": {
-                "artifactLocation": {
-                  "uri": "file:///C:/Users/faye/Desktop/Projects/Application/Application/objects.h"
-                },
-                "region": {
-                  "startLine": 342,
-                  "startColumn": 1
-                }
-              },
-              "logicalLocations": [
-                {
-                  "fullyQualifiedName": "Framebuffer::{ctor}",
-                  "decoratedName": "??0Framebuffer@@QEAA@XZ",
-                  "kind": "function"
-                }
-              ]
-            }
-          ],
-          "properties": {
-            "targetSymbol": "Framebuffer::texture"
+            "targetSymbol": "Texture::_format"
           }
         },
         {
           "ruleId": "C26495",
           "message": {
-            "text": "Variable 'Framebuffer::RBO_' is uninitialized. Always initialize a member variable (type.6)."
+            "text": "Variable 'Program::deltaTimer' is uninitialized. Always initialize a member variable (type.6)."
           },
           "analysisTarget": {
             "uri": "file:///c:/users/faye/desktop/projects/application/application/main.cpp"
@@ -2308,30 +208,30 @@
             {
               "physicalLocation": {
                 "artifactLocation": {
-                  "uri": "file:///C:/Users/faye/Desktop/Projects/Application/Application/objects.h"
+                  "uri": "file:///C:/Users/faye/Desktop/Projects/Application/Application/ProgramBase.h"
                 },
                 "region": {
-                  "startLine": 342,
+                  "startLine": 120,
                   "startColumn": 1
                 }
               },
               "logicalLocations": [
                 {
-                  "fullyQualifiedName": "Framebuffer::{ctor}",
-                  "decoratedName": "??0Framebuffer@@QEAA@XZ",
+                  "fullyQualifiedName": "Program::{ctor}",
+                  "decoratedName": "??0Program@@QEAA@XZ",
                   "kind": "function"
                 }
               ]
             }
           ],
           "properties": {
-            "targetSymbol": "Framebuffer::RBO_"
+            "targetSymbol": "Program::deltaTimer"
           }
         },
         {
           "ruleId": "C26495",
           "message": {
-            "text": "Variable 'Framebuffer::type' is uninitialized. Always initialize a member variable (type.6)."
+            "text": "Variable 'Program::vidMode' is uninitialized. Always initialize a member variable (type.6)."
           },
           "analysisTarget": {
             "uri": "file:///c:/users/faye/desktop/projects/application/application/main.cpp"
@@ -2340,30 +240,30 @@
             {
               "physicalLocation": {
                 "artifactLocation": {
-                  "uri": "file:///C:/Users/faye/Desktop/Projects/Application/Application/objects.h"
+                  "uri": "file:///C:/Users/faye/Desktop/Projects/Application/Application/ProgramBase.h"
                 },
                 "region": {
-                  "startLine": 342,
+                  "startLine": 120,
                   "startColumn": 1
                 }
               },
               "logicalLocations": [
                 {
-                  "fullyQualifiedName": "Framebuffer::{ctor}",
-                  "decoratedName": "??0Framebuffer@@QEAA@XZ",
+                  "fullyQualifiedName": "Program::{ctor}",
+                  "decoratedName": "??0Program@@QEAA@XZ",
                   "kind": "function"
                 }
               ]
             }
           ],
           "properties": {
-            "targetSymbol": "Framebuffer::type"
+            "targetSymbol": "Program::vidMode"
           }
         },
         {
           "ruleId": "C26495",
           "message": {
-            "text": "Variable 'Framebuffer::FBO_' is uninitialized. Always initialize a member variable (type.6)."
+            "text": "Variable 'Program::monitor' is uninitialized. Always initialize a member variable (type.6)."
           },
           "analysisTarget": {
             "uri": "file:///c:/users/faye/desktop/projects/application/application/main.cpp"
@@ -2372,32 +272,224 @@
             {
               "physicalLocation": {
                 "artifactLocation": {
-                  "uri": "file:///C:/Users/faye/Desktop/Projects/Application/Application/objects.h"
+                  "uri": "file:///C:/Users/faye/Desktop/Projects/Application/Application/ProgramBase.h"
                 },
                 "region": {
-                  "startLine": 342,
+                  "startLine": 120,
                   "startColumn": 1
                 }
               },
               "logicalLocations": [
                 {
-                  "fullyQualifiedName": "Framebuffer::{ctor}",
-                  "decoratedName": "??0Framebuffer@@QEAA@XZ",
+                  "fullyQualifiedName": "Program::{ctor}",
+                  "decoratedName": "??0Program@@QEAA@XZ",
                   "kind": "function"
                 }
               ]
             }
           ],
           "properties": {
-            "targetSymbol": "Framebuffer::FBO_"
+            "targetSymbol": "Program::monitor"
+          }
+        },
+        {
+          "ruleId": "C26495",
+          "message": {
+            "text": "Variable 'Program::thisWindow' is uninitialized. Always initialize a member variable (type.6)."
+          },
+          "analysisTarget": {
+            "uri": "file:///c:/users/faye/desktop/projects/application/application/main.cpp"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "file:///C:/Users/faye/Desktop/Projects/Application/Application/ProgramBase.h"
+                },
+                "region": {
+                  "startLine": 120,
+                  "startColumn": 1
+                }
+              },
+              "logicalLocations": [
+                {
+                  "fullyQualifiedName": "Program::{ctor}",
+                  "decoratedName": "??0Program@@QEAA@XZ",
+                  "kind": "function"
+                }
+              ]
+            }
+          ],
+          "properties": {
+            "targetSymbol": "Program::thisWindow"
+          }
+        },
+        {
+          "ruleId": "C26495",
+          "message": {
+            "text": "Variable 'MainProgram::timer' is uninitialized. Always initialize a member variable (type.6)."
+          },
+          "analysisTarget": {
+            "uri": "file:///c:/users/faye/desktop/projects/application/application/main.cpp"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "file:///C:/Users/faye/Desktop/Projects/Application/Application/MainProgram.cpp"
+                },
+                "region": {
+                  "startLine": 117,
+                  "startColumn": 1
+                }
+              },
+              "logicalLocations": [
+                {
+                  "fullyQualifiedName": "MainProgram::{ctor}",
+                  "decoratedName": "??0MainProgram@@QEAA@XZ",
+                  "kind": "function"
+                }
+              ]
+            }
+          ],
+          "properties": {
+            "targetSymbol": "MainProgram::timer"
+          }
+        },
+        {
+          "ruleId": "C26495",
+          "message": {
+            "text": "Variable 'MainProgram::mr' is uninitialized. Always initialize a member variable (type.6)."
+          },
+          "analysisTarget": {
+            "uri": "file:///c:/users/faye/desktop/projects/application/application/main.cpp"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "file:///C:/Users/faye/Desktop/Projects/Application/Application/MainProgram.cpp"
+                },
+                "region": {
+                  "startLine": 117,
+                  "startColumn": 1
+                }
+              },
+              "logicalLocations": [
+                {
+                  "fullyQualifiedName": "MainProgram::{ctor}",
+                  "decoratedName": "??0MainProgram@@QEAA@XZ",
+                  "kind": "function"
+                }
+              ]
+            }
+          ],
+          "properties": {
+            "targetSymbol": "MainProgram::mr"
+          }
+        },
+        {
+          "ruleId": "C26495",
+          "message": {
+            "text": "Variable 'ComponentArray<Transform>::mSize' is uninitialized. Always initialize a member variable (type.6)."
+          },
+          "analysisTarget": {
+            "uri": "file:///c:/users/faye/desktop/projects/application/application/main.cpp"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "file:///C:/Users/faye/Desktop/Projects/Application/Application/Entity.h"
+                },
+                "region": {
+                  "startLine": 165,
+                  "startColumn": 1
+                }
+              },
+              "logicalLocations": [
+                {
+                  "fullyQualifiedName": "ComponentArray<Transform>::{ctor}",
+                  "decoratedName": "??0?$ComponentArray@UTransform@@@@QEAA@XZ",
+                  "kind": "function"
+                }
+              ]
+            }
+          ],
+          "properties": {
+            "targetSymbol": "ComponentArray<Transform>::mSize"
+          }
+        },
+        {
+          "ruleId": "C26495",
+          "message": {
+            "text": "Variable 'ComponentArray<Camera>::mSize' is uninitialized. Always initialize a member variable (type.6)."
+          },
+          "analysisTarget": {
+            "uri": "file:///c:/users/faye/desktop/projects/application/application/main.cpp"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "file:///C:/Users/faye/Desktop/Projects/Application/Application/Entity.h"
+                },
+                "region": {
+                  "startLine": 165,
+                  "startColumn": 1
+                }
+              },
+              "logicalLocations": [
+                {
+                  "fullyQualifiedName": "ComponentArray<Camera>::{ctor}",
+                  "decoratedName": "??0?$ComponentArray@VCamera@@@@QEAA@XZ",
+                  "kind": "function"
+                }
+              ]
+            }
+          ],
+          "properties": {
+            "targetSymbol": "ComponentArray<Camera>::mSize"
+          }
+        },
+        {
+          "ruleId": "C26495",
+          "message": {
+            "text": "Variable 'ComponentArray<MeshRenderer>::mSize' is uninitialized. Always initialize a member variable (type.6)."
+          },
+          "analysisTarget": {
+            "uri": "file:///c:/users/faye/desktop/projects/application/application/main.cpp"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "file:///C:/Users/faye/Desktop/Projects/Application/Application/Entity.h"
+                },
+                "region": {
+                  "startLine": 165,
+                  "startColumn": 1
+                }
+              },
+              "logicalLocations": [
+                {
+                  "fullyQualifiedName": "ComponentArray<MeshRenderer>::{ctor}",
+                  "decoratedName": "??0?$ComponentArray@VMeshRenderer@@@@QEAA@XZ",
+                  "kind": "function"
+                }
+              ]
+            }
+          ],
+          "properties": {
+            "targetSymbol": "ComponentArray<MeshRenderer>::mSize"
           }
         }
       ],
       "tool": {
         "driver": {
           "name": "PREfast",
-          "fullName": "PREfast Code Analysis",
-          "version": "14.42.34435.0",
+          "fullName": "MSVC Code Analysis",
+          "version": "14.50.35717.0",
           "informationUri": "https://aka.ms/cpp/ca"
         }
       },
@@ -2412,44 +504,54 @@
             "uri": "file:///c:/users/faye/desktop/projects/application/application/main.cpp"
           },
           "roles": [
-            "analysisTarget",
-            "resultFile"
+            "analysisTarget"
           ],
           "hashes": {
-            "sha-256": "74cf2bc7339d1761d9138a7b092e567c2cf751399c5f9cafdfe7cef68ba5ebc6"
+            "sha-256": "b265d51ed37b4baee6594fa04878c5331404517987810fc57595a632928c350f"
           }
         },
         {
           "location": {
-            "uri": "file:///C:/Users/faye/Desktop/Projects/Application/Application/engine.h"
+            "uri": "file:///C:/Users/faye/Desktop/Projects/Application/Application/Entity.h"
           },
           "roles": [
             "resultFile"
           ],
           "hashes": {
-            "sha-256": "4aff01322b3a798f477f5e2588a3a954ffe6c29fa9811bd6f4d98384f0b9dbf9"
+            "sha-256": "1d4b072e8e1c365bb2b32f24e9f261f5a6f2c3108c362ec27b195491c7b5834a"
           }
         },
         {
           "location": {
-            "uri": "file:///C:/Users/faye/Desktop/Projects/Application/Application/Gamepad.h"
+            "uri": "file:///C:/Users/faye/Desktop/Projects/Application/Application/Texture.h"
           },
           "roles": [
             "resultFile"
           ],
           "hashes": {
-            "sha-256": "c5374ac3f9b7cd569444dfc067c748a85ac2ed786233ade37cb01279009198a8"
+            "sha-256": "cf33cae06a6ca3fada8373bddb6d386fed4821798db5b0755588fc23830d88f8"
           }
         },
         {
           "location": {
-            "uri": "file:///C:/Users/faye/Desktop/Projects/Application/Application/objects.h"
+            "uri": "file:///C:/Users/faye/Desktop/Projects/Application/Application/ProgramBase.h"
           },
           "roles": [
             "resultFile"
           ],
           "hashes": {
-            "sha-256": "6ef71e16cd6328ba037495ee4649704d403546f5cb375648a1031dd4ac91521a"
+            "sha-256": "8168d6617fc45171b3d61852f0d41de8a09f84912d73a8de6e49e3fe8be0642b"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///C:/Users/faye/Desktop/Projects/Application/Application/MainProgram.cpp"
+          },
+          "roles": [
+            "resultFile"
+          ],
+          "hashes": {
+            "sha-256": "e5b62077714f83b12f251757f44b81c85d381e066467a686b5ee5624a65e2cc9"
           }
         },
         {
@@ -2457,39 +559,31 @@
             "uri": "file:///c:/users/faye/desktop/projects/application/application/main.h"
           },
           "hashes": {
-            "sha-256": "04dc61be1437256a6c17ef42af2499462cfd586ac434e4927fccb33f970cb7e0"
+            "sha-256": "37d8ebdbe3bdc28caa747f5b3e75879f29e040f46e521b1a26bb56f2d13e68c2"
           }
         },
         {
           "location": {
-            "uri": "file:///c:/users/faye/desktop/projects/application/application/libraries/include/glad/glad.h"
+            "uri": "file:///c:/users/faye/desktop/projects/application/application/objects.h"
           },
           "hashes": {
-            "sha-256": "828f4d14edca043aebe7047801f5bfc5efef9cc9da0410ca6ecd7abfb903094e"
+            "sha-256": "8ac5c8b0ccf209efdee4778644da438ecd9c8f3146b7b91674e8aeb2dbfab3fc"
           }
         },
         {
           "location": {
-            "uri": "file:///c:/users/faye/desktop/projects/application/application/libraries/include/khr/khrplatform.h"
+            "uri": "file:///c:/users/faye/desktop/projects/application/application/ktymath.h"
           },
           "hashes": {
-            "sha-256": "5ee5d5c2c6b2abd028cec8dc1a24e995bb47b075654a6fc55f3a1293de36943f"
+            "sha-256": "74e998ef7fc694c94101c794d72e2e6f6f03bf094f76b843123b29a7dabd7e6e"
           }
         },
         {
           "location": {
-            "uri": "file:///c:/users/faye/desktop/projects/application/application/libraries/include/glfw3.h"
+            "uri": "file:///c:/users/faye/desktop/projects/application/application/vector2.h"
           },
           "hashes": {
-            "sha-256": "0fd04b330d92fc4bd6630c20d1006cef36d25b16ec9f911ec4041918482307bb"
-          }
-        },
-        {
-          "location": {
-            "uri": "file:///c:/users/faye/desktop/projects/application/application/transform.h"
-          },
-          "hashes": {
-            "sha-256": "b00467e5f4593807e54e35668065f770ff213adb01ee5be5188bbc40375de4f6"
+            "sha-256": "54f160732019bf065a4dcce0e11af7fa6418c29ec3e78fb358d5ba352621723a"
           }
         },
         {
@@ -3558,6 +1652,46 @@
         },
         {
           "location": {
+            "uri": "file:///c:/users/faye/desktop/projects/application/application/vector3.h"
+          },
+          "hashes": {
+            "sha-256": "8c2f82c7c87cfb38ba1052ba1a6a07ec105cae3e01731e347c9dea4a118c96f3"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///c:/users/faye/desktop/projects/application/application/vector4.h"
+          },
+          "hashes": {
+            "sha-256": "82db31093837a4b08bc875e94e4ac6c400a77ed526609e5dd5c82d1c32c6185d"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///c:/users/faye/desktop/projects/application/application/logger.h"
+          },
+          "hashes": {
+            "sha-256": "18f59f791c16e81c380de80a3f6b67e85a8eb5ec6abad56580a210b2702d8653"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///c:/users/faye/desktop/projects/application/application/debugcolours.h"
+          },
+          "hashes": {
+            "sha-256": "d0bae4e70226d3468c220b7537c40cbba1213b75363274b4b19da98cce29993f"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///c:/users/faye/desktop/projects/application/application/ktytime.h"
+          },
+          "hashes": {
+            "sha-256": "c7d3ed6ee482f7db94a7d50b6ec6372184ad85c7617f6ab068536211cbbb2c95"
+          }
+        },
+        {
+          "location": {
             "uri": "file:///c:/users/faye/desktop/projects/application/application/libraries/include/glm/gtc/matrix_transform.hpp"
           },
           "hashes": {
@@ -3942,10 +2076,66 @@
         },
         {
           "location": {
-            "uri": "file:///c:/users/faye/desktop/projects/application/application/libraries/include/assimp/importer.hpp"
+            "uri": "file:///c:/users/faye/desktop/projects/application/application/libraries/include/glad/glad.h"
           },
           "hashes": {
-            "sha-256": "6ea72587c0ac0f402a1512637b749b915eb20d91fcac99fbaa3c540aa623cc98"
+            "sha-256": "828f4d14edca043aebe7047801f5bfc5efef9cc9da0410ca6ecd7abfb903094e"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///c:/users/faye/desktop/projects/application/application/libraries/include/khr/khrplatform.h"
+          },
+          "hashes": {
+            "sha-256": "5ee5d5c2c6b2abd028cec8dc1a24e995bb47b075654a6fc55f3a1293de36943f"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///c:/users/faye/desktop/projects/application/application/libraries/include/glfw3.h"
+          },
+          "hashes": {
+            "sha-256": "0fd04b330d92fc4bd6630c20d1006cef36d25b16ec9f911ec4041918482307bb"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///c:/users/faye/desktop/projects/application/application/scene.h"
+          },
+          "hashes": {
+            "sha-256": "2d87926ae7f91263b05cbab3d35d44f728fae63ad473f7cfbd9851c779f11f28"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///c:/users/faye/desktop/projects/application/application/gamepad.h"
+          },
+          "hashes": {
+            "sha-256": "4f1090585229b64fc175a9f880c056e0aa36d7d23d8683b922aeb53dd9035366"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///c:/users/faye/desktop/projects/application/application/deviceinfo.h"
+          },
+          "hashes": {
+            "sha-256": "ac367e8c49c6e5472335aafff3b9e008725ada8eac8549b30603424ec6e24acb"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///c:/users/faye/desktop/projects/application/application/ktykeyboard.h"
+          },
+          "hashes": {
+            "sha-256": "df97d2f97d9e0341cf04c89a6cfc522741e50249972efce0e83db5cc102078f1"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///c:/users/faye/desktop/projects/application/application/shader.h"
+          },
+          "hashes": {
+            "sha-256": "83305ef93932255d53637eeaa1ff5e9def2ba2c7b43ebe23bb0a5ad736277ff4"
           }
         },
         {
@@ -4078,122 +2268,66 @@
         },
         {
           "location": {
-            "uri": "file:///c:/users/faye/desktop/projects/application/application/libraries/include/assimp/scene.h"
+            "uri": "file:///c:/users/faye/desktop/projects/application/application/global.h"
           },
           "hashes": {
-            "sha-256": "dc505d7fff6b37cfff9627fc67f173d2f005bd9721aa556ba75528b6f416db1a"
+            "sha-256": "d4170595abda4b903a963767d5723db17f6b99af34603324e1a865d5a77d8cec"
           }
         },
         {
           "location": {
-            "uri": "file:///c:/users/faye/desktop/projects/application/application/libraries/include/assimp/texture.h"
+            "uri": "file:///c:/users/faye/desktop/projects/application/application/defaultshaders.h"
           },
           "hashes": {
-            "sha-256": "43fa6012dcada00c6571e13e4e9547caf0d0acb0374f7286b7aaadbd1617b520"
+            "sha-256": "3fae60e550b80f532e57a9ea1a365437d1d77ffb808e92e47c4bd42e4d7855d1"
           }
         },
         {
           "location": {
-            "uri": "file:///c:/users/faye/desktop/projects/application/application/libraries/include/assimp/compiler/pushpack1.h"
+            "uri": "file:///c:/users/faye/desktop/projects/application/application/camera.h"
           },
           "hashes": {
-            "sha-256": "d8df458c394c3afa149403914e03c86dcb6e1dca1af4d366b52541f61d0dd116"
+            "sha-256": "b5197ea1c99c6c7eb2d71a698e17cdf616f6ea9d742279f4741f11cb04cc7232"
           }
         },
         {
           "location": {
-            "uri": "file:///c:/users/faye/desktop/projects/application/application/libraries/include/assimp/compiler/poppack1.h"
+            "uri": "file:///c:/users/faye/desktop/projects/application/application/renderer.h"
           },
           "hashes": {
-            "sha-256": "0dccb098bbdd32dfcd67a0029d9f48133a38586b91c314b9045366028721537b"
+            "sha-256": "79827c2f2683fc01c667a4793418dd64a545a70c46af365a0246092d736feea5"
           }
         },
         {
           "location": {
-            "uri": "file:///c:/users/faye/desktop/projects/application/application/libraries/include/assimp/mesh.h"
+            "uri": "file:///c:/users/faye/desktop/projects/application/application/vertex.h"
           },
           "hashes": {
-            "sha-256": "f05a5538119990394109d2e192d7516f3de91d8c7c8376a93b56a7782bfb8bd6"
+            "sha-256": "28e49b7f5201f401b07799abc31ddc190f73d2b34be9137ba831d32e163ccacc"
           }
         },
         {
           "location": {
-            "uri": "file:///c:/users/faye/desktop/projects/application/application/libraries/include/assimp/aabb.h"
+            "uri": "file:///c:/users/faye/desktop/projects/application/application/mesh.h"
           },
           "hashes": {
-            "sha-256": "7e8e452ffb852997466d5b4e884725f8f18cd6cfc08b243b7198f85ddf311e48"
+            "sha-256": "c278b17163c71ddcbc4e97723a4a10d366165835495bddb34fa1c35c861c6197"
           }
         },
         {
           "location": {
-            "uri": "file:///c:/users/faye/desktop/projects/application/application/libraries/include/assimp/light.h"
+            "uri": "file:///c:/users/faye/desktop/projects/application/application/material.h"
           },
           "hashes": {
-            "sha-256": "424ddaddf7645d0edfa0b969be64b409a93e52b8f1f5a3abd8028c4fdc039d93"
+            "sha-256": "eee6803527a176bf58c31815652f26c87be807455813ec5f16886d24eaba629d"
           }
         },
         {
           "location": {
-            "uri": "file:///c:/users/faye/desktop/projects/application/application/libraries/include/assimp/camera.h"
+            "uri": "file:///c:/users/faye/desktop/projects/application/application/testbehaviour.h"
           },
           "hashes": {
-            "sha-256": "b612e926fe21e1cc06fb25de6d15c7712b143fe58c7c502b2f627593c6e8e6d9"
-          }
-        },
-        {
-          "location": {
-            "uri": "file:///c:/users/faye/desktop/projects/application/application/libraries/include/assimp/material.h"
-          },
-          "hashes": {
-            "sha-256": "4a0d723a9c39a5bbebe72ceb899bccafef22d6ad1c23432afc328eb853ad9fc7"
-          }
-        },
-        {
-          "location": {
-            "uri": "file:///c:/users/faye/desktop/projects/application/application/libraries/include/assimp/material.inl"
-          },
-          "hashes": {
-            "sha-256": "23acb82b963fe08c8ca6b81139e8dfdec28b19c2a91d05cd9213db94940e2eb4"
-          }
-        },
-        {
-          "location": {
-            "uri": "file:///c:/users/faye/desktop/projects/application/application/libraries/include/assimp/anim.h"
-          },
-          "hashes": {
-            "sha-256": "78e31626fc1113fb9d893d0db182156486c1daa3308a598383e243932938a840"
-          }
-        },
-        {
-          "location": {
-            "uri": "file:///c:/users/faye/desktop/projects/application/application/libraries/include/assimp/metadata.h"
-          },
-          "hashes": {
-            "sha-256": "40aa7fd3567b204288a8d93168d48c253d6ac04245dd2de75bdf5fc22b3a7b2f"
-          }
-        },
-        {
-          "location": {
-            "uri": "file:///c:/users/faye/desktop/projects/application/application/libraries/include/assimp/postprocess.h"
-          },
-          "hashes": {
-            "sha-256": "913117cb319a3b8c800ab30ecfa277d3a351d11ebc2a66b48f07309a70685c1b"
-          }
-        },
-        {
-          "location": {
-            "uri": "file:///c:/users/faye/desktop/projects/application/application/scene.h"
-          },
-          "hashes": {
-            "sha-256": "e9bbb1048c10ee7c1301ec03ae430e668c1199d891be47a30eabfc1a499fdd6d"
-          }
-        },
-        {
-          "location": {
-            "uri": "file:///c:/users/faye/desktop/projects/application/application/engineresources/console.h"
-          },
-          "hashes": {
-            "sha-256": "01bc35123e939789515b9213dac71d184a2cfacb9d272015b2973d2b389f8f8b"
+            "sha-256": "6d3def55549b1eb24e60062b221248e4f486efad0b22cbca46790b8ee15fa0e0"
           }
         }
       ]

@@ -1,0 +1,43 @@
+{
+  "version": "2.1.0",
+  "$schema": "https://schemastore.azurewebsites.net/schemas/json/sarif-2.1.0-rtm.5.json",
+  "runs": [
+    {
+      "results": [],
+      "tool": {
+        "driver": {
+          "name": "PREfast",
+          "fullName": "MSVC Code Analysis",
+          "version": "14.50.35717.0",
+          "informationUri": "https://aka.ms/cpp/ca"
+        }
+      },
+      "invocations": [
+        {
+          "executionSuccessful": true
+        }
+      ],
+      "artifacts": [
+        {
+          "location": {
+            "uri": "file:///c:/users/faye/desktop/projects/application/application/ktytime.cpp"
+          },
+          "roles": [
+            "analysisTarget"
+          ],
+          "hashes": {
+            "sha-256": "1e2262db40c4acb5d142db5aa1233f14639f8d5689b94d4359debd3b6a99dbe9"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///c:/users/faye/desktop/projects/application/application/ktytime.h"
+          },
+          "hashes": {
+            "sha-256": "c7d3ed6ee482f7db94a7d50b6ec6372184ad85c7617f6ab068536211cbbb2c95"
+          }
+        }
+      ]
+    }
+  ]
+}

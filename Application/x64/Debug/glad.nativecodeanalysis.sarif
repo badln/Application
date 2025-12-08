@@ -7,8 +7,8 @@
       "tool": {
         "driver": {
           "name": "PREfast",
-          "fullName": "PREfast Code Analysis",
-          "version": "14.42.34435.0",
+          "fullName": "MSVC Code Analysis",
+          "version": "14.50.35717.0",
           "informationUri": "https://aka.ms/cpp/ca"
         }
       },

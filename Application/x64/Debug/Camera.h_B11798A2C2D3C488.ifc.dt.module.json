@@ -1,0 +1,22 @@
+{
+    "version": 1,
+    "revision": 0,
+    "rules": [
+        {
+            "primary-output": "x64\\Debug\\Camera.obj",
+            "outputs": [
+                "x64\\Debug\\Camera.h_B11798A2C2D3C488.ifc.dt.module.json",
+                "x64\\Debug\\Camera.h_B11798A2C2D3C488.ifc.dt.d.json",
+                "x64\\Debug\\Camera.h.ifc"
+            ],
+            "provides": [
+                {
+                    "logical-name": "C:\\Users\\faye\\Desktop\\Projects\\Application\\Application\\Camera.h",
+                    "source-path": "c:\\users\\faye\\desktop\\projects\\application\\application\\camera.h",
+                    "lookup-method": "absolute"
+                }
+            ],
+            "requires": []
+        }
+    ]
+}

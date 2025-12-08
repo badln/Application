@@ -1,0 +1,5 @@
+C:/Users/faye/Desktop/Projects/Application/out/build/x64-debug/CMakeFiles/edit_cache.dir
+C:/Users/faye/Desktop/Projects/Application/out/build/x64-debug/CMakeFiles/rebuild_cache.dir
+C:/Users/faye/Desktop/Projects/Application/out/build/x64-debug/Editor/CMakeFiles/Editor.dir
+C:/Users/faye/Desktop/Projects/Application/out/build/x64-debug/Editor/CMakeFiles/edit_cache.dir
+C:/Users/faye/Desktop/Projects/Application/out/build/x64-debug/Editor/CMakeFiles/rebuild_cache.dir

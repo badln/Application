@@ -3,45 +3,12 @@
   "$schema": "https://schemastore.azurewebsites.net/schemas/json/sarif-2.1.0-rtm.5.json",
   "runs": [
     {
-      "results": [
-        {
-          "ruleId": "C26495",
-          "message": {
-            "text": "Variable '<unnamed-type-EngineInfo>::frameTime' is uninitialized. Always initialize a member variable (type.6)."
-          },
-          "analysisTarget": {
-            "uri": "file:///c:/users/faye/desktop/projects/application/application/gamepad.cpp"
-          },
-          "locations": [
-            {
-              "physicalLocation": {
-                "artifactLocation": {
-                  "uri": "file:///C:/Users/faye/Desktop/Projects/Application/Application/engine.h"
-                },
-                "region": {
-                  "startLine": 41,
-                  "startColumn": 1
-                }
-              },
-              "logicalLocations": [
-                {
-                  "fullyQualifiedName": "<unnamed-type-EngineInfo>::{ctor}",
-                  "decoratedName": "??0<unnamed-type-EngineInfo>@@QEAA@XZ",
-                  "kind": "function"
-                }
-              ]
-            }
-          ],
-          "properties": {
-            "targetSymbol": "<unnamed-type-EngineInfo>::frameTime"
-          }
-        }
-      ],
+      "results": [],
       "tool": {
         "driver": {
           "name": "PREfast",
-          "fullName": "PREfast Code Analysis",
-          "version": "14.42.34435.0",
+          "fullName": "MSVC Code Analysis",
+          "version": "14.50.35717.0",
           "informationUri": "https://aka.ms/cpp/ca"
         }
       },
@@ -59,18 +26,7 @@
             "analysisTarget"
           ],
           "hashes": {
-            "sha-256": "54f8a5a4cbd005e5836d24f600badec7ab805c66426dee9f6a95814472eaf77c"
-          }
-        },
-        {
-          "location": {
-            "uri": "file:///C:/Users/faye/Desktop/Projects/Application/Application/engine.h"
-          },
-          "roles": [
-            "resultFile"
-          ],
-          "hashes": {
-            "sha-256": "4aff01322b3a798f477f5e2588a3a954ffe6c29fa9811bd6f4d98384f0b9dbf9"
+            "sha-256": "73e4ee832cf721341b8a62d096205e05324e8a7b8e4103329c0fbc8d26ef60e9"
           }
         },
         {
@@ -78,7 +34,7 @@
             "uri": "file:///c:/users/faye/desktop/projects/application/application/gamepad.h"
           },
           "hashes": {
-            "sha-256": "c5374ac3f9b7cd569444dfc067c748a85ac2ed786233ade37cb01279009198a8"
+            "sha-256": "4f1090585229b64fc175a9f880c056e0aa36d7d23d8683b922aeb53dd9035366"
           }
         },
         {
@@ -86,39 +42,31 @@
             "uri": "file:///c:/users/faye/desktop/projects/application/application/main.h"
           },
           "hashes": {
-            "sha-256": "04dc61be1437256a6c17ef42af2499462cfd586ac434e4927fccb33f970cb7e0"
+            "sha-256": "37d8ebdbe3bdc28caa747f5b3e75879f29e040f46e521b1a26bb56f2d13e68c2"
           }
         },
         {
           "location": {
-            "uri": "file:///c:/users/faye/desktop/projects/application/application/libraries/include/glad/glad.h"
+            "uri": "file:///c:/users/faye/desktop/projects/application/application/objects.h"
           },
           "hashes": {
-            "sha-256": "828f4d14edca043aebe7047801f5bfc5efef9cc9da0410ca6ecd7abfb903094e"
+            "sha-256": "8ac5c8b0ccf209efdee4778644da438ecd9c8f3146b7b91674e8aeb2dbfab3fc"
           }
         },
         {
           "location": {
-            "uri": "file:///c:/users/faye/desktop/projects/application/application/libraries/include/khr/khrplatform.h"
+            "uri": "file:///c:/users/faye/desktop/projects/application/application/ktymath.h"
           },
           "hashes": {
-            "sha-256": "5ee5d5c2c6b2abd028cec8dc1a24e995bb47b075654a6fc55f3a1293de36943f"
+            "sha-256": "74e998ef7fc694c94101c794d72e2e6f6f03bf094f76b843123b29a7dabd7e6e"
           }
         },
         {
           "location": {
-            "uri": "file:///c:/users/faye/desktop/projects/application/application/libraries/include/glfw3.h"
+            "uri": "file:///c:/users/faye/desktop/projects/application/application/vector2.h"
           },
           "hashes": {
-            "sha-256": "0fd04b330d92fc4bd6630c20d1006cef36d25b16ec9f911ec4041918482307bb"
-          }
-        },
-        {
-          "location": {
-            "uri": "file:///c:/users/faye/desktop/projects/application/application/transform.h"
-          },
-          "hashes": {
-            "sha-256": "b00467e5f4593807e54e35668065f770ff213adb01ee5be5188bbc40375de4f6"
+            "sha-256": "54f160732019bf065a4dcce0e11af7fa6418c29ec3e78fb358d5ba352621723a"
           }
         },
         {
@@ -1187,6 +1135,46 @@
         },
         {
           "location": {
+            "uri": "file:///c:/users/faye/desktop/projects/application/application/vector3.h"
+          },
+          "hashes": {
+            "sha-256": "8c2f82c7c87cfb38ba1052ba1a6a07ec105cae3e01731e347c9dea4a118c96f3"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///c:/users/faye/desktop/projects/application/application/vector4.h"
+          },
+          "hashes": {
+            "sha-256": "82db31093837a4b08bc875e94e4ac6c400a77ed526609e5dd5c82d1c32c6185d"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///c:/users/faye/desktop/projects/application/application/logger.h"
+          },
+          "hashes": {
+            "sha-256": "18f59f791c16e81c380de80a3f6b67e85a8eb5ec6abad56580a210b2702d8653"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///c:/users/faye/desktop/projects/application/application/debugcolours.h"
+          },
+          "hashes": {
+            "sha-256": "d0bae4e70226d3468c220b7537c40cbba1213b75363274b4b19da98cce29993f"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///c:/users/faye/desktop/projects/application/application/ktytime.h"
+          },
+          "hashes": {
+            "sha-256": "c7d3ed6ee482f7db94a7d50b6ec6372184ad85c7617f6ab068536211cbbb2c95"
+          }
+        },
+        {
+          "location": {
             "uri": "file:///c:/users/faye/desktop/projects/application/application/libraries/include/glm/gtc/matrix_transform.hpp"
           },
           "hashes": {
@@ -1571,250 +1559,26 @@
         },
         {
           "location": {
-            "uri": "file:///c:/users/faye/desktop/projects/application/application/objects.h"
+            "uri": "file:///c:/users/faye/desktop/projects/application/application/libraries/include/glad/glad.h"
           },
           "hashes": {
-            "sha-256": "6ef71e16cd6328ba037495ee4649704d403546f5cb375648a1031dd4ac91521a"
+            "sha-256": "828f4d14edca043aebe7047801f5bfc5efef9cc9da0410ca6ecd7abfb903094e"
           }
         },
         {
           "location": {
-            "uri": "file:///c:/users/faye/desktop/projects/application/application/libraries/include/assimp/importer.hpp"
+            "uri": "file:///c:/users/faye/desktop/projects/application/application/libraries/include/khr/khrplatform.h"
           },
           "hashes": {
-            "sha-256": "6ea72587c0ac0f402a1512637b749b915eb20d91fcac99fbaa3c540aa623cc98"
+            "sha-256": "5ee5d5c2c6b2abd028cec8dc1a24e995bb47b075654a6fc55f3a1293de36943f"
           }
         },
         {
           "location": {
-            "uri": "file:///c:/users/faye/desktop/projects/application/application/libraries/include/assimp/types.h"
+            "uri": "file:///c:/users/faye/desktop/projects/application/application/libraries/include/glfw3.h"
           },
           "hashes": {
-            "sha-256": "d26ae3739974ab92505f45ec55f597be39e0b2d419b7065d03b6f629d06af9fe"
-          }
-        },
-        {
-          "location": {
-            "uri": "file:///c:/users/faye/desktop/projects/application/application/libraries/include/assimp/defs.h"
-          },
-          "hashes": {
-            "sha-256": "2199ad1d5be5b7cce6caafd4e5753a89abedfb7f98d04fc09abe3d98cbca8878"
-          }
-        },
-        {
-          "location": {
-            "uri": "file:///c:/users/faye/desktop/projects/application/application/libraries/include/assimp/config.h"
-          },
-          "hashes": {
-            "sha-256": "eeff95901927fc6f23481ccf7cef8e244c3788c75a67243d1939d725845240c9"
-          }
-        },
-        {
-          "location": {
-            "uri": "file:///c:/users/faye/desktop/projects/application/application/libraries/include/assimp/vector2.h"
-          },
-          "hashes": {
-            "sha-256": "5c03a6b83f9744f9a90a839d5960d09472ba6918c8d6340f69c8d371071a8381"
-          }
-        },
-        {
-          "location": {
-            "uri": "file:///c:/users/faye/desktop/projects/application/application/libraries/include/assimp/vector3.h"
-          },
-          "hashes": {
-            "sha-256": "65ba84f23accc275f937da8226d3f342e4f23233d6cadbccc006c5dc15f5751f"
-          }
-        },
-        {
-          "location": {
-            "uri": "file:///c:/users/faye/desktop/projects/application/application/libraries/include/assimp/color4.h"
-          },
-          "hashes": {
-            "sha-256": "e39ab6401be448abe7d49ec955aaff40975d70d882d735ca834324440b8819d3"
-          }
-        },
-        {
-          "location": {
-            "uri": "file:///c:/users/faye/desktop/projects/application/application/libraries/include/assimp/matrix3x3.h"
-          },
-          "hashes": {
-            "sha-256": "f964c84bfa383acb397502a33fc824d3a799b2d9e20b2de6bfbe73ba5636cb40"
-          }
-        },
-        {
-          "location": {
-            "uri": "file:///c:/users/faye/desktop/projects/application/application/libraries/include/assimp/matrix4x4.h"
-          },
-          "hashes": {
-            "sha-256": "04b9516ab27a4b73c74652fe3ded2f8747646844ecbdb112f350e036c50e6b8e"
-          }
-        },
-        {
-          "location": {
-            "uri": "file:///c:/users/faye/desktop/projects/application/application/libraries/include/assimp/quaternion.h"
-          },
-          "hashes": {
-            "sha-256": "56877dd04ab2d1fa0bf4aa0c9d10525b30eb211d55d9bf99e2b8b29b6aaee264"
-          }
-        },
-        {
-          "location": {
-            "uri": "file:///c:/users/faye/desktop/projects/application/application/libraries/include/assimp/vector2.inl"
-          },
-          "hashes": {
-            "sha-256": "fffa398b410b212d8a56acb85a9245589dacfd6ca1d1e1561286ed424c7d489b"
-          }
-        },
-        {
-          "location": {
-            "uri": "file:///c:/users/faye/desktop/projects/application/application/libraries/include/assimp/vector3.inl"
-          },
-          "hashes": {
-            "sha-256": "660ffacba01a39865fda954056eab641270358ad1d417679d80b6bb77a3a13d8"
-          }
-        },
-        {
-          "location": {
-            "uri": "file:///c:/users/faye/desktop/projects/application/application/libraries/include/assimp/color4.inl"
-          },
-          "hashes": {
-            "sha-256": "2222b1355c94530963d3752231ae33bf7a2326dbdac88e6028be64e1ae3a74f6"
-          }
-        },
-        {
-          "location": {
-            "uri": "file:///c:/users/faye/desktop/projects/application/application/libraries/include/assimp/matrix3x3.inl"
-          },
-          "hashes": {
-            "sha-256": "b31082246bbbe75f95fd9413cd93767451ddc88dee1469475b4fa9bcbce76ab4"
-          }
-        },
-        {
-          "location": {
-            "uri": "file:///c:/users/faye/desktop/projects/application/application/libraries/include/assimp/matrix4x4.inl"
-          },
-          "hashes": {
-            "sha-256": "e1735ed8a59db96ff58a32d13e20dc3c6f56e2337c2bdd6b0f13890b85777afa"
-          }
-        },
-        {
-          "location": {
-            "uri": "file:///c:/users/faye/desktop/projects/application/application/libraries/include/assimp/mathfunctions.h"
-          },
-          "hashes": {
-            "sha-256": "516263848644a818d286b409d108ff2c38efb5145c2dcfdfd34859e55dfb38a2"
-          }
-        },
-        {
-          "location": {
-            "uri": "file:///c:/users/faye/desktop/projects/application/application/libraries/include/assimp/quaternion.inl"
-          },
-          "hashes": {
-            "sha-256": "026c15b605562c00489cd7435afb14164669b79cef7ae0f7342f8ec550310dec"
-          }
-        },
-        {
-          "location": {
-            "uri": "file:///c:/users/faye/desktop/projects/application/application/libraries/include/assimp/scene.h"
-          },
-          "hashes": {
-            "sha-256": "dc505d7fff6b37cfff9627fc67f173d2f005bd9721aa556ba75528b6f416db1a"
-          }
-        },
-        {
-          "location": {
-            "uri": "file:///c:/users/faye/desktop/projects/application/application/libraries/include/assimp/texture.h"
-          },
-          "hashes": {
-            "sha-256": "43fa6012dcada00c6571e13e4e9547caf0d0acb0374f7286b7aaadbd1617b520"
-          }
-        },
-        {
-          "location": {
-            "uri": "file:///c:/users/faye/desktop/projects/application/application/libraries/include/assimp/compiler/pushpack1.h"
-          },
-          "hashes": {
-            "sha-256": "d8df458c394c3afa149403914e03c86dcb6e1dca1af4d366b52541f61d0dd116"
-          }
-        },
-        {
-          "location": {
-            "uri": "file:///c:/users/faye/desktop/projects/application/application/libraries/include/assimp/compiler/poppack1.h"
-          },
-          "hashes": {
-            "sha-256": "0dccb098bbdd32dfcd67a0029d9f48133a38586b91c314b9045366028721537b"
-          }
-        },
-        {
-          "location": {
-            "uri": "file:///c:/users/faye/desktop/projects/application/application/libraries/include/assimp/mesh.h"
-          },
-          "hashes": {
-            "sha-256": "f05a5538119990394109d2e192d7516f3de91d8c7c8376a93b56a7782bfb8bd6"
-          }
-        },
-        {
-          "location": {
-            "uri": "file:///c:/users/faye/desktop/projects/application/application/libraries/include/assimp/aabb.h"
-          },
-          "hashes": {
-            "sha-256": "7e8e452ffb852997466d5b4e884725f8f18cd6cfc08b243b7198f85ddf311e48"
-          }
-        },
-        {
-          "location": {
-            "uri": "file:///c:/users/faye/desktop/projects/application/application/libraries/include/assimp/light.h"
-          },
-          "hashes": {
-            "sha-256": "424ddaddf7645d0edfa0b969be64b409a93e52b8f1f5a3abd8028c4fdc039d93"
-          }
-        },
-        {
-          "location": {
-            "uri": "file:///c:/users/faye/desktop/projects/application/application/libraries/include/assimp/camera.h"
-          },
-          "hashes": {
-            "sha-256": "b612e926fe21e1cc06fb25de6d15c7712b143fe58c7c502b2f627593c6e8e6d9"
-          }
-        },
-        {
-          "location": {
-            "uri": "file:///c:/users/faye/desktop/projects/application/application/libraries/include/assimp/material.h"
-          },
-          "hashes": {
-            "sha-256": "4a0d723a9c39a5bbebe72ceb899bccafef22d6ad1c23432afc328eb853ad9fc7"
-          }
-        },
-        {
-          "location": {
-            "uri": "file:///c:/users/faye/desktop/projects/application/application/libraries/include/assimp/material.inl"
-          },
-          "hashes": {
-            "sha-256": "23acb82b963fe08c8ca6b81139e8dfdec28b19c2a91d05cd9213db94940e2eb4"
-          }
-        },
-        {
-          "location": {
-            "uri": "file:///c:/users/faye/desktop/projects/application/application/libraries/include/assimp/anim.h"
-          },
-          "hashes": {
-            "sha-256": "78e31626fc1113fb9d893d0db182156486c1daa3308a598383e243932938a840"
-          }
-        },
-        {
-          "location": {
-            "uri": "file:///c:/users/faye/desktop/projects/application/application/libraries/include/assimp/metadata.h"
-          },
-          "hashes": {
-            "sha-256": "40aa7fd3567b204288a8d93168d48c253d6ac04245dd2de75bdf5fc22b3a7b2f"
-          }
-        },
-        {
-          "location": {
-            "uri": "file:///c:/users/faye/desktop/projects/application/application/libraries/include/assimp/postprocess.h"
-          },
-          "hashes": {
-            "sha-256": "913117cb319a3b8c800ab30ecfa277d3a351d11ebc2a66b48f07309a70685c1b"
+            "sha-256": "0fd04b330d92fc4bd6630c20d1006cef36d25b16ec9f911ec4041918482307bb"
           }
         }
       ]

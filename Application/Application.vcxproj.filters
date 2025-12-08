@@ -1,10 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <ClCompile Include="main.cpp">
-      <Filter>Engine\Core\Renderer</Filter>
-    </ClCompile>
-    <ClCompile Include="Gamepad.cpp">
+    <ClCompile Include="Input.cpp">
       <Filter>Engine\Input</Filter>
     </ClCompile>
     <ClCompile Include="Scene.cpp">
@@ -25,27 +22,63 @@
     <ClCompile Include="Shader.cpp">
       <Filter>Engine\Core\Renderer</Filter>
     </ClCompile>
+    <ClCompile Include="main.cpp">
+      <Filter>Engine\Core\Program</Filter>
+    </ClCompile>
     <ClCompile Include="ProgramBase.cpp">
+      <Filter>Engine\Core\Program</Filter>
+    </ClCompile>
+    <ClCompile Include="Entity.cpp">
+      <Filter>Engine\Core\Renderer\EntityComponentSystem</Filter>
+    </ClCompile>
+    <ClCompile Include="MeshGenerator.cpp">
+      <Filter>Engine\Core\Mesh</Filter>
+    </ClCompile>
+    <ClCompile Include="quad.cpp">
+      <Filter>Engine\Core\Mesh\generator</Filter>
+    </ClCompile>
+    <ClCompile Include="cube.cpp">
+      <Filter>Engine\Core\Mesh\generator</Filter>
+    </ClCompile>
+    <ClCompile Include="plane.cpp">
+      <Filter>Engine\Core\Mesh\generator</Filter>
+    </ClCompile>
+    <ClCompile Include="cubesphere.cpp">
+      <Filter>Engine\Core\Mesh\generator</Filter>
+    </ClCompile>
+    <ClCompile Include="uvsphere.cpp">
+      <Filter>Engine\Core\Mesh\generator</Filter>
+    </ClCompile>
+    <ClCompile Include="circle.cpp">
+      <Filter>Engine\Core\Mesh\generator</Filter>
+    </ClCompile>
+    <ClCompile Include="Camera.h">
+      <Filter>Engine\Core\Renderer\EntityComponentSystem</Filter>
+    </ClCompile>
+    <ClCompile Include="Camera.cpp">
+      <Filter>Engine\Core\Renderer\EntityComponentSystem</Filter>
+    </ClCompile>
+    <ClCompile Include="Texture.cpp">
       <Filter>Engine\Core\Renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="CameraController.h">
+      <Filter>Engine\Game</Filter>
+    </ClCompile>
+    <ClCompile Include="Light.cpp">
+      <Filter>Engine\Core\Renderer\EntityComponentSystem</Filter>
+    </ClCompile>
+    <ClCompile Include="defaultshaders.cpp">
+      <Filter>Engine\Core\Renderer\Shaders</Filter>
+    </ClCompile>
+    <ClCompile Include="Framebuffer.cpp">
+      <Filter>Engine\Core\Renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="ScreenshotPNG.cpp">
+      <Filter>Engine</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="EngineResources\Console.h">
-      <Filter>Old\EngineResources</Filter>
-    </ClInclude>
-    <ClInclude Include="main.h">
-      <Filter>Engine\Core\Renderer</Filter>
-    </ClInclude>
-    <ClInclude Include="transform.h">
-      <Filter>Engine\Maths</Filter>
-    </ClInclude>
-    <ClInclude Include="Gamepad.h">
-      <Filter>Engine\Input</Filter>
-    </ClInclude>
-    <ClInclude Include="Vector2.h">
-      <Filter>Engine\Maths</Filter>
-    </ClInclude>
-    <ClInclude Include="EngineMaths.h">
+    <ClInclude Include="KTYMath.h">
       <Filter>Engine\Maths</Filter>
     </ClInclude>
     <ClInclude Include="Logger.h">
@@ -54,20 +87,8 @@
     <ClInclude Include="DebugColours.h">
       <Filter>Engine\Debug</Filter>
     </ClInclude>
-    <ClInclude Include="Vector3.h">
-      <Filter>Engine\Maths</Filter>
-    </ClInclude>
-    <ClInclude Include="Vector4.h">
-      <Filter>Engine\Maths</Filter>
-    </ClInclude>
-    <ClInclude Include="ProgramBase.h">
-      <Filter>Engine\Core\Renderer</Filter>
-    </ClInclude>
     <ClInclude Include="DeviceInfo.h">
       <Filter>Device</Filter>
-    </ClInclude>
-    <ClInclude Include="oldengine.h">
-      <Filter>Old</Filter>
     </ClInclude>
     <ClInclude Include="objects.h">
       <Filter>Old</Filter>
@@ -75,10 +96,7 @@
     <ClInclude Include="Scene.h">
       <Filter>Old</Filter>
     </ClInclude>
-    <ClInclude Include="MainProgram.h">
-      <Filter>Engine\Core\Renderer</Filter>
-    </ClInclude>
-    <ClInclude Include="Mouse.h">
+    <ClInclude Include="KTYMouse.h">
       <Filter>Engine\Input</Filter>
     </ClInclude>
     <ClInclude Include="KTYKeyboard.h">
@@ -91,13 +109,73 @@
       <Filter>Engine\Core\Renderer</Filter>
     </ClInclude>
     <ClInclude Include="Entity.h">
-      <Filter>Engine\Core</Filter>
+      <Filter>Engine\Core\Renderer\EntityComponentSystem</Filter>
     </ClInclude>
-    <ClInclude Include="KTYEngine.h">
-      <Filter>Engine\Core</Filter>
+    <ClInclude Include="Vertex.h">
+      <Filter>Engine\Core\Renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="main.h">
+      <Filter>Engine\Core\Program</Filter>
+    </ClInclude>
+    <ClInclude Include="ProgramBase.h">
+      <Filter>Engine\Core\Program</Filter>
+    </ClInclude>
+    <ClInclude Include="global.h">
+      <Filter>Engine\Core\Program</Filter>
+    </ClInclude>
+    <ClInclude Include="DefaultShaders.h">
+      <Filter>Engine\Core\Renderer\Shaders</Filter>
+    </ClInclude>
+    <ClInclude Include="Mesh.h">
+      <Filter>Engine\Core\Mesh</Filter>
+    </ClInclude>
+    <ClInclude Include="MainProgram.cpp">
+      <Filter>Engine\Game</Filter>
     </ClInclude>
     <ClInclude Include="Renderer.h">
+      <Filter>Engine\Core\Renderer\EntityComponentSystem</Filter>
+    </ClInclude>
+    <ClInclude Include="Material.h">
       <Filter>Engine\Core\Renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="Texture.h">
+      <Filter>Engine\Core\Renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="Light.h">
+      <Filter>Engine\Core\Renderer\EntityComponentSystem</Filter>
+    </ClInclude>
+    <ClInclude Include="Transform.h">
+      <Filter>Engine\Core\Renderer\EntityComponentSystem</Filter>
+    </ClInclude>
+    <ClInclude Include="Framebuffer.h">
+      <Filter>Engine\Core\Renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="ScreenshotPNG.h">
+      <Filter>Engine</Filter>
+    </ClInclude>
+    <ClInclude Include="Portal.h">
+      <Filter>Engine\Game</Filter>
+    </ClInclude>
+    <ClInclude Include="GLMmath.h">
+      <Filter>Engine\Maths</Filter>
+    </ClInclude>
+    <ClInclude Include="Vector2.h">
+      <Filter>Engine\Maths\Vector</Filter>
+    </ClInclude>
+    <ClInclude Include="Vector3.h">
+      <Filter>Engine\Maths\Vector</Filter>
+    </ClInclude>
+    <ClInclude Include="Vector4.h">
+      <Filter>Engine\Maths\Vector</Filter>
+    </ClInclude>
+    <ClInclude Include="Matrix4x4.h">
+      <Filter>Engine\Maths\Matrix</Filter>
+    </ClInclude>
+    <ClInclude Include="Gamepad.h">
+      <Filter>Engine\Input</Filter>
+    </ClInclude>
+    <ClInclude Include="Quaternion.h">
+      <Filter>Engine\Maths\Quaternion</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -131,11 +209,47 @@
     <Filter Include="Old">
       <UniqueIdentifier>{4aa06eb9-45ac-457c-89c5-edc24e9c4795}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Old\EngineResources">
-      <UniqueIdentifier>{22d2c26a-6ce9-496d-8f08-5d54d994b8db}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Engine\Core\Renderer\Shaders">
       <UniqueIdentifier>{9234ae03-e16f-4078-9a7c-733326922cad}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Engine\Core\Mesh">
+      <UniqueIdentifier>{bcc25019-c6c3-475b-aa9d-ec2e817ea834}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Engine\Core\Mesh\generator">
+      <UniqueIdentifier>{4a4af2df-490e-42f1-8847-515edd16d813}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Engine\Core\Program">
+      <UniqueIdentifier>{ecc1933c-21b6-49ee-8afd-19a541e2b263}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Engine\Core\Renderer\Shaders\unlit">
+      <UniqueIdentifier>{e7b18e2f-20f3-4765-8815-00320eb0c61f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Engine\Game">
+      <UniqueIdentifier>{e86e1b94-1219-4293-860e-d168eb59e4a1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Engine\Core\Renderer\Shaders\editor">
+      <UniqueIdentifier>{f56fc2d2-ba4c-46ac-ad78-c67beaf0a4be}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Engine\Core\Renderer\Shaders\lit">
+      <UniqueIdentifier>{77b695de-0c99-4da0-a4df-e9e840aa62c5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Engine\Core\Renderer\EntityComponentSystem">
+      <UniqueIdentifier>{8dc93530-c2f5-47d4-a7f4-4dacb00fd259}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Engine\Core\Renderer\Shaders\depth">
+      <UniqueIdentifier>{43ae6036-ecff-4dc8-b93a-5ae9dbcb6082}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Engine\Core\Renderer\Shaders\Screenspace">
+      <UniqueIdentifier>{e487a528-4c5f-49d4-9aae-abd7f4fff8df}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Engine\Maths\Vector">
+      <UniqueIdentifier>{9d845ec2-ca8f-49c4-91b5-e6c8cd658773}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Engine\Maths\Matrix">
+      <UniqueIdentifier>{d5dd76d8-3418-4690-8bc6-6ae12aea4951}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Engine\Maths\Quaternion">
+      <UniqueIdentifier>{d8931373-154f-4347-a980-244c6577ff74}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -148,11 +262,29 @@
     <None Include="Scenes\FMP.sc">
       <Filter>Scenes</Filter>
     </None>
-    <None Include="Shaders\fragment.glsl">
+    <None Include="Shaders\unlit_fragment.glsl">
+      <Filter>Engine\Core\Renderer\Shaders\unlit</Filter>
+    </None>
+    <None Include="Shaders\default_vert.glsl">
       <Filter>Engine\Core\Renderer\Shaders</Filter>
     </None>
-    <None Include="Shaders\vertex.glsl">
-      <Filter>Engine\Core\Renderer\Shaders</Filter>
+    <None Include="Shaders\lit_fragment.glsl">
+      <Filter>Engine\Core\Renderer\Shaders\lit</Filter>
+    </None>
+    <None Include="Shaders\worldspace_depth_fragment.glsl">
+      <Filter>Engine\Core\Renderer\Shaders\depth</Filter>
+    </None>
+    <None Include="Shaders\screenspace_vert.glsl">
+      <Filter>Engine\Core\Renderer\Shaders\Screenspace</Filter>
+    </None>
+    <None Include="Shaders\screenspace_depth_frag.glsl">
+      <Filter>Engine\Core\Renderer\Shaders\depth</Filter>
+    </None>
+    <None Include="Shaders\screenspace_frag.glsl">
+      <Filter>Engine\Core\Renderer\Shaders\Screenspace</Filter>
+    </None>
+    <None Include="Shaders\portal.glsl">
+      <Filter>Engine\Game</Filter>
     </None>
   </ItemGroup>
 </Project>

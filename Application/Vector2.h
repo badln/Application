@@ -2,42 +2,121 @@
 #define VEC2_H
 
 #include "main.h"
+#include "GLMmath.h"
 
 class Vector2 {
 public:
-    double e[2];
-
-    Vector2() : e{ 0,0 } {}
-    Vector2(double x) : e{ x,x } {}
-    Vector2(double e0, double e1) : e{ e0, e1 } {}
     
-    Vector2(glm::vec2 x) : e { x.x, x.y } {}
-    glm::vec2 glm() { return glm::vec2(e[0], e[1]); }
+    double x, y;
 
-    std::string str() { return "(" + std::to_string(e[0]) + ", " + std::to_string(e[1]) + ")"; }
+    Vector2() { x = 0; y = 0; }
+    Vector2(double i) { x = i; y = i; }
+    Vector2(double ix, double iy) { x = ix; y = iy; }
+    
+    Vector2(glm::vec2 i) { x = i.x; y = i.y; }
+    glm::vec2 glm() { return glm::vec2(x, y); }
+
+    std::string str() { return "(" + std::to_string(x) + ", " + std::to_string(y) + ")"; }
 
     static Vector2 zero() { return Vector2(0); }
     static Vector2 one() { return Vector2(1); }
 
-    double x() const { return e[0]; }
-    double r() const { return e[0]; }
+    static Vector2 Distance(Vector2 to, Vector2 from) {
+        double X = (pow(from.x, (double)2) - pow(to.x, (double)2));
+        double Y = (pow(from.y, (double)2) - pow(to.x, (double)2));
 
-    double y() const { return e[1]; }
-    double g() const { return e[1]; }
+        return sqrt(X + Y);
+    }
+    static Vector2 RotateAround(Vector2 point, Vector2 origin, float theta) {
+        double s = sin(theta);
+        double c = cos(theta);
 
-    Vector2 operator-() const { return Vector2(-e[0], -e[1]); }
-    double operator[](int i) const { return e[i]; }
-    double& operator[](int i) { return e[i]; }
+        point -= origin;
+
+        Vector2 r;
+
+        r.x = point.x * c - point.y * s;
+        r.y = point.x * s + point.y * c;
+
+        r += origin;
+
+        return r;
+    }
+
+    static Vector2* Normalize(Vector2* v) {
+        float mag = sqrt(
+            pow(v->x, 2) +
+            pow(v->y, 2)
+        );
+        v->x = v->x / mag;
+        v->y = v->y / mag;
+        return v;
+    }
+
+    Vector2 Normalized() {
+        Vector2 v = *this;
+        float mag = sqrt(
+            pow(v.x, 2) +
+            pow(v.y, 2)
+        );
+        v.x = v.x / mag;
+        v.y = v.y / mag;
+        return v;
+    }
+    double Length() {
+        Vector2 v = *this;
+        double mag = sqrt(
+            (v.x * v.x) +
+            (v.y * v.y)
+        );
+        return mag;
+    }
+
+    Vector2 operator-() const { return Vector2(-x, -y); }
+    double operator[](int i) const {
+        switch (i) {
+        case 0:
+            return x;
+            break;
+        case 1:
+            return y;
+            break;
+        default:
+            throw ERROR_INDEX_OUT_OF_BOUNDS;
+            return x;
+            break;
+        }
+    }
+    double& operator[](int i) { 
+        switch (i) {
+        case 0:
+            return x;
+            break;
+        case 1:
+            return y;
+            break;
+        default:
+            throw ERROR_INDEX_OUT_OF_BOUNDS;
+            return x;
+            break;
+        }
+    }
 
     Vector2& operator+=(const Vector2& v) {
-        e[0] += v.e[0];
-        e[1] += v.e[1];
+        x += v.x;
+        y += v.y;
+        return *this;
+    }
+
+    Vector2& operator-=(const Vector2& v) {
+        x -= v.x;
+        y -= v.y;
         return *this;
     }
 
     Vector2& operator*=(double t) {
-        e[0] *= t;
-        e[1] *= t;
+        x *= t;
+        y *= t;
         return *this;
     }
 
@@ -50,28 +129,27 @@ public:
     }
 
     double length_squared() const {
-        return e[0] * e[0] + e[1] * e[1];
+        return x * x + y * y;
     }
 };
-
 inline std::ostream& operator<<(std::ostream& out, const Vector2& v) {
-    return out << v.e[0] << ' ' << v.e[1];
+    return out << v.x << ' ' << v.y;
 }
 
 inline Vector2 operator+(const Vector2& u, const Vector2& v) {
-    return Vector2(u.e[0] + v.e[0], u.e[1] + v.e[1]);
+    return Vector2(u.x + v.x, u.y + v.y);
 }
 
 inline Vector2 operator-(const Vector2& u, const Vector2& v) {
-    return Vector2(u.e[0] - v.e[0], u.e[1] - v.e[1]);
+    return Vector2(u.x - v.x, u.y - v.y);
 }
 
 inline Vector2 operator*(const Vector2& u, const Vector2& v) {
-    return Vector2(u.e[0] * v.e[0], u.e[1] * v.e[1]);
+    return Vector2(u.x * v.x, u.y * v.y);
 }
 
 inline Vector2 operator*(double t, const Vector2& v) {
-    return Vector2(t * v.e[0], t * v.e[1]);
+    return Vector2(t * v.x, t * v.y);
 }
 
 inline Vector2 operator*(const Vector2& v, double t) {
@@ -83,13 +161,13 @@ inline Vector2 operator/(const Vector2& v, double t) {
 }
 
 inline double dot(const Vector2& u, const Vector2& v) {
-    return u.e[0] * v.e[0]
-        + u.e[1] * v.e[1];
+    return u.x * v.x
+        + u.y * v.y;
 }
 
 inline Vector2 cross(const Vector2& u, const Vector2& v) {
-    return Vector2(u.e[0] * v.e[1] - u.e[1] * v.e[0],
-        u.e[1] * v.e[0] - u.e[0] * v.e[1]);
+    return Vector2(u.x * v.y - u.y * v.x,
+        u.y * v.x - u.x * v.y);
 }
 
 inline Vector2 unit_vector(const Vector2& v) {

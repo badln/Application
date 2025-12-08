@@ -6,6 +6,7 @@
 #include <wtypes.h>
 #include "Logger.h"
 #include <wchar.h>
+#include "global.h"
 
 #ifndef KTY_KEYCODE
 #define KEYCODE
@@ -123,80 +124,66 @@
 #define key_media_play_pause 0xB2
 #endif
 
-#define key_pressed 0
-#define key_depressed 1
-#define key_pressed_this_frame 2
-#define key_depressed_this_frame 3
+#define pressed 0
+#define depressed 1
+#define pressed_this_frame 2
+#define depressed_this_frame 3
 
 
-static enum KeyState {
+enum KeyState {
 	Pressed = 0,
 	Depressed = 1,
 	PressedThisFrame = 2,
 	DepressedThisFrame = 3
 };
-
-class Keyboard {
-private:
-	bool key_press(int KeyCode) {
-		if (GetKeyState(KeyCode) == -127 || GetKeyState(KeyCode) == -128)
-			return true; 
-		return false;
-	}
-public:
-	int keys[256]{ 0 };
-	int old_keys[256]{ 0 };
-
-	bool enabled = true; 
-	bool Key(int state, int keyCode) {
-		switch (state) {
-		case key_pressed:
-			return Key(Pressed, keyCode);
-			break;
-		case key_depressed:
-			return Key(Depressed, keyCode);
-			break;
-		case key_pressed_this_frame:
-			return Key(PressedThisFrame, keyCode);
-			break;
-		case key_depressed_this_frame:
-			return Key(DepressedThisFrame, keyCode);
-			break;
-		default:
-			return Key(PressedThisFrame, keyCode);
-			break;
-		}
-	}
-	bool Key(KeyState state, int KeyCode) {
-		if (!enabled)
+namespace Input
+{
+	class Keyboard {
+	private:
+		static bool key_press(int KeyCode) {
+			int KeyState = GetKeyState(KeyCode);
+			if (KeyState == -127 || KeyState == -128)
+				return true;
 			return false;
-
-		keys[KeyCode] = GetKeyState(KeyCode);
-		switch (state) {
-		case Pressed:
-			if (key_press(KeyCode))
-				return true;
-			break;
-		case Depressed:
-			if (!key_press(KeyCode))
-				return true;
-			break;
-		case PressedThisFrame:
-			if (key_press(KeyCode) && keys[KeyCode] != old_keys[KeyCode])
-				return true; 
-			break;
-		case DepressedThisFrame:
-			if (!key_press(KeyCode) && keys[KeyCode] != old_keys[KeyCode])
-				return true;
-			break;
 		}
-		return false;
-	}
-	void SwapKeyBuffer() {
-		for (int i = 0; i < std::size(keys); i++) {
-			old_keys[i] = keys[i];
-		}
-	}
-};
+		static inline int keys[256]{ 0 };
+		static inline int old_keys[256]{ 0 };
+	public:
+		static bool enabled;
+		static bool Key(int state, int keyCode, bool IgnoreDefocus = false) {
 
+			if (!enabled)
+				return false;
+
+			if (!KTYGlobal::WindowFocused() && !IgnoreDefocus)
+				return false;
+
+			keys[keyCode] = GetKeyState(keyCode);
+			switch (state) {
+			case pressed:
+				if (key_press(keyCode))
+					return true;
+				break;
+			case depressed:
+				if (!key_press(keyCode))
+					return true;
+				break;
+			case pressed_this_frame:
+				if (key_press(keyCode) && keys[keyCode] != old_keys[keyCode])
+					return true;
+				break;
+			case depressed_this_frame:
+				if (!key_press(keyCode) && keys[keyCode] != old_keys[keyCode])
+					return true;
+				break;
+			}
+			return false;
+		}
+		static void SwapKeyBuffer(GLFWwindow* window) {
+			for (int i = 0; i < std::size(keys); i++) {
+				old_keys[i] = keys[i];
+			}
+		}
+	};
+}
 #endif

@@ -3,10 +3,10 @@
 
 class Gamepad {
 private:
-	vec2 CalculateDeadZone(vec2 v);
-	float length(vec2 v);
-	float angle(vec2 v1, vec2 v2);
-	vec2 rotate(vec2 v, float angleInRads);
+	Vector2 CalculateDeadZone(Vector2 v);
+	float length(Vector2 v);
+	float angle(Vector2 v1, Vector2 v2);
+	Vector2 rotate(Vector2 v, float angleInRads);
 public:
 	GLuint thisPad = GLFW_JOYSTICK_1;
 
@@ -18,7 +18,7 @@ public:
 	float RS_X_ADDITIVE = 0, RS_Y_ADDITIVE = 0;
 	double Sensitivity = 1500;
 
-	vec2 LEFT_STICK(double ft);
-	vec2 RIGHT_STICK(double ft);
+	Vector2 LEFT_STICK(double ft);
+	Vector2 RIGHT_STICK(double ft);
 
 };

@@ -1,0 +1,22 @@
+{
+    "version": 1,
+    "revision": 0,
+    "rules": [
+        {
+            "primary-output": "x64\\Debug\\CameraController.obj",
+            "outputs": [
+                "x64\\Debug\\CameraController.h_46357CCDF4ED7888.ifc.dt.module.json",
+                "x64\\Debug\\CameraController.h_46357CCDF4ED7888.ifc.dt.d.json",
+                "x64\\Debug\\CameraController.h.ifc"
+            ],
+            "provides": [
+                {
+                    "logical-name": "C:\\Users\\faye\\Desktop\\Projects\\Application\\Application\\CameraController.h",
+                    "source-path": "c:\\users\\faye\\desktop\\projects\\application\\application\\cameracontroller.h",
+                    "lookup-method": "absolute"
+                }
+            ],
+            "requires": []
+        }
+    ]
+}

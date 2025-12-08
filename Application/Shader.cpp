@@ -1,5 +1,5 @@
 #include "Shader.h"
-ShaderProgram ShaderProgram::CreateShader(const char* VERTEX_SHADER_PATH, const char* FRAGMENT_SHADER_PATH) {
+Shader Shader::CreateShader(const char* VERTEX_SHADER_PATH, const char* FRAGMENT_SHADER_PATH) {
 
 	ShaderLog.LoggerName = "SHADER";
 	ShaderLog.defaultColour = DBG_MAGENTA;
@@ -77,12 +77,21 @@ ShaderProgram ShaderProgram::CreateShader(const char* VERTEX_SHADER_PATH, const 
 	glDeleteShader(vShader);
 	glDeleteShader(fShader);
 
+	ShaderLog.Empty();
 	return *this;
 }
-void ShaderProgram::Use() {
+int Shader::CurrentID() { return _currentID; }
+
+int Shader::_currentID;
+
+void Shader::Use() {
+	if (Shader::_currentID == shaderID)
+		return;  //check if currently active shader is this shader.
+	else 
+		Shader::_currentID = shaderID;
 	glUseProgram(shaderID);
 }
-void ShaderProgram::checkCompileErrors(unsigned int shader, std::string type)
+void Shader::checkCompileErrors(unsigned int shader, std::string type)
 {
 	int success;
 	char infoLog[1024];
