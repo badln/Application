@@ -109,19 +109,19 @@ C:\Users\faye\Desktop\Projects\Application\Application\Shader.h(56,59): warning 
 C:\Users\faye\Desktop\Projects\Application\Application\Framebuffer.h(3,20): warning C4067: unexpected tokens following preprocessor directive - expected a newline
   (compiling source file 'main.cpp')
   
-C:\Users\faye\Desktop\Projects\Application\Application\Camera.h(132,3): warning C4244: 'argument': conversion from 'double' to 'GLfloat', possible loss of data
+C:\Users\faye\Desktop\Projects\Application\Application\Camera.h(129,3): warning C4244: 'argument': conversion from 'double' to 'GLfloat', possible loss of data
   (compiling source file 'main.cpp')
   
-C:\Users\faye\Desktop\Projects\Application\Application\Camera.h(135,58): warning C4244: 'argument': conversion from 'double' to 'GLsizei', possible loss of data
+C:\Users\faye\Desktop\Projects\Application\Application\Camera.h(132,58): warning C4244: 'argument': conversion from 'double' to 'GLsizei', possible loss of data
   (compiling source file 'main.cpp')
   
-C:\Users\faye\Desktop\Projects\Application\Application\Camera.h(135,46): warning C4244: 'argument': conversion from 'double' to 'GLsizei', possible loss of data
+C:\Users\faye\Desktop\Projects\Application\Application\Camera.h(132,46): warning C4244: 'argument': conversion from 'double' to 'GLsizei', possible loss of data
   (compiling source file 'main.cpp')
   
-C:\Users\faye\Desktop\Projects\Application\Application\Camera.h(135,34): warning C4244: 'argument': conversion from 'double' to 'GLint', possible loss of data
+C:\Users\faye\Desktop\Projects\Application\Application\Camera.h(132,34): warning C4244: 'argument': conversion from 'double' to 'GLint', possible loss of data
   (compiling source file 'main.cpp')
   
-C:\Users\faye\Desktop\Projects\Application\Application\Camera.h(135,22): warning C4244: 'argument': conversion from 'double' to 'GLint', possible loss of data
+C:\Users\faye\Desktop\Projects\Application\Application\Camera.h(132,22): warning C4244: 'argument': conversion from 'double' to 'GLint', possible loss of data
   (compiling source file 'main.cpp')
   
 C:\Users\faye\Desktop\Projects\Application\Application\ProgramBase.h(68,45): warning C4244: 'argument': conversion from 'double' to 'int', possible loss of data
@@ -136,10 +136,10 @@ C:\Users\faye\Desktop\Projects\Application\Application\ProgramBase.h(69,174): wa
 C:\Users\faye\Desktop\Projects\Application\Application\ProgramBase.h(69,92): warning C4244: 'argument': conversion from 'double' to 'int', possible loss of data
   (compiling source file 'main.cpp')
   
-C:\Users\faye\Desktop\Projects\Application\Application\Renderer.h(93,58): warning C4267: 'argument': conversion from 'size_t' to 'GLsizei', possible loss of data
+C:\Users\faye\Desktop\Projects\Application\Application\Renderer.h(111,58): warning C4267: 'argument': conversion from 'size_t' to 'GLsizei', possible loss of data
   (compiling source file 'main.cpp')
   
-C:\Users\faye\Desktop\Projects\Application\Application\Renderer.h(96,56): warning C4267: 'argument': conversion from 'size_t' to 'GLsizei', possible loss of data
+C:\Users\faye\Desktop\Projects\Application\Application\Renderer.h(114,56): warning C4267: 'argument': conversion from 'size_t' to 'GLsizei', possible loss of data
   (compiling source file 'main.cpp')
   
 C:\Users\faye\Desktop\Projects\Application\Application\CameraController.h(2,20): warning C4067: unexpected tokens following preprocessor directive - expected a newline

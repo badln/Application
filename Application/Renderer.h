@@ -9,16 +9,20 @@
 #include "Material.h"
 #include "Framebuffer.h"
 
-#define KTY_WIREFRAME 0x00;
-#define KTY_FILL 0x01
+enum DrawMode {
+	Backface,
+	Frontface,
+	Wireframe, 
+	NoCull
+};
 
 using namespace glm;
 
 class MeshRenderer : public EntityComponent {
 public:
 	Mesh mesh;
-	Material material; 
-	int DrawMode = KTY_FILL;
+	Material material = Material(); 
+	DrawMode drawMode = DrawMode::Backface;
 	bool autoDraw = true;
 
 	void Start() override {
@@ -80,14 +84,28 @@ public:
 		SendMaterialData(s);
 
 		mesh.BindVArray();
-		switch (DrawMode) {
-		case (0):
+		switch (drawMode) {
+		case (Wireframe):
+			glDisable(GL_CULL_FACE);
 			glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 			glDisable(GL_CULL_FACE);
 			break;
-		case KTY_FILL:
+		case Backface:
+			glEnable(GL_CULL_FACE);
+			glCullFace(GL_BACK);
 			glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 			break;
+		case Frontface:
+			glEnable(GL_CULL_FACE);
+			glCullFace(GL_FRONT);
+			glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+			break;
+		case NoCull:
+			glDisable(GL_CULL_FACE);
+			glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+			break;
+
+
 		}
 		if (mesh.data.indices.size() == 0) {
 			glDrawArrays(mesh.topology, 0, mesh.data.vertices.size());

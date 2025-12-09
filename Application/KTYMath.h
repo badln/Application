@@ -21,7 +21,7 @@ public:
 	/// </summary>
 	/// <param name="theta"></param>
 	/// <returns></returns>
-	double cos(double theta) {
+	static double cos(double theta) {
 		return std::cos(theta);
 	}
 	/// <summary>
@@ -29,7 +29,7 @@ public:
 	/// </summary>
 	/// <param name="theta"></param>
 	/// <returns></returns>
-	double sin(double theta) {
+	static double sin(double theta) {
 		return std::sin(theta);
 	}
 	/// <summary>
@@ -37,7 +37,7 @@ public:
 	/// </summary>
 	/// <param name="theta"></param>
 	/// <returns></returns>
-	double arccos(double theta) {
+	static double arccos(double theta) {
 		return std::acos(theta);
 	}
 	/// <summary>
@@ -45,7 +45,7 @@ public:
 	/// </summary>
 	/// <param name="theta"></param>
 	/// <returns></returns>
-	double arcsin(double theta) {
+	static double arcsin(double theta) {
 		return std::asin(theta);
 	}
 	template <typename T>

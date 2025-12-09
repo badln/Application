@@ -40,14 +40,9 @@ private:
 		}
 	}
 	void CreateViewMatrix() {
-		Vector3 pos;
-		if (entity->Parent() != nullptr)
-			pos = entity->transform.position + entity->transform.localPosition + entity->Parent()->transform.localPosition;
-		else
-			pos = entity->transform.position + entity->transform.localPosition;
 		viewMatrix = glm::lookAt(
-			pos.glm(),
-			(pos + entity->transform.forward()).glm(),
+			entity->transform.GlobalPosition().glm(),
+			(entity->transform.GlobalPosition() + entity->transform.forward()).glm(),
 			entity->transform.up().glm()
 		);
 	}
@@ -58,6 +53,8 @@ public:
 	Colour clearColour = Colour(0, 0, 0, 1);
 
 	Framebuffer* framebuffer = Framebuffer::Default;
+
+	bool DontDrawParent = false;
 
 	unsigned int DepthMode = DepthTestMode::Less;
 	std::vector<unsigned int> RenderFunctions{
@@ -83,8 +80,8 @@ public:
 	CameraPerspective perspective = CameraPerspective::Projection;
 	CameraViewportMode viewportMode = CameraViewportMode::FixedToWindow;
 
-	//Camera is rotated by vec2 angle. autoClamp, if left true, will automatically clamp the pitch between -90 and 90, giving a first-person camera feel. Note: Camera localRotation is dependent exclusively on the localRotation of the object it is assigned to.
-	void Look(Vector2 angle, bool autoClamp = true, double min_pitchclamp = -90, double max_pitchclamp = 90) {
+	//Camera is rotated by vec2 angle. autoClamp, if left true, will automatically clamp the pitch between -89 and 89, giving a first-person camera feel. Note: Camera localRotation is dependent exclusively on the localRotation of the object it is assigned to.
+	void Look(Vector2 angle, bool autoClamp = true, double min_pitchclamp = -89, double max_pitchclamp = 89) {
 		if (KTYGlobal::WindowFocused()) {
 			entity->transform.localRotation.x += angle.y;
 			entity->transform.localRotation.y += -angle.x;

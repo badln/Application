@@ -119,7 +119,7 @@ class MainProgram : public Program {
 
 		cube3.transform.rotation.y += Time::deltaTime() * 30;
 		cube3.transform.rotation.z += Time::deltaTime() * 30;
-		cube2.transform.localRotation.x += Time::deltaTime() * 15;
+		cube2.transform.localPosition.z = (Math::sin(Time::SinceStartup()) * 2) - 1;
 
 		cube2.GetComponent<LightRenderer>().light.diffuse = Colour(Math::abs(glm::sin(Time::SinceStartup())), 0, 1, 1);
 		cube2.GetComponent<MeshRenderer>().material.diffuseColour = cube2.GetComponent<LightRenderer>().light.diffuse; 

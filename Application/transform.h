@@ -18,7 +18,7 @@ private:
 	/// <param name="scale"></param>
 	/// <param name="rot"></param>
 	/// <returns></returns>
-	glm::mat4 localOrWorldMatrix(Vector3 pos, Vector3 scale, Vector3 rot, glm::mat4 parent = glm::mat4(1)) {
+	glm::mat4 localOrWorldMatrix(Vector3 pos, Vector3 scale, Vector3 rot, glm::mat4 parentT = glm::mat4(1), glm::mat4 parentS = glm::mat4(1), glm::mat4 parentR = glm::mat4(1)) {
 
 		transformMatrix = glm::translate(glm::mat4(1), pos.glm());
 		
@@ -28,14 +28,20 @@ private:
 
 		scaleMatrix = glm::scale(glm::mat4(1), scale.glm());
 
-		_calcMatrix = parent * (transformMatrix * rotationMatrix * scaleMatrix);
-		globalPosition = _calcMatrix[3];
+		_calcMatrix = (parentT * parentR * parentS) * (transformMatrix) * (rotationMatrix) * (scaleMatrix);
+
+		globalPosition = Vector3(_calcMatrix[3][0], _calcMatrix[3][1], _calcMatrix[3][2]);
+
+		glm::extractEulerAngleYXZ(_calcMatrix, y, p, r);
+		globalRotation = Math::Degrees(Vector3(p, y, r));
+
 		return _calcMatrix;
 	};
 
 	float y, p, r = 0;
 
 	Vector3 globalPosition = Vector3::zero();
+	Vector3 globalRotation = Vector3::zero();
 
 public:
 
@@ -56,6 +62,7 @@ public:
 	}
 
 	Vector3 GlobalPosition() { return globalPosition; }
+	Vector3 GlobalRotation() { return globalRotation; }
 
 	/// <summary>
     /// The position of the transform. It is suggested to use localPosition.
@@ -85,12 +92,12 @@ public:
 	
 	glm::mat4 WorldMatrix(Transform* parent = nullptr) {
 		if (parent != nullptr) {
-			return localOrWorldMatrix(localPosition, localScale, localRotation, parent->calculatedMatrix());
+			return localOrWorldMatrix(localPosition, localScale, localRotation, parent->calculatedTransformMatrix(), parent->calculatedScaleMatrix(), parent->calculatedRotationMatrix());
 		}
 		return localOrWorldMatrix(position + localPosition, scale * localScale, rotation + localRotation);
 	}
 	Vector3 forward() {
-		Vector3 euler = Math::Radians(rotation + localRotation);
+		Vector3 euler = Math::Radians(globalRotation);
 		return Vector3(
 			glm::cos (euler.x) * glm::sin(euler.y),
 			-glm::sin(euler.x),
@@ -99,7 +106,7 @@ public:
 	}
 
 	Vector3 left() {
-		Vector3 euler = Math::Radians(rotation + localRotation);
+		Vector3 euler = Math::Radians(globalRotation);
 		return Vector3(
 			 glm::cos(euler.y),
 			0,
@@ -108,7 +115,7 @@ public:
 	}
 
 	Vector3 up() {
-		Vector3 euler = Math::Radians(rotation + localRotation);
+		Vector3 euler = Math::Radians(globalRotation);
 		return Vector3(
 			glm::sin(euler.x) * glm::sin(euler.y),
 			glm::cos(euler.x),
